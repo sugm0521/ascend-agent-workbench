@@ -1,0 +1,9 @@
+[submodule "deps/vllm-ascend-workspace"]
+	path = deps/vllm-ascend-workspace
+	url = https://github.com/vllm-ascend-workspace/vllm-ascend-workspace.git
+[submodule "deps/cannbot-skills"]
+	path = deps/cannbot-skills
+	url = https://gitcode.com/cann/cannbot-skills.git
+[submodule "deps/matt-pocock-skills"]
+	path = deps/matt-pocock-skills
+	url = https://github.com/mattpocock/skills.git

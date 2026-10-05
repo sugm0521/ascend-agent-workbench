@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ascend 授权任务执行"
+  short_description: "持续推进已授权调查与实现，保留实验条件、验证及 CI 对应证据"
+  default_prompt: "使用 $ascend-task-execution 按当前授权和计划执行，并记录可核查的改动与验证。"

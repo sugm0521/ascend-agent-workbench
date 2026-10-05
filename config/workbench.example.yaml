@@ -1,0 +1,56 @@
+# 首版由 agent 读取；复制到忽略提交的 workbench.local.yaml 后按现状填写。
+# 所有相对路径相对工作台根目录，null 表示未确认，不是执行授权。
+schema_version: 1
+
+paths:
+  sources_lock: upstream/sources.lock.yaml
+  init_report: .workbench-local/init-report.md
+
+dependencies:
+  workspace:
+    path: deps/vllm-ascend-workspace
+    enabled: true
+  cannbot:
+    path: deps/cannbot-skills
+    enabled: true
+  matt:
+    path: deps/matt-pocock-skills
+    enabled: true
+
+business:
+  repositories:
+    vllm:
+      mode: reuse
+      path: null
+      clone_path: repos/vllm
+      topology: null
+      source_url: null
+      origin_url: null
+      upstream_url: null
+      requested_ref: null
+    vllm-ascend:
+      mode: reuse
+      path: null
+      clone_path: repos/vllm-ascend
+      topology: null
+      source_url: null
+      origin_url: null
+      upstream_url: null
+      requested_ref: null
+
+init:
+  mode: standard
+  prefer_reuse: true
+  github_required: true
+  remote_required: false
+
+capabilities:
+  remote_execution: false
+  knowledge_tests: false
+
+execution:
+  max_subagents: 3
+  provider_refs:
+    remote_dev: null
+    coordinator: null
+  artifact_root: .workbench-local/artifacts

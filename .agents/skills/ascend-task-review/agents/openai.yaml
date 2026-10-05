@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ascend 验收与交接"
+  short_description: "核对当前代码、覆盖与终态证据，形成可恢复交付及具体改进候选"
+  default_prompt: "使用 $ascend-task-review 核查当前任务的覆盖和证据，完成交付或中断交接。"

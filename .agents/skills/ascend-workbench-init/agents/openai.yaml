@@ -1,0 +1,4 @@
+interface:
+  display_name: "工作台初始化"
+  short_description: "按实际路径准备业务代码、Git 身份与 PR 条件，合并上下层缺失步骤"
+  default_prompt: "使用 $ascend-workbench-init 核对当前配置，准备本工作台缺失的开发与 PR 条件。"

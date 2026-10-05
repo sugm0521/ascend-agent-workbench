@@ -1,0 +1,4 @@
+interface:
+  display_name: "工作台依赖维护"
+  short_description: "核对顶层与相关传递依赖，按目标父声明升级并保持业务实验版本稳定"
+  default_prompt: "使用 $ascend-workbench-dependencies 核对本次能力依赖，提出可验证和可回退的升级方案。"
