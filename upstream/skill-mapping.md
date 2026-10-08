@@ -4,6 +4,12 @@
 
 领域来源保持只读。先明确业务路径与启用能力，再读取相关 SKILL；目录存在不等于已安装插件或获得远程执行能力。直接引用的 skill 使用其本身相对资源，不能从工作台根目录猜脚本工作目录。
 
+## 本项目补充能力
+
+| 需求 | 入口 | 接入条件与边界 |
+|---|---|---|
+| HCCL alltoallvc 单机/多机打流 | [ascend-hccl-traffic-test](../.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用原运行工具与 MPI/CANN；支持本地 fork、有限诊断及已明确授权的宿主直接路径，不携带大二进制；日志摘要不代替规模/rank 覆盖 |
+
 ## workspace：流程与执行
 
 | 需求 | 已核对入口 | 接入条件与边界 |

@@ -45,6 +45,7 @@ git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-works
 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
 | [review](.agents/skills/ascend-task-review/SKILL.md) | 关键结论复核、覆盖、交付与回顾 |
 | [skill-development](.agents/skills/ascend-skill-development/SKILL.md) | 评估候选并建设已确认的自有 skill |
+| [HCCL 打流](.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用 MPI/CANN，验证单机或多机 alltoallvc 双模式及限时故障诊断；真实覆盖另行验收 |
 
 定位/分析默认交付证据与建议；明确要求修复/优化/实现才推进业务修改。提交、推送和发布按本次授权处理，未授权时提供可审核结果。数值语义、支持范围和必需验收的变化由用户决定。
 

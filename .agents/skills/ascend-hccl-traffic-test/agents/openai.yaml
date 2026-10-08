@@ -1,0 +1,4 @@
+interface:
+  display_name: "HCCL 轻量通信测试"
+  short_description: "复用 MPI/CANN，验证单机或多机通信并定位 HCCL 打流失败"
+  default_prompt: "使用 $ascend-hccl-traffic-test 检查指定昇腾服务器的通信环境，在已确认范围内运行打流并汇总正确性与故障证据。"

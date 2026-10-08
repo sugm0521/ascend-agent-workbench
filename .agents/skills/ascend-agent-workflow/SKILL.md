@@ -33,6 +33,8 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 
 跨环境部署能力可包括 `ascend-service-deploy`。这两个个人 skill 在其他主机可能不存在：查找可用入口并报告缺口，不把个人绝对路径当作依赖、不假装已加载。找不到能力时可查证源码/现有工具，缺设备或远程入口不编造实测。首次接入或升级分别路由到 init/dependencies，不在业务任务中顺带完整初始化或升级。
 
+明确要求 HCCL alltoallvc 打流或验证打流故障时，使用 [HCCL 轻量通信测试](../ascend-hccl-traffic-test/SKILL.md)。一般分布式问题仍按各 rank 证据诊断，模型吞吐仍按端到端基准验收。
+
 ## 推进与反馈
 
 - 需要可独立交付的拆分时用 [planning](../ascend-task-planning/SKILL.md)；明确小任务直接执行，不为了分工固定团队。
