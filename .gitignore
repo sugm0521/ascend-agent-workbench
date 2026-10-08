@@ -4,6 +4,8 @@ __pycache__/
 /config/workbench.local.yaml
 /.workbench-local/
 /repos/
+/.codex/config.toml
+/.codex/hooks.json
 **/.vaws-local/
 .env
 .env.*
