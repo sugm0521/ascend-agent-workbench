@@ -49,6 +49,8 @@ git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-works
 
 定位/分析默认交付证据与建议；明确要求修复/优化/实现才推进业务修改。提交、推送和发布按本次授权处理，未授权时提供可审核结果。数值语义、支持范围和必需验收的变化由用户决定。
 
+涉及产物搬迁/安装来源或原生扩展兼容问题时，可按需使用 [通用运行探针与产物核对](docs/runtime-tools.md)。两个 Python 标准库工具独立运行，复用原远程执行能力；普通业务任务不默认增加导入、NPU 或 PD 检查。
+
 ## 文档与记录
 
 - [AGENTS.md](AGENTS.md)：所有会话共享的行为规则与导航。
