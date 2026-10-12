@@ -37,7 +37,8 @@ if sys.platform.startswith("linux"):
         libraries = sorted({line.rstrip().split(maxsplit=5)[-1]
                             for line in handle if len(line.split(maxsplit=5)) == 6
                             and ".so" in line.split(maxsplit=5)[-1]})
-print("__IMPORT_PROBE_METADATA__=" + json.dumps({"completed": True,
+# Probe code or native libraries may leave stdout without a trailing newline.
+print("\n__IMPORT_PROBE_METADATA__=" + json.dumps({"completed": True,
       "python_executable": sys.executable, "python_version": sys.version,
       "module_origins": origins, "loaded_libraries": libraries[:128],
       "loaded_libraries_truncated": len(libraries) > 128,

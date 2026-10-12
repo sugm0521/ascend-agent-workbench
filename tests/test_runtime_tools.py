@@ -66,6 +66,18 @@ class NativeProbeTests(unittest.TestCase):
         self.assertTrue(case["metadata"]["completed"])
         self.assertEqual(case["status"], "exit_failure")
 
+    def test_unterminated_stdout_does_not_hide_completion(self):
+        result, report, _, _ = self.run_probe([
+            {"name": "python_stdout", "code": "print('progress', end='')"},
+            {"name": "fd_stdout", "code": "import os; os.write(1, b'progress')"}])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(report["status"], "passed")
+        for case in report["cases"]:
+            self.assertEqual(case["status"], "passed")
+            self.assertEqual(case["exit_code"], 0)
+            self.assertTrue(case["metadata"]["completed"])
+            self.assertIn("progress", Path(case["logs"]["stdout"]["path"]).read_text())
+
     def test_exit_zero_without_probe_completion_is_inconclusive(self):
         result, report, _, _ = self.run_probe([{"name": "early", "code": "import os; os._exit(0)"}])
         self.assertEqual(result.returncode, 1)
@@ -86,14 +98,19 @@ class NativeProbeTests(unittest.TestCase):
         self.assertIn("ModuleNotFoundError", Path(case["logs"]["stderr"]["path"]).read_text())
 
     def test_noisy_streams_are_bounded_and_env_values_not_in_report(self):
-        code = "import os, sys; assert os.getenv('PROBE_TEST_SECRET') == 'private'; print('x'*20000); sys.stderr.write('y'*20000)"
+        # Evidence paths may legitimately contain common words such as private.
+        self.directory = self.directory / "private"
+        self.directory.mkdir()
+        sentinel = "probe-env-value-8e0be45c20f14319819a26f1b9bd51d6"
+        code = (f"import os, sys; assert os.getenv('PROBE_TEST_SECRET') == {sentinel!r}; "
+                "print('x'*20000); sys.stderr.write('y'*20000)")
         result, report, _, _ = self.run_probe([{"name": "noise", "code": code,
-                                               "env": {"PROBE_TEST_SECRET": "private"}}], log_bytes=1024)
+                                               "env": {"PROBE_TEST_SECRET": sentinel}}], log_bytes=1024)
         self.assertEqual(result.returncode, 0, result.stderr)
         for log in report["cases"][0]["logs"].values():
             self.assertTrue(log["truncated"])
             self.assertLessEqual(Path(log["path"]).stat().st_size, 1024)
-        self.assertNotIn("private", json.dumps(report))
+        self.assertNotIn(sentinel, json.dumps(report))
 
     def test_bad_config_is_rejected_without_creating_output(self):
         result, report, output, _ = self.run_probe([{"name": "../unsafe", "imports": ["json"]}])
