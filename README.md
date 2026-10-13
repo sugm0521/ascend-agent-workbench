@@ -44,7 +44,8 @@ git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-works
 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 依赖、子任务、写入归属与资源边界 |
 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
 | [review](.agents/skills/ascend-task-review/SKILL.md) | 关键结论复核、覆盖、交付与回顾 |
-| [skill-development](.agents/skills/ascend-skill-development/SKILL.md) | 评估候选并建设已确认的自有 skill |
+| [skill-candidate-review](.agents/skills/ascend-skill-candidate-review/SKILL.md) | 评估改进价值、去重与检查触发条件，给出最小修改或不改的结论 |
+| [skill-development](.agents/skills/ascend-skill-development/SKILL.md) | 复用候选评估，建设已确认的自有 skill |
 | [HCCL 打流](.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用 MPI/CANN，验证单机或多机 alltoallvc 双模式及限时故障诊断；真实覆盖另行验收 |
 
 定位/分析默认交付证据与建议；明确要求修复/优化/实现才推进业务修改。提交、推送和发布按本次授权处理，未授权时提供可审核结果。数值语义、支持范围和必需验收的变化由用户决定。
@@ -62,7 +63,7 @@ git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-works
 - [配置示例](config/workbench.example.yaml)：本机配置的参考结构，`null` 不是默认授权。
 - [流程演练](tasks/2026-10-05-流程演练/任务说明.md)：明确标记的模拟场景，真实工程验收另行完成。
 
-具体任务状态只在其 `任务说明.md` 维护。大型原始数据与本机报告放 `.workbench-local/`，本机配置放 `config/workbench.local.yaml`；均不提交。`repos/` 下业务仓库各自维护 Git 历史，父项目只记录定位和证据。
+只有用户明确提到任务名字时，才新建对应任务目录存放日志和记录；否则统一放入当前日期命名的 `tasks/MMDD/`，例如 2026-10-12 使用 `tasks/1012/`。当天多个事项用文件名及索引区分，同名文档加事项前缀。具体状态只在各事项的任务说明文件维护，目录归并不改变已有 task_id。大型原始数据与本机报告放 `.workbench-local/`，本机配置放 `config/workbench.local.yaml`；均不提交。`repos/` 下业务仓库各自维护 Git 历史，父项目只记录定位和证据。
 
 ## 验证边界
 

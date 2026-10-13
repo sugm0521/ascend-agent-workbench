@@ -1,4 +1,4 @@
 interface:
   display_name: "Ascend 自有 Skill 开发"
-  short_description: "基于任务证据评估具体候选，开发已确认 skill 并验证边界与行为"
-  default_prompt: "使用 $ascend-skill-development 评估这个候选，或在已确认范围内开发并验证自有 skill。"
+  short_description: "复用候选评估结论，在确认范围内开发自有 skill 并验证边界与行为"
+  default_prompt: "使用 $ascend-skill-development 在已确认范围内开发并验证自有 skill；未评估的候选先按候选评估入口收敛。"

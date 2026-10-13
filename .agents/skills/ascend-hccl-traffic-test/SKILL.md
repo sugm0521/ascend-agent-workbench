@@ -38,4 +38,4 @@ python scripts/hccl_traffic.py plan --work-dir /absolute/task \
 
 `--iters`、`--warmup-iters` 可选，省略时保留程序默认；`--timeout-seconds` 增加 10 秒终止宽限。plan 的授权、占用与环境标记始终未验证，生成命令不能代替实际检查。初始化失败先看 root rank 的同期 plog/debug 日志与源代码，再区分配置、环境、设备错误；其他 rank 的 invalid data 可能只是 root 失败通知，不能据此归因于某张卡。
 
-SSH 修复、环境/编译准备、安装分支与来源说明见[环境准备](references/environment.md)。原包的大型 MPICH、CANN 安装包不随 skill 携带；遵守用户上传不超过 1 MB 的限制，不通过拆包绕过。项目与依赖的已有身份/配置/资源状态复用，不建立另一套管理系统。
+SSH 修复、环境/编译准备、按异常启用的拓扑/占用排查、安装分支与来源说明见[环境准备](references/environment.md)。原包的大型 MPICH、CANN 安装包不随 skill 携带；遵守用户上传不超过 1 MB 的限制，不通过拆包绕过。项目与依赖的已有身份/配置/资源状态复用，不建立另一套管理系统。

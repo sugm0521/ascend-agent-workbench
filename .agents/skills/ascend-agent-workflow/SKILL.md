@@ -38,7 +38,7 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 ## 推进与反馈
 
 - 需要可独立交付的拆分时用 [planning](../ascend-task-planning/SKILL.md)；明确小任务直接执行，不为了分工固定团队。
-- 按授权用 [execution](../ascend-task-execution/SKILL.md) 推进调查/实现/实验；用 [review](../ascend-task-review/SKILL.md) 核查结果与交接。明确评估或开发 skill 才用 [skill-development](../ascend-skill-development/SKILL.md)。
+- 按授权用 [execution](../ascend-task-execution/SKILL.md) 推进调查/实现/实验；用 [review](../ascend-task-review/SKILL.md) 核查结果与交接。明确评估 skill 候选时用 [skill-candidate-review](../ascend-skill-candidate-review/SKILL.md)，创建/优化用 [skill-development](../ascend-skill-development/SKILL.md)复用评估。
 - 关键判断反馈可查证的证据、当前假设、方案理由、风险/替代项和下一步验证；不公开内部逐步思维链。假设推翻、路线改变、精度失败、退化或 CI 归因变化及时说明。
 - 默认在确定范围内连续工作，提交、推送、发布前提供可审核结果；沿用已获得的具体授权，不重复确认。改变语义、支持范围、必需验收或扩大授权时准备证据与选项，等待用户决定。
 

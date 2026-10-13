@@ -8,6 +8,7 @@
 
 | 需求 | 入口 | 接入条件与边界 |
 |---|---|---|
+| skill 改进候选筛选与去重 | [ascend-skill-candidate-review](../.agents/skills/ascend-skill-candidate-review/SKILL.md) | 明确评估/优化请求才启用；优先最小增量，新增检查须有触发条件，不自动建设工具 |
 | HCCL alltoallvc 单机/多机打流 | [ascend-hccl-traffic-test](../.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用原运行工具与 MPI/CANN；支持本地 fork、有限诊断及已明确授权的宿主直接路径，不携带大二进制；日志摘要不代替规模/rank 覆盖 |
 
 ## workspace：流程与执行
