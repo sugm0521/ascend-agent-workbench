@@ -27,7 +27,8 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 | 模型性能 | benchmark、profiling、memory 与 regression 工具 | 可比工作负载下端到端指标和资源变化 |
 | 模型精度 | correctness、独立 reference、输入与中间结果 | 明确误差标准下偏差路径与回归 |
 | 算子开发/替换 | 原语义、适用 AscendC 方法与框架运行验证 | 接口/支持范围、正确性、生产场景与集成 |
-| 部署 | 现有 serving、P/D 或跨环境部署流程 | 当前目标服务完成真实请求 |
+| 部署 | 按[部署说明](references/service-deployment.md)选择运行方式、准备容器与环境，再调用适用serving/PD或已核对执行入口 | 启动前版本清单与当前目标路径的真实请求 |
+| 指定环境复现清单 | [ascend-runtime-snapshot](../ascend-runtime-snapshot/SKILL.md)只读整理当前/历史环境，区分选用与实际加载 | 实际版本/代码/PR/依赖替换、来源和未知项；不自动部署或升级 |
 | CI/PR | 当前仓库 workflow、失败 job、提交与 review | 当前 head SHA 的实际终态 |
 | 源码学习 | 实际源码；可用时使用 `ascend-source-walkthrough` | 连续调用链、版本与事实/推断边界 |
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "运行环境复现清单"
+  short_description: "只读整理指定环境的代码、CANN、PR、依赖替换与启动条件，明确历史和未知项"
+  default_prompt: "使用 $ascend-runtime-snapshot 输出指定运行环境的复现清单，标明实际版本、依赖替换和未核实项。"
