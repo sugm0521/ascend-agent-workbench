@@ -16,6 +16,9 @@ dependencies:
   matt:
     path: deps/matt-pocock-skills
     enabled: true
+  aisbench_auto_tools_prefix:
+    path: deps/aisbench-auto-tools-prefix
+    enabled: true  # 服务性能压测首选；仅在请求发起端准备运行环境
 
 business:
   repositories:

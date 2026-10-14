@@ -24,7 +24,8 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 |---|---|---|
 | 问题单定位 | 复现、日志、源码与适用 graph/distributed/operator 诊断 | 触发条件、影响范围、根因证据与未确认项 |
 | 模型适配或功能实现 | 实际接口、注册/执行路径、当前测试与运行工具 | 功能、兼容范围及所需集成证据 |
-| 模型性能 | benchmark、profiling、memory 与 regression 工具 | 可比工作负载下端到端指标和资源变化 |
+| 服务性能压测、吞吐/延迟、prefix cache 测试 | [ascend-performance-benchmark](../ascend-performance-benchmark/SKILL.md) | 实际请求结果、工作负载、指标与日志；保留既有服务 |
+| 其他模型性能分析、profiling 或性能回归 | profiling、memory 与 regression 工具；需要服务负载时使用上述压测入口 | 可比工作负载下端到端指标和资源变化 |
 | 模型精度 | correctness、独立 reference、输入与中间结果 | 明确误差标准下偏差路径与回归 |
 | 算子开发/替换 | 原语义、适用 AscendC 方法与框架运行验证 | 接口/支持范围、正确性、生产场景与集成 |
 | 部署 | 按[部署说明](references/service-deployment.md)选择运行方式、准备容器与环境，再调用适用serving/PD或已核对执行入口 | 启动前版本清单与当前目标路径的真实请求 |

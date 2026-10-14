@@ -12,6 +12,8 @@
 | HCCL alltoallvc 单机/多机打流 | [ascend-hccl-traffic-test](../.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用原运行工具与 MPI/CANN；支持本地 fork、有限诊断及已明确授权的宿主直接路径，不携带大二进制；日志摘要不代替规模/rank 覆盖 |
 | 服务部署准备与验收 | [部署说明](../.agents/skills/ascend-agent-workflow/references/service-deployment.md) | 通用流程与A5条件命令；区分运行方式、同会话容器延续与显式复用；命令结构模拟不代表远端运行 |
 | 指定环境复现清单 | [ascend-runtime-snapshot](../.agents/skills/ascend-runtime-snapshot/SKILL.md) | 每次启动前及独立只读输出；字段统一维护，区分历史/模拟/实际加载，不自动部署、升级或NPU验证 |
+| 服务性能压测、吞吐/延迟和公共前缀测试 | [ascend-performance-benchmark](../.agents/skills/ascend-performance-benchmark/SKILL.md)、[aisbench_auto_tools_prefix](../deps/aisbench-auto-tools-prefix/README.md) | 默认优先使用；只在请求端运行，独立可写副本与AISBench环境；精度、算子打流和纯profiling走原入口 |
+| 生成式AISBench评测结果与输出质量证据 | [证据报告工具](../docs/aisbench-evidence.md) | 离线消费显式run/解析器，每组与总汇分开；基础检查和按需审计，不改官方评分、不发请求 |
 
 ## workspace：流程与执行
 
@@ -23,7 +25,7 @@
 | 机器接入与修复 | [machine-management](../deps/vllm-ascend-workspace/.agents/skills/machine-management/SKILL.md) | 目标与既有 provider 明确后按其原 profile/检查入口接入 |
 | 隔离会话与代码一致性 | [session-management](../deps/vllm-ascend-workspace/.agents/skills/session-management/SKILL.md)、[remote-code-parity](../deps/vllm-ascend-workspace/.agents/skills/remote-code-parity/SKILL.md) | 复用底层身份与资源，确认实际代码路径；不复制另一套锁或状态 |
 | 单机服务 / P-D | [serving](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-serving/SKILL.md)、[pd-serving](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-pd-serving/SKILL.md) | 管理目标与模型条件满足后执行，真实请求另验收 |
-| 模型基准与性能回归 | [benchmark](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-benchmark/SKILL.md)、[performance-regression](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-performance-regression/SKILL.md) | 可比工作负载、基线与实际环境；算子收益不能替代端到端指标 |
+| 模型基准与性能回归 | [benchmark](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-benchmark/SKILL.md)、[performance-regression](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-performance-regression/SKILL.md) | 服务压测先走上述AISBench工具；原benchmark用于不适用的工作负载，regression负责可比对照；算子收益不能替代端到端指标 |
 | profiling / memory | [collection](../deps/vllm-ascend-workspace/.agents/skills/ascend-profiling-collection/SKILL.md)、[analysis](../deps/vllm-ascend-workspace/.agents/skills/ascend-profiling-analysis/SKILL.md)、[memory](../deps/vllm-ascend-workspace/.agents/skills/ascend-memory-profiling/SKILL.md) | 按数据和阶段选用；采集要真实环境，分析需可访问 trace/manifest |
 | 图模式 / 分布式定位 | [graph-debug](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-graph-debug/SKILL.md)、[distributed-debug](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-distributed-debug/SKILL.md) | 根据复现和 rank/执行模式证据路由，不泛化为算子问题 |
 | 精度与变更验证 | [correctness-validation](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-correctness-validation/SKILL.md)、[change-validation](../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-change-validation/SKILL.md) | reference/标准、真实代码状态和覆盖；静态检查不冒充推理通过 |

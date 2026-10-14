@@ -26,5 +26,19 @@ sources:
     purpose: 澄清、拆分、实现与交接方法参考
     declared_dependencies: []
 
-# 仅固定三个顶层来源。下层版本要求从父提交的原声明读取，
+  aisbench_auto_tools_prefix:
+    path: deps/aisbench-auto-tools-prefix
+    url: https://github.com/rayn-zzz/aisbench_auto_tools_prefix.git
+    commit: ef2b6d8653d57487b622b0dc9db458f8a1e8dec6
+    purpose: 服务性能压测与公共前缀负载生成；调用 AISBench
+    declared_dependencies:
+      - README.md
+      - aisbench_test.py
+      - config.py
+      - default_api.py
+      - generate_dataset.py
+      - cal_prefix_hit_rate.py
+      - save_file.py
+
+# 仅固定顶层来源。下层版本要求从父提交的原声明读取，
 # 不在这里复制另一套 pin；业务版本与本机能力另行初始化。

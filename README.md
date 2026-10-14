@@ -30,6 +30,14 @@ cd ascend-agent-workbench
 git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-workspace deps/cannbot-skills deps/matt-pocock-skills
 ```
 
+使用服务性能压测入口时，准备固定版本的工具源码：
+
+```bash
+git -c submodule.recurse=false submodule update --init -- deps/aisbench-auto-tools-prefix
+```
+
+该步骤只取得源码；AISBench、tokenizer等运行依赖按需在请求发起端准备，无需在全部服务节点安装。
+
 该命令只准备三个顶层来源仓库。不要对整个依赖树无条件执行递归初始化，否则可能另外克隆 workspace 内的业务代码。目标提交由父仓库 gitlink 和 [sources.lock.yaml](upstream/sources.lock.yaml) 固定。
 
 ## 后续任务
@@ -41,6 +49,7 @@ git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-works
 | [init](.agents/skills/ascend-workbench-init/SKILL.md) | 本机接入、业务仓库/身份准备、初始化报告；按状态复用下层步骤 |
 | [dependencies](.agents/skills/ascend-workbench-dependencies/SKILL.md) | 版本变化、相关传递依赖、升级与组合验证 |
 | [workflow](.agents/skills/ascend-agent-workflow/SKILL.md) | 目标、事实、验收、领域路由与整体推进 |
+| [performance-benchmark](.agents/skills/ascend-performance-benchmark/SKILL.md) | 现有服务吞吐、时延、并发与公共前缀压测；优先调用AISBench工具并核验原生结果 |
 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/SKILL.md) | 只读输出指定环境复现清单，记录CANN/代码/PR/依赖替换；部署前也调用，不自动启动或升级 |
 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 依赖、子任务、写入归属与资源边界 |
 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
@@ -53,7 +62,11 @@ git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-works
 
 涉及产物搬迁/安装来源或原生扩展兼容问题时，可按需使用 [通用运行探针与产物核对](docs/runtime-tools.md)。两个 Python 标准库工具独立运行，复用原远程执行能力；普通业务任务不默认增加导入、NPU 或 PD 检查。
 
+生成式AISBench评测的指标、有效回答与输出审计可使用[证据报告工具](docs/aisbench-evidence.md)，消费已有明确run，分别给出逐组和总体报告；官方分数与格式异常不混为一个通过结论。
+
 ## 文档与记录
+
+后续提到“性能压测”“吞吐/延迟测试”或“prefix cache测试”，默认由[性能压测skill](.agents/skills/ascend-performance-benchmark/SKILL.md)调用 `aisbench_auto_tools_prefix`。工具源码锁定且保持只读，服务地址、模型路径和负载参数放在每次任务的可写副本；不因发起压测自动重启既有服务。精度评测、算子打流和纯profiling保持原有入口。
 
 - [AGENTS.md](AGENTS.md)：所有会话共享的行为规则与导航。
 - [项目框架](docs/项目框架.md)：架构、职责、init 去重与建设标准。

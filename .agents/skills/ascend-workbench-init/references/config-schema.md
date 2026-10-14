@@ -29,7 +29,7 @@
 | `execution.provider_refs` | mapping | 已有底层 provider/profile/config/id 的引用 |
 | `execution.artifact_root` | 路径 | 本机缓存及大型原始产物位置 |
 
-`dependencies` 与 lock 的 `sources` 使用相同 id：`workspace`、`cannbot`、`matt`。lock 保存 `{path, url, commit, purpose, declared_dependencies}`，其中 `declared_dependencies` 是父仓原声明的相对文件路径引用。配置 path 可绑定已有外部 checkout；与 lock 记录不同则核对来源和实际 SHA，并报告偏离，不能悄悄改 lock 或切版本。没有配置时使用 lock 路径查询资料现状，不替用户决定业务绑定。
+`dependencies` 与 lock 的 `sources` 使用相同 id：`workspace`、`cannbot`、`matt` 及服务性能压测首选 `aisbench_auto_tools_prefix`。lock 保存 `{path, url, commit, purpose, declared_dependencies}`，其中 `declared_dependencies` 是父仓原声明的相对文件路径引用。配置 path 可绑定已有外部 checkout；与 lock 记录不同则核对来源和实际 SHA，并报告偏离，不能悄悄改 lock 或切版本。没有配置时使用 lock 路径查询资料现状，不替用户决定业务绑定。
 
 enabled 只表示选择来源，仍须逐个核对其适用初始化。本轮消费方式、下层身份、直接工具/协调/服务器各自状态与用户选择保存于 init_report，原状态与 pin 仍由下层管理。remote_execution=false 不代表 workspace 本机身份/profile 可以默认跳过；也不代表用户已决定本轮所有执行组件的范围。
 

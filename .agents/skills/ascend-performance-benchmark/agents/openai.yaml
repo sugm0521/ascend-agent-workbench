@@ -1,0 +1,4 @@
+interface:
+  display_name: "服务性能压测"
+  short_description: "使用AISBench测量现有服务的吞吐、时延与公共前缀缓存，核验请求结果并交付日志"
+  default_prompt: "使用 $ascend-performance-benchmark 按指定负载压测当前模型服务，核验原生结果并交付性能指标与日志。"

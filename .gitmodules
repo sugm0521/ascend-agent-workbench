@@ -7,3 +7,6 @@
 [submodule "deps/matt-pocock-skills"]
 	path = deps/matt-pocock-skills
 	url = https://github.com/mattpocock/skills.git
+[submodule "deps/aisbench-auto-tools-prefix"]
+	path = deps/aisbench-auto-tools-prefix
+	url = https://github.com/rayn-zzz/aisbench_auto_tools_prefix.git
