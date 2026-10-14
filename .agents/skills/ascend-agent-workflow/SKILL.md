@@ -27,6 +27,7 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 | 服务性能压测、吞吐/延迟、prefix cache 测试 | [ascend-performance-benchmark](../ascend-performance-benchmark/SKILL.md) | 实际请求结果、工作负载、指标与日志；保留既有服务 |
 | 其他模型性能分析、profiling 或性能回归 | profiling、memory 与 regression 工具；需要服务负载时使用上述压测入口 | 可比工作负载下端到端指标和资源变化 |
 | 模型精度 | correctness、独立 reference、输入与中间结果 | 明确误差标准下偏差路径与回归 |
+| 手工已有容器独立SSH登录入口 | [ascend-container-ssh](../ascend-container-ssh/SKILL.md) | 实际端口、认证和容器归属及用户访问端的登录结果；托管目标按原契约交接 |
 | 算子开发/替换 | 原语义、适用 AscendC 方法与框架运行验证 | 接口/支持范围、正确性、生产场景与集成 |
 | 部署 | 按[部署说明](references/service-deployment.md)选择运行方式、准备容器与环境，再调用适用serving/PD或已核对执行入口 | 启动前版本清单与当前目标路径的真实请求 |
 | 指定环境复现清单 | [ascend-runtime-snapshot](../ascend-runtime-snapshot/SKILL.md)只读整理当前/历史环境，区分选用与实际加载 | 实际版本/代码/PR/依赖替换、来源和未知项；不自动部署或升级 |

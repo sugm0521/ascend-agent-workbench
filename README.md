@@ -51,6 +51,7 @@ git -c submodule.recurse=false submodule update --init -- deps/aisbench-auto-too
 | [workflow](.agents/skills/ascend-agent-workflow/SKILL.md) | 目标、事实、验收、领域路由与整体推进 |
 | [performance-benchmark](.agents/skills/ascend-performance-benchmark/SKILL.md) | 现有服务吞吐、时延、并发与公共前缀压测；优先调用AISBench工具并核验原生结果 |
 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/SKILL.md) | 只读输出指定环境复现清单，记录CANN/代码/PR/依赖替换；部署前也调用，不自动启动或升级 |
+| [container-ssh](.agents/skills/ascend-container-ssh/SKILL.md) | 给手工已有容器配置或恢复独立SSH入口，选择可用端口并验证实际登录；可直接调用 `$ascend-container-ssh` |
 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 依赖、子任务、写入归属与资源边界 |
 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
 | [review](.agents/skills/ascend-task-review/SKILL.md) | 关键结论复核、覆盖、交付与回顾 |

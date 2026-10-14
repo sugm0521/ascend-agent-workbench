@@ -1,0 +1,4 @@
+interface:
+  display_name: "容器独立SSH登录"
+  short_description: "为指定容器选择可用端口并建立或恢复独立SSH登录入口，验证认证与容器归属"
+  default_prompt: "使用 $ascend-container-ssh 为指定容器建立独立SSH登录入口，选择空闲端口并验证实际登录。"

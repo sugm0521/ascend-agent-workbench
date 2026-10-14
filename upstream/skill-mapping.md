@@ -11,6 +11,7 @@
 | skill 改进候选筛选与去重 | [ascend-skill-candidate-review](../.agents/skills/ascend-skill-candidate-review/SKILL.md) | 明确评估/优化请求才启用；优先最小增量，新增检查须有触发条件，不自动建设工具 |
 | HCCL alltoallvc 单机/多机打流 | [ascend-hccl-traffic-test](../.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用原运行工具与 MPI/CANN；支持本地 fork、有限诊断及已明确授权的宿主直接路径，不携带大二进制；日志摘要不代替规模/rank 覆盖 |
 | 服务部署准备与验收 | [部署说明](../.agents/skills/ascend-agent-workflow/references/service-deployment.md) | 通用流程与A5条件命令；区分运行方式、同会话容器延续与显式复用；命令结构模拟不代表远端运行 |
+| 手工已有容器的独立SSH登录入口 | [ascend-container-ssh](../.agents/skills/ascend-container-ssh/SKILL.md) | 选择/复用可用端口，按指定认证配置并验证实际登录；托管目标按原契约交接，不自动重建容器或做NPU smoke |
 | 指定环境复现清单 | [ascend-runtime-snapshot](../.agents/skills/ascend-runtime-snapshot/SKILL.md) | 每次启动前及独立只读输出；字段统一维护，区分历史/模拟/实际加载，不自动部署、升级或NPU验证 |
 | 服务性能压测、吞吐/延迟和公共前缀测试 | [ascend-performance-benchmark](../.agents/skills/ascend-performance-benchmark/SKILL.md)、[aisbench_auto_tools_prefix](../deps/aisbench-auto-tools-prefix/README.md) | 默认优先使用；只在请求端运行，独立可写副本与AISBench环境；精度、算子打流和纯profiling走原入口 |
 | 生成式AISBench评测结果与输出质量证据 | [证据报告工具](../docs/aisbench-evidence.md) | 离线消费显式run/解析器，每组与总汇分开；基础检查和按需审计，不改官方评分、不发请求 |
