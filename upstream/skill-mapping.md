@@ -9,6 +9,7 @@
 | 需求 | 入口 | 接入条件与边界 |
 |---|---|---|
 | skill 改进候选筛选与去重 | [ascend-skill-candidate-review](../.agents/skills/ascend-skill-candidate-review/SKILL.md) | 明确评估/优化请求才启用；优先最小增量，新增检查须有触发条件，不自动建设工具 |
+| 个人工作、项目与知识库改进两份周报 | [ascend-weekly-report](../.agents/skills/ascend-weekly-report/SKILL.md) | 从当前项目及手工/自动变更取证，Markdown与HTML展示；只读汇报与候选评估，不维护知识、实施skill或发布，不承载个人调度时间 |
 | HCCL alltoallvc 单机/多机打流 | [ascend-hccl-traffic-test](../.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用原运行工具与 MPI/CANN；支持本地 fork、有限诊断及已明确授权的宿主直接路径，不携带大二进制；日志摘要不代替规模/rank 覆盖 |
 | 服务部署准备与验收 | [部署说明](../.agents/skills/ascend-agent-workflow/references/service-deployment.md) | 通用流程与A5条件命令；区分运行方式、同会话容器延续与显式复用；命令结构模拟不代表远端运行 |
 | 手工已有容器的独立SSH登录入口 | [ascend-container-ssh](../.agents/skills/ascend-container-ssh/SKILL.md) | 选择/复用可用端口，按指定认证配置并验证实际登录；托管目标按原契约交接，不自动重建容器或做NPU smoke |

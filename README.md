@@ -98,7 +98,8 @@ git -c submodule.recurse=false submodule update --init -- deps/compound-engineer
 - [项目框架](docs/项目框架.md)：架构、职责、init 去重与建设标准。
 - [开发计划](docs/开发计划.md)：工作台自身待办和完成状态。
 - [开发记录](docs/开发记录.md)：实际变化、验证和决定。
-- [每日同步](docs/daily-sync.md)与[知识库](knowledge/README.md)：每天北京时间09:00归档任务、核实并维护知识、检查遗漏发布；推送后逐事项反馈实际变化、验证、提交和保留项。
+- [归档与知识维护](docs/daily-sync.md)：个人任务归档和调度配置留本机，仅按授权发布skill与知识维护内容；实际推送后逐项反馈变化、验证和保留项。
+- [两份工程周报](.agents/skills/ascend-weekly-report/SKILL.md)：个人具体工作与项目/知识改进分别组织，Markdown正文生成HTML阅读和打印版；报告只保存在本机，时间由本机调用方决定。
 - [五种任务模板](docs/templates/任务说明.md)：任务说明、实验、验证矩阵、CI、交付与回顾。
 - [领域映射](upstream/skill-mapping.md)：锁定版本中的真实入口和能力边界。
 - [配置示例](config/workbench.example.yaml)：本机配置的参考结构，`null` 不是默认授权。

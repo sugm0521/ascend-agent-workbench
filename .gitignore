@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 /config/workbench.local.yaml
 /.workbench-local/
+/tasks/
+/knowledge/daily/
 /repos/
 /.codex/config.toml
 /.codex/hooks.json
