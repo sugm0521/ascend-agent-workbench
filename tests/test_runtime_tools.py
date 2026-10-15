@@ -211,6 +211,25 @@ class ArtifactTests(unittest.TestCase):
         wheel = self.make_wheel([("pkg.data/scripts/tool", b"tool")])
         self.assertEqual(artifact.wheel_installation(wheel, {"site": self.source})["status"], "inconclusive")
 
+    def test_record_or_signature_only_wheel_has_no_verifiable_coverage(self):
+        site = self.directory / "empty-site"
+        site.mkdir()
+        for name in ("RECORD", "RECORD.jws", "RECORD.p7s"):
+            with self.subTest(name=name):
+                wheel = self.make_wheel([("pkg.dist-info/" + name, b"installer metadata")])
+                output = self.directory / (name + ".json")
+                result = subprocess.run(
+                    [sys.executable, str(ROOT / "scripts/artifact_manifest.py"), "verify-wheel",
+                     "--wheel", str(wheel), "--site-root", str(site), "--output", str(output)],
+                    capture_output=True, timeout=10)
+                self.assertEqual(result.returncode, 1, result.stderr)
+                report = json.loads(output.read_text(encoding="utf-8"))
+                self.assertEqual(report["status"], "inconclusive")
+                self.assertEqual(report["checked_files"], 0)
+                self.assertEqual(len(report["excluded"]), 1)
+                self.assertIn("no wheel members", " ".join(report["errors"]))
+                self.assertEqual(list(site.iterdir()), [])
+
     def test_wheel_traversal_absolute_and_backslash_rejected(self):
         for name in ("../escape", "/absolute", "C:/escape", "pkg\\escape"):
             with self.subTest(name=name):

@@ -3,6 +3,8 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -169,6 +171,85 @@ class EvidenceReportTests(unittest.TestCase):
         rc, report, _, _, _ = self.run_report([sample()], {'evidence_dir': str(evidence)})
         self.assertEqual(rc, 1)
         self.assertEqual(report['aggregate']['flag:missing_response_evidence'], 1)
+
+    def test_aisbench_mapping_preserves_outer_id_in_json_and_jsonl(self):
+        row = {'id': 0, 'prediction': 'A', 'gold': 'A', 'success': True}
+        without_id = {k: v for k, v in row.items() if k != 'id'}
+        for suffix, obj in [('.json', {'0': without_id, '1': {**row, 'id': 1}}),
+                            ('.jsonl', {'0': without_id, '1': {**row, 'id': '1'}}),
+                            ('.json', [row, {**row, 'id': 1}])]:
+            with self.subTest(suffix=suffix, obj=obj):
+                path = self.root / ('mapping' + suffix)
+                original = json.dumps(obj).encode() + b'\n'
+                path.write_bytes(original)
+                rc, report, output, _, _ = self.run_report([], {
+                    'format': 'aisbench', 'samples': str(path), 'expected_count': 2,
+                    'expected_request': {}, 'parser': {'type': 'choice', 'choices': ['A', 'B'],
+                                                       'source': 'prediction'}})
+                self.assertEqual(rc, 0, report)
+                self.assertEqual(report['groups'][0]['unique_ids'], 2)
+                rows = [json.loads(line) for line in (output / 'round1.samples.jsonl').read_text().splitlines()]
+                self.assertEqual([str(item['id']) for item in rows], ['0', '1'])
+                self.assertEqual(report['aggregate_independent_format_score_percent'], 100)
+                self.assertEqual(path.read_bytes(), original)
+
+    def test_aisbench_invalid_or_conflicting_ids_are_visible_incomplete_inputs(self):
+        row = {'prediction': 'A', 'gold': 'A', 'success': True}
+        invalid = [{'0': {**row, 'id': 1}}, {'': row}, {'0': None},
+                   *[{**row, 'id': key} for key in [None, '', '  ', True, [], {}, 0.5]],
+                   *[{'0': {**row, 'id': key}} for key in [None, '', True, [], {}, 0.0]]]
+        for suffix in ['.json', '.jsonl']:
+            for obj in invalid:
+                with self.subTest(suffix=suffix, obj=obj):
+                    path = self.root / ('invalid' + suffix)
+                    path.write_text(json.dumps(obj) + '\n', encoding='utf-8')
+                    rc, report, _, _, _ = self.run_report([], {
+                        'format': 'aisbench', 'samples': str(path), 'expected_count': 1,
+                        'expected_request': {}, 'parser': {'type': 'choice', 'choices': ['A', 'B']}})
+                    self.assertEqual(rc, 1)
+                    self.assertFalse(report['all_reports_complete'])
+                    self.assertTrue(report['groups'][0]['issues'])
+                    self.assertEqual(report['groups'][0]['unique_ids'], 0)
+
+    def test_mapping_key_can_be_the_string_id(self):
+        path = self.root / 'named-id.jsonl'
+        path.write_text('{"id":{"prediction":"A","gold":"A"}}\n')
+        rc, report, output, _, _ = self.run_report([], {
+            'format': 'aisbench', 'samples': str(path), 'expected_count': 1,
+            'expected_request': {}, 'parser': {'type': 'choice', 'choices': ['A', 'B']}})
+        self.assertEqual(rc, 0, report)
+        self.assertEqual(json.loads((output / 'round1.samples.jsonl').read_text())['id'], 'id')
+        for fmt in ['samples', 'answer-index']:
+            rows = list(reporter.records(path, fmt))
+            self.assertEqual(rows, [{'id': {'prediction': 'A', 'gold': 'A'}}])
+
+    def test_aisbench_duplicate_json_keys_do_not_silently_select_a_record(self):
+        for suffix in ['.json', '.jsonl']:
+            path = self.root / ('duplicates' + suffix)
+            path.write_text('{"0":{"prediction":"A"},"0":{"prediction":"B"}}\n')
+            rc, report, _, _, _ = self.run_report([], {
+                'format': 'aisbench', 'samples': str(path), 'expected_count': 1})
+            self.assertEqual(rc, 1)
+            self.assertIn('duplicate AISBench JSON key', str(report['groups'][0]['issues']))
+
+    def test_aisbench_mapping_cli_exit_codes(self):
+        for inner_id, expected_rc in [(None, 0), (1, 1)]:
+            row = {'prediction': 'A', 'gold': 'A', 'success': True}
+            if inner_id is not None:
+                row['id'] = inner_id
+            source = self.root / 'cli-mapping.jsonl'
+            source.write_text(json.dumps({'0': row}) + '\n')
+            spec = self.root / 'cli-spec.json'
+            spec.write_text(json.dumps({'runs': [{
+                'id': 'round1', 'format': 'aisbench', 'samples': str(source), 'expected_count': 1,
+                'parser': {'type': 'choice', 'choices': ['A', 'B']}}]}))
+            output = self.root / f'cli-output-{expected_rc}'
+            result = subprocess.run([sys.executable, str(ROOT / 'scripts/aisbench_evidence_report.py'),
+                                     '--spec', str(spec), '--output-dir', str(output)],
+                                    capture_output=True, timeout=10)
+            self.assertEqual(result.returncode, expected_rc, result.stderr)
+            report = json.loads((output / 'report.json').read_text())
+            self.assertEqual(report['all_reports_complete'], expected_rc == 0)
 
     def test_malformed_input_is_not_reported_as_empty_success(self):
         path = self.root / 'bad.jsonl'

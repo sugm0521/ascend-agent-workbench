@@ -25,6 +25,9 @@ dependencies:
   aisbench_auto_tools_prefix:
     path: deps/aisbench-auto-tools-prefix
     enabled: true  # 服务性能压测首选；仅在请求发起端准备运行环境
+  awesome_agent_skills:
+    path: deps/awesome-agent-skills
+    enabled: false  # 可选：模型精度诊断手册，只读引用
 
 business:
   repositories:

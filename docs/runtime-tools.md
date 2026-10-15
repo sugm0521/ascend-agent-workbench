@@ -74,6 +74,8 @@ python scripts/artifact_manifest.py verify-wheel --wheel /path/package.whl --sit
 
 不解包归档；拒绝绝对路径、路径穿越、重复成员及 wheel 符号链接；已安装路径解析后不能逃出所选根。安装器会改写的 `.dist-info/RECORD` 及签名明确列为 excluded，其他成员逐字节比较。脚本头部重写、后处理原生库等安装修改可能合理，但本工具仍报告字节差异，由任务解释，不把差异直接当作 pip 或算子故障。
 
+排除后没有可核对成员时（例如只有 `RECORD` 或其签名），报告 `checked_files=0`、明确错误及 `inconclusive`，退出 1。该工具不验证完整 wheel 打包规范；`matched` 仅说明至少一个非排除成员在所选安装路径的字节匹配，不证明 wheel 结构完整或安装成功。
+
 清单状态 complete/incomplete；比较和 wheel 核对状态 matched/different/inconclusive。退出码：0 完整采集或一致；1 采集不完整、存在差异或无定论；2 配置、schema、读取或输出错误。大型清单留在服务器侧，单次上传另检查文件字节数，不自动上传。
 
 ## 验证与来源

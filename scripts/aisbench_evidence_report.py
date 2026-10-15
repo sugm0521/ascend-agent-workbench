@@ -45,6 +45,35 @@ def file_info(path):
     return {'path': str(path), 'bytes': path.stat().st_size, 'sha256': digest(path)}
 
 
+def aisbench_object(pairs):
+    """Reject ambiguous JSON objects instead of silently keeping the last ID."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f'duplicate AISBench JSON key: {key!r}')
+        result[key] = value
+    return result
+
+
+def aisbench_records(obj):
+    def valid_id(value):
+        return type(value) is int or (isinstance(value, str) and bool(value.strip()))
+
+    if not isinstance(obj, dict):
+        raise ValueError('AISBench sample or ID mapping must be an object')
+    if 'id' in obj and not all(isinstance(value, dict) for value in obj.values()):
+        if not valid_id(obj['id']):
+            raise ValueError('invalid AISBench sample ID: expected a nonempty string or integer')
+        yield obj
+        return
+    for key, row in obj.items():
+        if not valid_id(key) or not isinstance(row, dict):
+            raise ValueError('invalid AISBench ID mapping: expected nonempty IDs and object records')
+        if 'id' in row and (not valid_id(row['id']) or str(row['id']) != key):
+            raise ValueError(f'AISBench mapping ID conflicts with inner ID or is invalid: {key!r}')
+        yield {**row, 'id': row.get('id', key)}
+
+
 def records(path, fmt):
     """JSONL is split on actual LF only, never Unicode str.splitlines()."""
     if fmt not in {'aisbench', 'samples', 'answer-index'}:
@@ -53,17 +82,23 @@ def records(path, fmt):
         with path.open(encoding='utf-8') as handle:
             for line in handle:
                 if line.strip():
-                    obj = json.loads(line)
-                    if fmt == 'aisbench' and isinstance(obj, dict) and 'id' not in obj:
-                        yield from obj.values()
+                    obj = json.loads(line, object_pairs_hook=aisbench_object if fmt == 'aisbench' else None)
+                    if fmt == 'aisbench':
+                        yield from aisbench_records(obj)
                     else:
                         yield obj
     else:
-        obj = read_json(path)
-        if isinstance(obj, dict) and 'id' in obj:
-            yield obj
+        if fmt == 'aisbench':
+            with path.open(encoding='utf-8') as handle:
+                obj = json.load(handle, object_pairs_hook=aisbench_object)
+            for item in obj if isinstance(obj, list) else [obj]:
+                yield from aisbench_records(item)
         else:
-            yield from obj if isinstance(obj, list) else obj.values()
+            obj = read_json(path)
+            if isinstance(obj, dict) and 'id' in obj:
+                yield obj
+            else:
+                yield from obj if isinstance(obj, list) else obj.values()
 
 
 def parse_answer(text, parser):

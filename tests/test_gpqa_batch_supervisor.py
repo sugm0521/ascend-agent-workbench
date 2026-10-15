@@ -2,8 +2,10 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from unittest import mock
 
@@ -19,9 +21,159 @@ class BatchSupervisorTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.plan = self.root / 'plan.json'
         self.state = self.root / 'state.json'
+        self.processes = []
 
     def tearDown(self):
+        for process in self.processes:
+            if process.poll() is None:
+                process.kill()
+            process.communicate(timeout=10)
         self.temp.cleanup()
+
+    def start_supervisor(self, resume=False, pause_at=None):
+        # Pause a real process inside the critical section so its competitor
+        # encounters the exact pre-ownership window, without timing guesses.
+        worker = self.root / 'worker.py'
+        worker.write_text('''import importlib.util, sys, time
+from pathlib import Path
+spec = importlib.util.spec_from_file_location('driver', sys.argv[1])
+driver = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(driver)
+root = Path(sys.argv[2])
+hook = sys.argv[4]
+if hook:
+    original = getattr(driver, hook)
+    def pause(*args, **kwargs):
+        result = original(*args, **kwargs)
+        (root / 'ready').write_text('ready')
+        deadline = time.monotonic() + 15
+        while not (root / 'release').exists():
+            if time.monotonic() >= deadline:
+                raise RuntimeError('test gate timed out')
+            time.sleep(.01)
+        return result
+    setattr(driver, hook, pause)
+driver.supervise(root / 'plan.json', root / 'state.json', sys.argv[3] == '1')
+''', encoding='utf-8')
+        kwargs = {'creationflags': subprocess.CREATE_NO_WINDOW} if sys.platform == 'win32' else {}
+        process = subprocess.Popen([sys.executable, str(worker), str(spec.origin),
+                                    str(self.root), '1' if resume else '0', pause_at or ''],
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, **kwargs)
+        self.processes.append(process)
+        return process
+
+    def wait_for_gate(self, process):
+        deadline = time.monotonic() + 10
+        while not (self.root / 'ready').exists():
+            if process.poll() is not None:
+                self.fail('supervisor exited before gate: ' + str(process.communicate()))
+            if time.monotonic() >= deadline:
+                self.fail('supervisor did not reach test gate')
+            time.sleep(.01)
+
+    def assert_contender_rejected(self, process):
+        output, error = process.communicate(timeout=10)
+        self.assertNotEqual(process.returncode, 0, output + error)
+        self.assertIn('state lock busy', error)
+
+    def test_concurrent_initial_launch_cannot_create_or_rewrite_state(self):
+        groups = self.make_plan(1)
+        owner = self.start_supervisor(pause_at='validate_plan')
+        self.wait_for_gate(owner)
+        self.assertFalse(self.state.exists())
+        self.assert_contender_rejected(self.start_supervisor())
+        self.assertFalse(self.state.exists())
+        (self.root / 'release').touch()
+        output, error = owner.communicate(timeout=10)
+        self.assertEqual(owner.returncode, 0, output + error)
+        self.assertEqual(json.loads(self.state.read_text())['status'], 'completed')
+        self.assertEqual((Path(groups[0]['root']) / 'sent.txt').read_text(), 'x')
+
+    def test_concurrent_resume_cannot_overwrite_owner_state(self):
+        groups = self.make_plan(1)
+        driver.atomic_json(self.state, {
+            'plan_sha256': hashlib.sha256(self.plan.read_bytes()).hexdigest(),
+            'status': 'running', 'owner': {'pid': 999999999, 'starttime': 'dead'},
+            'groups': [{'id': 'g0', 'status': 'pending'}]})
+        before = self.state.read_bytes()
+        owner = self.start_supervisor(resume=True, pause_at='same_live')
+        self.wait_for_gate(owner)
+        self.assert_contender_rejected(self.start_supervisor(resume=True))
+        self.assertEqual(self.state.read_bytes(), before)
+        (self.root / 'release').touch()
+        output, error = owner.communicate(timeout=10)
+        self.assertEqual(owner.returncode, 0, output + error)
+        state = json.loads(self.state.read_text())
+        self.assertEqual(state['status'], 'completed')
+        self.assertEqual(state['owner']['pid'], owner.pid)
+        self.assertEqual((Path(groups[0]['root']) / 'sent.txt').read_text(), 'x')
+
+    def test_process_crash_releases_lock_without_removing_sidecar(self):
+        self.make_plan(1)
+        owner = self.start_supervisor(pause_at='validate_plan')
+        self.wait_for_gate(owner)
+        lock = self.state.with_name(self.state.name + '.lock')
+        self.assertTrue(lock.exists())
+        owner.kill()
+        owner.communicate(timeout=10)
+        self.assertFalse(self.state.exists())
+        self.assertEqual(driver.supervise(self.plan, self.state)['status'], 'completed')
+        self.assertTrue(lock.exists())
+
+    def test_running_client_is_preserved_after_supervisor_crash(self):
+        groups = self.make_plan(1)
+        root = Path(groups[0]['root'])
+        groups[0]['command'] = [sys.executable, '-c', '''import time
+from pathlib import Path
+Path('sent.txt').write_text('x')
+deadline = time.monotonic() + 10
+while not Path('client.release').exists():
+    if time.monotonic() > deadline:
+        raise RuntimeError('client gate timed out')
+    time.sleep(.01)
+Path('result.json').write_text('{"samples":1}')
+''']
+        self.plan.write_text(json.dumps({'groups': groups}))
+        owner = self.start_supervisor()
+        client = None
+        try:
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline:
+                if self.state.exists():
+                    state = json.loads(self.state.read_text())
+                    client = state['groups'][0].get('process')
+                    if client and (root / 'sent.txt').exists():
+                        break
+                self.assertIsNone(owner.poll(), 'supervisor exited before starting client')
+                time.sleep(.01)
+            self.assertIsNotNone(client, 'client was not recorded')
+            before = self.state.read_bytes()
+            self.assert_contender_rejected(self.start_supervisor(resume=True))
+            self.assertEqual(self.state.read_bytes(), before)
+            owner.kill()
+            owner.communicate(timeout=10)
+            # The OS lock is released but the unfinished client still owns its
+            # requests: do not turn crash recovery into an implicit retry.
+            with self.assertRaisesRegex(ValueError, 'client command is still running'):
+                driver.supervise(self.plan, self.state, resume=True)
+            self.assertEqual(self.state.read_bytes(), before)
+            self.assertEqual((root / 'sent.txt').read_text(), 'x')
+        finally:
+            (root / 'client.release').touch()
+            if client:
+                deadline = time.monotonic() + 10
+                while driver.same_live(client) and time.monotonic() < deadline:
+                    time.sleep(.01)
+                self.assertFalse(driver.same_live(client), 'task client did not exit')
+
+    def test_exception_releases_lock_and_preserves_state(self):
+        self.make_plan(1)
+        before = b'not valid json'
+        self.state.write_bytes(before)
+        with self.assertRaises(json.JSONDecodeError):
+            driver.supervise(self.plan, self.state, resume=True)
+        with driver.state_lock(self.state):
+            self.assertEqual(self.state.read_bytes(), before)
 
     def make_plan(self, count=2, fail=None, collect=False):
         groups = []

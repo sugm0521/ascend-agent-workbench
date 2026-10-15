@@ -45,6 +45,8 @@ python scripts/aisbench_evidence_report.py --spec /task/selected-runs.json --out
 
 JSONL只按文件实际LF读取，输出中的U+2028不会被当换行切开。解析器必须声明`type`：`choice`需选项列表，`regex`需匹配规则，`nonempty`只检查非空、不计算精度。pattern有且只有一个捕获组；省略pattern时匹配整个去空白文本。`source=prediction`消费预测/已提取答案，`source=final_content`消费原始API最终正文，不能把缺少正文的reasoning当成最终答案。
 
+`aisbench` 的 ID 映射在 JSON 根对象或 JSONL 的每行对象中声明，例如 `{"0":{"prediction":"A","gold":"A","success":true}}`；外层键用作样本 ID，记录无需重复 `id`。若内层已有 `id`，必须与外层键字符串形式一致（整数 `0` 与字符串 `"0"` 一致，`"00"` 与 `0` 不一致），并保留原内层类型。直接记录或 JSON 列表中的记录继续支持内层 `id`。ID 只接受整数或非空白字符串；布尔、浮点、null、容器及内外冲突均记为输入问题，报告不完整、退出 1。重复 JSON 键也显式报错，不静默保留最后一项；这些映射和 ID 校验仅用于 `aisbench`，不改变其他 format 的输入约定。
+
 独立格式分数是该显式解析器下的精确匹配统计，可能不同于官方数据集后处理；官方数值保持原尺度。`official_metric_keys`可指定原结果中需要呈现的数字指标。任务reference、阈值和基线比较继续由原correctness流程负责，不由本工具生成另一套精度通过规则。
 
 request证据只核对显式expected_request中的生成字段（model/max_tokens/temperature/top_p/reasoning_effort/stream/seed/ignore_eos）。缺失字段不当作已确认，重复ID、缺失响应、参数不符、样本数不符和歧义的多次成功重试均显式列为报告不完整；不按文件遍历顺序默选最后一个成功响应。先查已有请求关联，必要时明确最终响应后再报告，不自动重发题目。

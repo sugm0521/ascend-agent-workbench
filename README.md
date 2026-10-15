@@ -2,7 +2,7 @@
 
 `ascend-agent-workbench` 用于需求分析、问题定位、模型性能与精度、算子开发、部署、CI/PR 和工程 skill 开发。它负责组织任务和证据，按需使用已有领域 skill 与执行工具。
 
-首版采用项目规则、七个项目级 skill、Markdown 任务记录和固定版本的领域依赖。没有自建 agent 平台、资源调度器或 GUI。
+工作台采用项目规则、项目级 skill、Markdown 任务记录和固定版本的领域依赖。没有自建 agent 平台、资源调度器或 GUI。
 
 ## 开始使用
 
@@ -108,5 +108,7 @@ git -c submodule.recurse=false submodule update --init -- deps/compound-engineer
 只有用户明确提到任务名字时，才新建对应任务目录存放日志和记录；否则统一放入当前日期命名的 `tasks/MMDD/`，例如 2026-10-12 使用 `tasks/1012/`。当天多个事项用文件名及索引区分，同名文档加事项前缀。具体状态只在各事项的任务说明文件维护，目录归并不改变已有 task_id。大型原始数据与本机报告放 `.workbench-local/`，本机配置放 `config/workbench.local.yaml`；均不提交。`repos/` 下业务仓库各自维护 Git 历史，父项目只记录定位和证据。
 
 ## 验证边界
+
+本地回归统一运行 `python scripts/validate_workbench.py`，覆盖根测试、周报真实渲染与历史路径下的 HCCL helper 测试，并检查文档引用的候选文件集。需要已有 Node.js/marked；解释器和模块目录、可选 skill 格式校验器及提交树检查方式见[本地验证说明](docs/validation.md)。缺运行依赖时明确失败，不自动安装，也不以跳过渲染声称完整回归通过。
 
 首版验证涵盖 skill 格式、引用、领域入口、隔离的行为走查和模拟流程。标准初始化与真实 NPU、模型、服务、CI 验收需要实际任务与环境；来源 checkout 可读不代表远程能力已就绪。实际结果与待完成项见开发计划和开发记录。

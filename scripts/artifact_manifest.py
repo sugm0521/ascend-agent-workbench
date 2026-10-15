@@ -250,6 +250,8 @@ def wheel_installation(path, schemes):
                 result["differences"].append({"path": name, "installed_path": str(destination), "reason": "bytes differ"})
         except (OSError, ValueError) as exc:
             result["differences"].append({"path": name, "installed_path": str(destination), "reason": str(exc)})
+    if not result["checked_files"]:
+        result["errors"].append("no wheel members available for installation byte verification")
     result["status"] = "inconclusive" if result["errors"] else "different" if result["differences"] else "matched"
     result["limits"] = "Wheel-covered bytes only; extra installed files and runtime compatibility are not checked."
     return result

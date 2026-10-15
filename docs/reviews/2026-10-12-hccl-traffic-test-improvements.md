@@ -4,6 +4,9 @@
 
 初轮为整理与评估，用户随后明确授权按收敛范围实施。目标是窄改进现有 `.agents/skills/ascend-hccl-traffic-test/`，不新增 skill、不修改外部维护源或全局安装、不建立另一套SSH/资源管理。原打流任务为 `a5-hccl-eight-node-20261012`，记录现已归并到 `tasks/1012/`；历史硬件和资源状态不代表当前状态。本轮未连接服务器或重新占用NPU。
 
+
+原始审计、日志与专用解析器均为本机证据（链接标记 `local-only`），其他机器克隆后不保证可访问。原实验日期采用本报告的 2026-10-12；下表指纹在 2026-10-15 只读复核，不表示重新执行实验，也不倒填为原实验日的指纹。正文保留方法与适用边界，发布引用约定见[本地验证说明](../validation.md#本机证据与发布引用)。
+
 ## 结论与优先顺序
 
 按用户补充约束收敛：**先考虑两处条件化文档补充：拓扑异常的诊断提示、占用矛盾时的设备句柄排查**。完整rank覆盖解析保留为候选，暂缓公共脚本建设；环境发现只考虑并入原有说明的一句提示。候选有证据不等于必须实现，更不等于每次都执行。
@@ -19,7 +22,7 @@
 
 ## 优先窄补：拓扑异常的条件诊断
 
-来源证据：[配置审计](../../tasks/1012/hccl_topology_override_audit.json)、[首轮失败日志](../../tasks/1012/ccu_ms_first.log)、[失败摘要](../../tasks/1012/ccu_ms_first_summary.json)、[对照后的拓扑与资源核对](../../tasks/1012/hccl_ccu_auto_postcheck.json)。
+来源证据：[配置审计（local-only）](../../tasks/1012/hccl_topology_override_audit.json)、[首轮失败日志（local-only）](../../tasks/1012/ccu_ms_first.log)、[失败摘要（local-only）](../../tasks/1012/ccu_ms_first_summary.json)、[对照后的拓扑与资源核对（local-only）](../../tasks/1012/hccl_ccu_auto_postcheck.json)。
 
 本次21/22在有效/etc视图中存在手工rootinfo，23–28使用驱动自动发现。手工配置平面标签为plane_pg_0/plane_pg_1，自动结果为plane_0/plane_1。同期plog显示rank被分为16与48两组，并增加无协议的第三层；CCU参数检查内部AllGather的selector costTable为空，导致warmup接口ret5（当前版本头文件定义为HCCL_E_NOT_SUPPORT）。只在21/22测试rank的私有挂载命名空间隐藏覆盖文件，拓扑统一为两层，随后两模式都通过。
 
@@ -37,7 +40,7 @@
 
 ## 暂缓建设：可选的完整rank覆盖校验
 
-来源证据：[ccu完整日志](../../tasks/1012/ccu_ms_auto.log)、[aicpu完整日志](../../tasks/1012/aicpu_ts_auto.log)、[两种模式完整覆盖摘要](../../tasks/1012/ccu_ms_auto_summary.json)、[任务专用解析原型](../../tasks/1012/scripts/summarize_attempt.py)。
+来源证据：[ccu完整日志（local-only）](../../tasks/1012/ccu_ms_auto.log)、[aicpu完整日志（local-only）](../../tasks/1012/aicpu_ts_auto.log)、[两种模式完整覆盖摘要（local-only）](../../tasks/1012/ccu_ms_auto_summary.json)、[任务专用解析原型（local-only）](../../tasks/1012/scripts/summarize_attempt.py)。
 
 本轮只读复核：现有helper对失败日志判failed、识别64次接口失败；对两份成功日志判passed_observed，但coverage_verified均为false。任务原型额外验证每模式27档×64rank=1728条校验、64条rank退出及实际host映射，才确认完整覆盖。计划请求8B，程序实际将最小值上调到64B；原型据实际声明与日志验证27档，而非误报30档。
 
@@ -55,7 +58,7 @@
 
 ## 优先窄补：占用矛盾时的设备句柄排查
 
-来源证据：[初次资源预检](../../tasks/1012/hccl_prelaunch_admission.json)、[残留进程归属](../../tasks/1012/hccl_residual_device_owners.json)、[最终启动前检查](../../tasks/1012/hccl_final_prelaunch_gate.json)。
+来源证据：[初次资源预检（local-only）](../../tasks/1012/hccl_prelaunch_admission.json)、[残留进程归属（local-only）](../../tasks/1012/hccl_residual_device_owners.json)、[最终启动前检查（local-only）](../../tasks/1012/hccl_final_prelaunch_gate.json)。
 
 本次npu-smi已无进程，但23仍有两个vLLM支撑PID持有/dev/davinci_manager。只看/dev/davinciN的fuser会漏掉；/proc FD、comm、cgroup与namespace交叉核对后，在用户明确释放设备授权下结束了这两个进程。
 
@@ -65,7 +68,7 @@
 
 ## P2：有界环境发现
 
-来源证据：[初始环境探测](../../tasks/1012/hccl_environment_probe.json)、[复用路径发现](../../tasks/1012/hccl_reuse_inventory.json)、[宿主同版本/同库证据](../../tasks/1012/hccl_host_cann_baseline.json)。
+来源证据：[初始环境探测（local-only）](../../tasks/1012/hccl_environment_probe.json)、[复用路径发现（local-only）](../../tasks/1012/hccl_reuse_inventory.json)、[宿主同版本/同库证据（local-only）](../../tasks/1012/hccl_host_cann_baseline.json)。
 
 PATH没有mpirun不代表未安装；/usr/local/Ascend只有driver也不代表没有toolkit。本次最终在8台复用了/usr/local/mpich与<CANN_INSTALL_ROOT>，避免了容器版本混用和不必要安装。
 
@@ -86,3 +89,22 @@ PATH没有mpirun不代表未安装；/usr/local/Ascend只有driver也不代表�
 评估时工作台HEAD为45efc9a751eb443e94b5e235a4a57f27560d91e7。HCCL维护源基线SHA256：SKILL.md=053715cbb9fa7409c2fafb0d52bfe85dfc3e09984ac486470c865ef9384f6d61；environment.md=5f35875f787075ab6b6d1812110e1f798f52cbaadea33967a472ed6338422c4c；hccl_traffic.py=afa5211682c5b8233aebf6e246d59f1aa45e08ebd798aa6c85a1ec04c8bbce01。
 
 本轮已授权的最小文档增补完成。完整rank解析继续暂缓，重复需求出现或用户明确建设时再评估，不因本次批准自动扩展；提交/推送仍沿用用户审核边界。
+
+## 本机来源指纹
+
+| 本机路径（local-only） | 字节数 | SHA256（2026-10-15 复核） |
+|---|---:|---|
+| `tasks/1012/hccl_topology_override_audit.json` | 9980 | `b5036d3d595f7ff0da0b916b9151e93c3d2a137dd48ab61cd539f217d139a5ec` |
+| `tasks/1012/ccu_ms_first.log` | 15226 | `2164b5d466a8f04e4b5c41c787b8def8c7907fe8bf240a0157d1444cc9f4b284` |
+| `tasks/1012/ccu_ms_first_summary.json` | 1049 | `2d37cba19e2f299cca98496bc2ac41d051bf7dc356c7b7744b838b2bf5de2a55` |
+| `tasks/1012/hccl_ccu_auto_postcheck.json` | 22163 | `435585931c03a6f6f806b88dd583473cab9d767efb590b09b16e370a4156c170` |
+| `tasks/1012/ccu_ms_auto.log` | 110484 | `64586452d79fd73fabfa68ce7d1c3bee0a7879537166d141736bb469fc1e19df` |
+| `tasks/1012/aicpu_ts_auto.log` | 110484 | `d7b85bd57c23bd14847ff79b8244f684c2548622b674743e5891141147559584` |
+| `tasks/1012/ccu_ms_auto_summary.json` | 6825 | `6a54bbbdb6516bfef84ab8c182bc1b314c88150e5b0779741e4618de67094a1a` |
+| `tasks/1012/scripts/summarize_attempt.py` | 4181 | `58ea18f9ce8bed5fd883c24e71d79c379cf9a19ac88bce37da2f021a12a41318` |
+| `tasks/1012/hccl_prelaunch_admission.json` | 20733 | `998b084e88f800dd594e6f5eaa8fa293b87605b47af55069a45ec3b1bcd2da03` |
+| `tasks/1012/hccl_residual_device_owners.json` | 3581 | `a109e2ea1d382f6d6a907d0bcd35678939c3a353bba16c71fe7ed2206b8e09ed` |
+| `tasks/1012/hccl_final_prelaunch_gate.json` | 11179 | `397d9f90acdab6015f4862eb132d3206485793e6d9f90a8e6bde985a2c2ccf46` |
+| `tasks/1012/hccl_environment_probe.json` | 38318 | `15a52efd5dffd6fe140de3768dd60eaa8bb62b46be3e7b68379ad8001ccff9f3` |
+| `tasks/1012/hccl_reuse_inventory.json` | 22357 | `be2ba78ce6dc4e928e0a08728ab6157a6de09294a131fe0746513ada18bcb3f2` |
+| `tasks/1012/hccl_host_cann_baseline.json` | 44503 | `6e03760d26eb76c2ea5129c9a385754f6dc7e4d66daec1a37cbb0d4ea769fb4b` |
