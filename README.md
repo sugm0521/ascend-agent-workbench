@@ -109,6 +109,6 @@ git -c submodule.recurse=false submodule update --init -- deps/compound-engineer
 
 ## 验证边界
 
-本地回归统一运行 `python scripts/validate_workbench.py`，覆盖根测试、周报真实渲染与历史路径下的 HCCL helper 测试，并检查文档引用的候选文件集。需要已有 Node.js/marked；解释器和模块目录、可选 skill 格式校验器及提交树检查方式见[本地验证说明](docs/validation.md)。缺运行依赖时明确失败，不自动安装，也不以跳过渲染声称完整回归通过。
+本地回归先按 `package-lock.json` 执行 `npm ci --ignore-scripts` 准备固定渲染依赖，再运行 `python scripts/validate_workbench.py`，覆盖根测试、真实周报渲染和 HCCL helper 测试。Python 3.10+、Git、Node.js 22.12+ 是声明的运行前提，不依赖客户端私有模块目录；可选 skill 格式校验器及提交树检查方式见[本地验证说明](docs/validation.md)。
 
 首版验证涵盖 skill 格式、引用、领域入口、隔离的行为走查和模拟流程。标准初始化与真实 NPU、模型、服务、CI 验收需要实际任务与环境；来源 checkout 可读不代表远程能力已就绪。实际结果与待完成项见开发计划和开发记录。

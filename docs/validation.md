@@ -1,45 +1,34 @@
-# 本地验证与引用边界
+# 干净克隆验证
 
-在实际工作台根运行：
+所需运行时为 Python 3.10+、Git 和 Node.js 22.12+。周报渲染的 `marked` 版本由仓库的 `package.json` / `package-lock.json` 固定；不需要当前作者的客户端缓存、私有模块目录或历史实验文件。
+
+在新克隆的工作台根运行：
 
 ```sh
+npm ci --ignore-scripts
 python scripts/validate_workbench.py
 ```
 
-此入口使用当前 Python（3.10+ 标准库）、已有 Git、Node.js 和 `marked`，不安装软件、不联网、不初始化依赖仓、不连接服务器或占用 NPU。它先核对文档引用，再运行 `tests/` 的全部测试（含真实 Node 渲染）及历史路径下 HCCL helper 的测试。任何必需步骤失败都返回非零；平台权限或 POSIX 语义导致的用例跳过保留在测试摘要中，不能作为该分支已实测的证据。
+依赖安装采用所选网络环境的正常 registry/proxy/CA 配置，不关闭 TLS 验证。安装目录 `node_modules/` 不提交。统一检查覆盖根测试、真实 Node 渲染和 HCCL helper 的合成测试；不连接服务器、不占用 NPU、不安装领域子模块或启动模型。平台权限或 POSIX 语义导致的用例跳过会在摘要中列出，不能当作该分支已实测。
 
-## 运行时与 skill 格式校验
+## 可选客户端集成
 
-默认从 `NODE_BINARY` 或 PATH 定位 Node，从当前进程 `NODE_PATH`/Node 模块机制定位已有 `marked`。可显式传入本机已找到的路径：
+默认从 `NODE_BINARY` 或 PATH 定位 Node，使用项目安装的 `marked`。已有兼容运行时可用 `--node` 指定；`--node-modules` / `NODE_PATH` 仅用于现有环境的附加模块搜索，不是干净克隆的必需条件。
 
-```sh
-python scripts/validate_workbench.py --node /actual/node --node-modules /actual/node_modules
-```
+客户端提供的 skill-creator `quick_validate.py` 是可选的附加格式检查；可通过 `--skill-validator` 指向实际可用校验器，缺省会明确报告未执行。它不参与项目代码、报告渲染或根测试的必需执行路径。涉及 skill 修改时仍按相应 skill 开发规范完成适用校验，不伪造未运行的结果。
 
-`marked` 需要提供当前渲染器使用的 `Marked`/`Renderer` 接口。路径是占位符；缺运行时或接口不兼容会报错，修复环境选择按本轮授权处理。公共脚本不硬编码客户端缓存路径，也不自动调用包管理器。
+仅运行 `python -m unittest discover -s tests -v` 不包含历史路径下的 HCCL 套件。直接运行根测试时缺 Node/marked 可能跳过渲染；统一入口会提前报告依赖缺口，不以漏测代替完整通过。
 
-skill-creator 的 `quick_validate.py` 属于客户端提供的技能工具，不是本仓安装的 Python 包。已存在时可把其实际路径加入同一次检查：
+## 发布引用检查
 
-```sh
-python scripts/validate_workbench.py --node /actual/node --node-modules /actual/node_modules --skill-validator /actual/skill-creator/scripts/quick_validate.py
-```
-
-校验器及其 Python 依赖由该来源提供，证据中记录实际路径/版本或文件指纹。未提供时明确报告 skill 专用格式校验未执行；工具回归通过不等于这一项已完成。无需为校验自动安装全局 skill 或第三方库。
-
-仅执行 `python -m unittest discover -s tests -v` 属于部分检查，未包含历史 HCCL 套件。无 Node/marked 时，直接运行根测试可能跳过渲染；统一入口则会提前报告缺口。
-
-## 本机证据与发布引用
-
-默认引用检查的候选文件集来自 Git 已跟踪文件及未被忽略的新文件；被忽略的本机日志即使实际存在，也不会让发布引用自动通过。检查提交快照时使用：
+引用检查使用 Git 候选文件集，不依赖当前机器的文件存在性。已忽略文件、已删除文件或作者本机材料不能满足仓内引用。检查最终提交树：
 
 ```sh
 python scripts/validate_workbench.py --links-only --links-ref HEAD
 ```
 
-`--links-ref` 只选择文档检查所用提交树；工具和测试仍来自当前工作目录。检查待发布内容时必须核对最终提交/候选文件清单，工作区未忽略的新文件不等于已提交。
+`--links-ref` 只选择文档来源；工具和测试仍来自当前工作目录。默认候选集包括未被忽略的新文件，发布时还须核对最终提交白名单。
 
-持续维护文档引用未发布的 `tasks/` 或 `.workbench-local/` 原始证据时，在链接名称中明确标注 `local-only`，说明原证据时间、指纹复核时间和可访问范围，正文保留可读结论及适用边界。缺失的公开说明不能用此标记掩盖。原始大日志、个人任务进度和运行回执继续留本机，不为消除断链上传它们。
+本机原始资料及其路径、文件名、大小和哈希索引不进入仓库。缺失文件链接、作者本机绝对文件链接一律报错；`local-only` 标签和历史任务目录没有放行例外。原始实验可在个人环境保留，仓库正文须给出自包含的方法与结论边界，必要代码、合成回归材料必须随仓库发布。
 
-旧版已跟踪 `tasks/` 资料是历史快照，其中指向未跟踪任务产物或 `.workbench-local/` 的链接按历史本机证据单独列出，不作为跨机器可访问入口验收。引用检查分别输出未标记错误、显式 local-only、历史 local-only 和未检查的依赖仓链接。外部来源允许按用途未初始化，版本/入口可读性由 init/dependencies 的相关检查负责；此工具不证明外部链接、文内锚点或所有 Markdown 语法均有效。
-
-本轮统一的是本地回归入口；仓内没有因此新增远端 CI 执行或 NPU 验收记录。
+领域依赖允许按用途未初始化，因此本检查单独列出依赖仓链接未验项；其固定来源与准备方法由 README、source lock 及 init/dependencies 管理。检查不验证外部网站、文内锚点或所有 Markdown 语法，也不把合成回归当作真实 HCCL/NPU/模型验收。

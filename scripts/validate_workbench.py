@@ -25,8 +25,9 @@ def check_links(root, ref=None):
     paths = (git(root, 'ls-tree', '-r', '--name-only', '-z', ref) if ref else
              git(root, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'))
     known = set(paths.rstrip('\0').split('\0')) - {''}
-    result = {'errors': [], 'local_only': [], 'historical_local_only': [],
-              'dependency_links_unchecked': 0, 'checked': 0}
+    if not ref:
+        known = {p for p in known if (root / p).exists() or (root / p).is_symlink()}
+    result = {'errors': [], 'dependency_links_unchecked': 0, 'checked': 0}
     for source in sorted(known):
         if not source.endswith('.md') or source.startswith('deps/'):
             continue
@@ -35,24 +36,24 @@ def check_links(root, ref=None):
         for match in LINK.finditer(text):
             label, href = match.groups()
             href = href.split('#', 1)[0]
-            if not href or href.startswith(('/', '#')) or re.match(r'^[A-Za-z][A-Za-z0-9+.-]*:', href):
+            if not href or re.match(r'^(?:https?|mailto):', href, re.I):
+                continue
+            item = {'source': source, 'line': text[:match.start()].count('\n') + 1, 'target': href}
+            if re.match(r'^(?:[A-Za-z]:[\\/]|file:)', href, re.I) or 'local-only' in label:
+                result['errors'].append(item)
                 continue
             target = posixpath.normpath(posixpath.join(posixpath.dirname(source), unquote(href)))
+            item['target'] = target
+            if target.startswith('.workbench-local/'):
+                result['errors'].append(item)
+                continue
             if target.startswith('deps/'):
                 result['dependency_links_unchecked'] += 1
                 continue
             result['checked'] += 1
             if target in known or any(p.startswith(target + '/') for p in known):
                 continue
-            item = {'source': source, 'line': text[:match.start()].count('\n') + 1, 'target': target}
-            local = target.startswith(('tasks/', '.workbench-local/'))
-            if local and 'local-only' in label:
-                result['local_only'].append(item)
-            elif local and source.startswith('tasks/'):
-                # Already tracked task archives predate the local-only publication rule.
-                result['historical_local_only'].append(item)
-            else:
-                result['errors'].append(item)
+            result['errors'].append(item)
     return result
 
 
@@ -87,7 +88,7 @@ def main(argv=None):
             env['NODE_PATH'] = str(args.node_modules.resolve()) + (os.pathsep + env['NODE_PATH'] if env.get('NODE_PATH') else '')
         probe = "const {Marked,Renderer}=require('marked'); if(typeof Marked!=='function'||typeof Renderer!=='function') process.exit(1)"
         if run([node, '-e', probe], env):
-            raise ValueError('marked is unavailable or incompatible; supply --node-modules or NODE_PATH. No package was installed.')
+            raise ValueError('marked is unavailable or incompatible; run npm ci --ignore-scripts in the workbench root. Existing installations may use --node-modules or NODE_PATH. No package was installed.')
         if args.skill_validator and not args.skill_validator.is_file():
             raise ValueError('--skill-validator must point to an existing quick_validate.py')
         # Root discovery includes renderer behavior; HCCL retains its historical path.

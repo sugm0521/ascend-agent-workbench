@@ -37,18 +37,29 @@ class ReferenceTests(unittest.TestCase):
         value = CHECKER.check_links(self.root)
         self.assertEqual(value['errors'][0]['target'], 'tasks/evidence.json')
 
-    def test_marked_local_evidence_and_historical_archives_are_separate(self):
+    def test_local_only_labels_and_historical_archives_cannot_bypass_checks(self):
         self.write('README.md', '[Evidence (local-only)](tasks/evidence.json)')
         self.write('tasks/old.md', '[Evidence](../.workbench-local/run.json)')
         self.git('add', '-f', 'tasks/old.md')
         value = CHECKER.check_links(self.root)
-        self.assertEqual(value['errors'], [])
-        self.assertEqual(len(value['local_only']), 1)
-        self.assertEqual(len(value['historical_local_only']), 1)
+        self.assertEqual(len(value['errors']), 2)
+
+    def test_local_absolute_paths_are_rejected_even_if_present(self):
+        self.write('README.md', '[Windows](C:/Users/private/evidence.json) [File](file:///tmp/evidence.json)')
+        self.assertEqual(len(CHECKER.check_links(self.root)['errors']), 2)
 
     def test_local_only_label_cannot_hide_missing_public_document(self):
         self.write('README.md', '[Missing (local-only)](docs/missing.md)')
         self.assertEqual(len(CHECKER.check_links(self.root)['errors']), 1)
+
+    def test_deleted_worktree_target_does_not_count_as_available(self):
+        self.write('README.md', '[Reference](docs/removed.md)')
+        self.write('docs/removed.md', '# Removed')
+        self.git('add', '.')
+        (self.root / 'docs/removed.md').unlink()
+        errors = CHECKER.check_links(self.root)['errors']
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]['target'], 'docs/removed.md')
 
     def test_committed_reference_does_not_read_dirty_or_untracked_repairs(self):
         self.write('README.md', '[Missing](docs/new.md)')
@@ -70,8 +81,9 @@ class ReferenceTests(unittest.TestCase):
         if not node:
             self.skipTest('Existing Node.js is required for incompatible-module regression')
         self.write('node_modules/marked/index.js', 'module.exports = {};')
+        self.write('scripts/validate_workbench.py', (ROOT / 'scripts/validate_workbench.py').read_text(encoding='utf-8'))
         result = subprocess.run(
-            [sys.executable, str(ROOT / 'scripts/validate_workbench.py'), '--node', node,
+            [sys.executable, str(self.root / 'scripts/validate_workbench.py'), '--node', node,
              '--node-modules', str(self.root / 'node_modules')],
             cwd=ROOT, capture_output=True, text=True, encoding='utf-8', timeout=30)
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)

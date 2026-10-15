@@ -1,11 +1,8 @@
 # 八机 HCCL 打流的 skill 改进候选
 
-评估及实施日期：2026-10-12，Asia/Shanghai。状态：**最小文档增补 implemented；完整rank解析 deferred**。实施状态与验证见[任务说明](../../tasks/1012/HCCL-skill评估-任务说明.md)。
+评估及实施日期：2026-10-12，Asia/Shanghai。状态：**最小文档增补 implemented；完整rank解析 deferred**。现行方法见[HCCL skill](../../.agents/skills/ascend-hccl-traffic-test/SKILL.md)及其[环境准备与故障边界](../../.agents/skills/ascend-hccl-traffic-test/references/environment.md)。
 
-初轮为整理与评估，用户随后明确授权按收敛范围实施。目标是窄改进现有 `.agents/skills/ascend-hccl-traffic-test/`，不新增 skill、不修改外部维护源或全局安装、不建立另一套SSH/资源管理。原打流任务为 `a5-hccl-eight-node-20261012`，记录现已归并到 `tasks/1012/`；历史硬件和资源状态不代表当前状态。本轮未连接服务器或重新占用NPU。
-
-
-原始审计、日志与专用解析器均为本机证据（链接标记 `local-only`），其他机器克隆后不保证可访问。原实验日期采用本报告的 2026-10-12；下表指纹在 2026-10-15 只读复核，不表示重新执行实验，也不倒填为原实验日的指纹。正文保留方法与适用边界，发布引用约定见[本地验证说明](../validation.md#本机证据与发布引用)。
+初轮为整理与评估，用户随后明确授权按收敛范围实施。目标是窄改进现有 `.agents/skills/ascend-hccl-traffic-test/`，不新增 skill、不修改外部维护源或全局安装、不建立另一套SSH/资源管理。本报告保留当时的建设决定与历史实验结论摘要，不作为当前硬件、资源状态或新环境的验收证据；本次文档整理未连接服务器或重新占用 NPU。
 
 ## 结论与优先顺序
 
@@ -22,9 +19,7 @@
 
 ## 优先窄补：拓扑异常的条件诊断
 
-来源证据：[配置审计（local-only）](../../tasks/1012/hccl_topology_override_audit.json)、[首轮失败日志（local-only）](../../tasks/1012/ccu_ms_first.log)、[失败摘要（local-only）](../../tasks/1012/ccu_ms_first_summary.json)、[对照后的拓扑与资源核对（local-only）](../../tasks/1012/hccl_ccu_auto_postcheck.json)。
-
-本次21/22在有效/etc视图中存在手工rootinfo，23–28使用驱动自动发现。手工配置平面标签为plane_pg_0/plane_pg_1，自动结果为plane_0/plane_1。同期plog显示rank被分为16与48两组，并增加无协议的第三层；CCU参数检查内部AllGather的selector costTable为空，导致warmup接口ret5（当前版本头文件定义为HCCL_E_NOT_SUPPORT）。只在21/22测试rank的私有挂载命名空间隐藏覆盖文件，拓扑统一为两层，随后两模式都通过。
+历史实验中，部分节点使用手工 rootinfo，其余节点使用驱动自动发现；两类配置的通信平面标签不同。同期 plog 显示 rank 分组与额外通信层级异常，CCU 预热中的 selector 无可用选择；在测试进程的私有挂载命名空间隔离手工配置后，两种打流模式通过。该结果支持在对应异常下检查有效配置来源，不能仅凭标签不同判定故障，也不能证明宿主配置已永久修复。
 
 以下是适用时的诊断边界，供实施时裁剪，不是每次执行的新增步骤。仅在发现自定义配置混用、拓扑来源变化或selector/层级异常时，沿现有失败路由展开：
 
@@ -36,75 +31,48 @@
 
 稳定输入/输出：参与节点与实际执行环境；只读配置/日志证据 → 配置来源与语义差异、失败阶段、候选实验、部署边界。正常单机/同构环境不强制额外A5诊断。维护成本低到中，主要为条件化文档，不固化本次IP、路径或plane重命名方案。
 
-验证方式：用本次失败/成功证据核对诊断边界，并审阅正常环境不会触发额外排查；纯文档补充不新增远端实验。缺少plog/不认识格式时保留无定论。不得因为本次配置问题而自动移动其他任务的系统文件。
+验证方式：用目标环境的失败/成功对照核对诊断边界，审阅正常环境不会触发额外排查；纯文档补充不要求新增远端实验。缺少 plog 或不认识格式时保留无定论，不得自动移动其他任务的系统文件。
 
 ## 暂缓建设：可选的完整rank覆盖校验
 
-来源证据：[ccu完整日志（local-only）](../../tasks/1012/ccu_ms_auto.log)、[aicpu完整日志（local-only）](../../tasks/1012/aicpu_ts_auto.log)、[两种模式完整覆盖摘要（local-only）](../../tasks/1012/ccu_ms_auto_summary.json)、[任务专用解析原型（local-only）](../../tasks/1012/scripts/summarize_attempt.py)。
-
-本轮只读复核：现有helper对失败日志判failed、识别64次接口失败；对两份成功日志判passed_observed，但coverage_verified均为false。任务原型额外验证每模式27档×64rank=1728条校验、64条rank退出及实际host映射，才确认完整覆盖。计划请求8B，程序实际将最小值上调到64B；原型据实际声明与日志验证27档，而非误报30档。
+历史复核中，现有 helper 能识别接口失败，对成功日志仅给出 `passed_observed`，不证明完整覆盖。专用解析曾额外核对每模式 27 档 × 64 rank 的校验、rank 退出及实际 host 映射；程序将请求的最小尺寸从 8B 上调至 64B，因此按实际声明与观测核对 27 档，不能按原请求误报为 30 档。这是解释覆盖边界的历史示例，不构成对任意版本或当前任务的通用验收。
 
 建议稳定接口（名称实施时按现有CLI风格确定）：显式提供计划/预期rank与host映射、数据规模/步进/迭代，以及可用的rank校验/退出证据格式；输出requested/effective/observed规模、遗漏/重复/矛盾项、覆盖状态和日志完整性证据。保持默认passed_observed语义；证据不足时不将coverage_verified提升为true。
 
 必要约束：
 
-- 不能直接复制原型里的64rank、rack08os名称、factor=2、任务路径；从显式计划和实际MPI布局取得这些信息，不默认rank编号连续分块分配到各host。
+- 不能直接复制示例中的固定 rank 数、节点名、步进或任务路径；从显式计划和实际MPI布局取得这些信息，不默认rank编号连续分块分配到各host。
 - 区分用户要求、程序声明、真实观测。程序自动调整尺寸要注明实际原因和范围；若违背用户明确的必需输入，应标未覆盖，不能把声明当成自动降低验收标准的授权。
 - 已识别的rank×size记录须完整、无重复冲突，校验必须启用且错误为0；退出记录和host映射必须完整；结果表、接口错误、终态均须通过。
 - 无逐rank成功/退出证据的旧版本，继续人工或原执行工具验收，不臆造证据。可选日志标记只在核对过的任务源码副本/包装器产生，不自动改CANN安装源。
 - 按现有artifact工具/原日志传输能力核对远端字节或hash，截断、UTF8损坏、未知格式保持无定论。不要引入新的远程执行或上传机制。
 
-维护成本中等，当前暂缓。若后续确认建设，只验证新增解析分支的代表成功、覆盖缺失和错误记录，复用已有退出码/截断等测试；不按1/2/8机或所有输入组合铺矩阵，不为日志解析重复跑NPU。已有旧helper测试位于tasks/2026-10-08-hccl-light-skill/scripts/test_hccl_traffic.py，确需维护新能力时再复用可发现的测试入口。
+维护成本中等，当前暂缓。若后续确认建设，只验证新增解析分支的代表成功、覆盖缺失和错误记录，复用已有退出码/截断等测试；不按1/2/8机或所有输入组合铺矩阵，不为日志解析重复跑NPU。现有[helper](../../.agents/skills/ascend-hccl-traffic-test/scripts/hccl_traffic.py)只负责计划生成与已有日志摘要；确需建设新能力时再扩展对应测试。
 
 ## 优先窄补：占用矛盾时的设备句柄排查
 
-来源证据：[初次资源预检（local-only）](../../tasks/1012/hccl_prelaunch_admission.json)、[残留进程归属（local-only）](../../tasks/1012/hccl_residual_device_owners.json)、[最终启动前检查（local-only）](../../tasks/1012/hccl_final_prelaunch_gate.json)。
-
-本次npu-smi已无进程，但23仍有两个vLLM支撑PID持有/dev/davinci_manager。只看/dev/davinciN的fuser会漏掉；/proc FD、comm、cgroup与namespace交叉核对后，在用户明确释放设备授权下结束了这两个进程。
+历史实验中，管理查询未列进程，但仍有业务支撑进程持有 `/dev/davinci_manager`；仅检查 `/dev/davinciN` 会漏列。结合 FD、comm、cgroup 与 namespace 核对归属，且取得明确释放授权后才清理。这只支持按矛盾触发进一步排查，不能把 manager 句柄直接等同于某卡忙碌。
 
 保留现有占用检查；只有npu-smi与设备占用证据矛盾、释放后仍有业务残留或初始化报占用时，才补查实际存在的manager设备句柄，按相关PID定位FD和归属，不默认全机扫描。manager句柄不自动等于某张卡被业务占用，也不能据此杀管理服务、另一个任务或当前探测进程。授权与清理后的核对复用现有规则，不再复制一套流程。
 
-输入为显式节点/设备范围与读权限；输出占用、空闲或证据不足以及归属证据。先增强文档；跨任务通用inventory候选已在2026-10-11评估，不另建重复脚本。验证以本次漏列案例、正常管理查询进程、宿主/容器路径差异、缺权限和PID退出/复用场景为代表。
+输入为显式节点/设备范围与读权限；输出占用、空闲或证据不足以及归属证据。先增强文档；不另建重复的通用 inventory 脚本。验证以漏列案例、正常管理查询进程、宿主/容器路径差异、缺权限和 PID 退出/复用场景为代表。
 
 ## P2：有界环境发现
 
-来源证据：[初始环境探测（local-only）](../../tasks/1012/hccl_environment_probe.json)、[复用路径发现（local-only）](../../tasks/1012/hccl_reuse_inventory.json)、[宿主同版本/同库证据（local-only）](../../tasks/1012/hccl_host_cann_baseline.json)。
+PATH 没有 `mpirun` 不代表未安装，默认前缀只显示 driver 也不代表没有 toolkit。历史实验通过已有安装前缀复用了 MPI/CANN，避免不必要安装；实际路径必须从当前环境确认。
 
-PATH没有mpirun不代表未安装；/usr/local/Ascend只有driver也不代表没有toolkit。本次最终在8台复用了/usr/local/mpich与<CANN_INSTALL_ROOT>，避免了容器版本混用和不必要安装。
-
-仅在现有路径未命中时提示查看初始化报告、已知前缀或已知挂载中的安装；找到可用环境后即回到原版本/链接检查，不新增一轮同库hash核对。不要全盘扫描模型目录或加载所有容器。路径只作为本次案例，不能写成通用硬编码。
+仅在现有路径未命中时提示查看初始化报告、已知前缀或已知挂载中的安装；找到可用环境后即回到原版本/链接检查，不新增一轮同库hash核对。不要全盘扫描模型目录或加载所有容器。安装路径不得写成通用硬编码。
 
 ## 已覆盖、不重复建设的内容
 
-- MPI exit0仍可能失败、接口非零返回、非root失败、NULL/未知/截断不能算通过，现有skill/helper已有对应规则；本次重放也证明退出码陷阱被正确识别。
+- MPI exit0仍可能失败、接口非零返回、非root失败、NULL/未知/截断不能算通过，现有 skill/helper 已有对应规则；历史复核曾确认退出码陷阱被识别，本次文档整理未重新执行该验证。
 - 严格免交互SSH、自身SSH、MPI环境传播、单机fork、复用MPI/CANN、上传不超过1MB、资源授权和收尾，均已有入口；只补缺少的细节，不扩大为完整初始化。
 - 代理/跳板登录属于原远程能力入口，不在HCCL skill复制本次临时Paramiko会话、密码输入或另一套SSH状态。
-- wall/kill为本次明确用户授权，不设为通用打流默认动作。
-- 不把本次“plane_pg”问题推广为所有自定义rootinfo都错误；不自动永久删除/改名系统配置；HCCL成功不代表P/D状态传输、模型请求或精度通过。
+- 通知其他用户或终止进程均需对应授权，不设为通用打流默认动作。
+- 不把历史拓扑配置问题推广为所有自定义 rootinfo 都错误；不自动永久删除/改名系统配置；HCCL成功不代表P/D状态传输、模型请求或精度通过。
 
 ## 本轮检查与后续入口
 
-评估阶段只读重放现有helper，对两份成功原始日志独立核对字节数、SHA256、完整rank-size集合及退出集合；所有证据与已保存摘要一致。实施仅合并两个条件化排查提示、一句环境发现说明与既有入口引用，不实现上文的完整解析方案或其他诊断自动化。格式、引用、差异及人工代表请求边界复核通过；helper未改，未重跑远端实验。
-
-评估时工作台HEAD为45efc9a751eb443e94b5e235a4a57f27560d91e7。HCCL维护源基线SHA256：SKILL.md=053715cbb9fa7409c2fafb0d52bfe85dfc3e09984ac486470c865ef9384f6d61；environment.md=5f35875f787075ab6b6d1812110e1f798f52cbaadea33967a472ed6338422c4c；hccl_traffic.py=afa5211682c5b8233aebf6e246d59f1aa45e08ebd798aa6c85a1ec04c8bbce01。
+当时的实施仅合并两个条件化排查提示、一句环境发现说明与既有入口引用，未实现完整 rank 解析方案或其他诊断自动化，未改变 helper，也未为文档修改重跑远端实验。本报告发布可独立阅读的方法、建设决定与结论边界，不提供原始运行材料，也不宣称读者已据此复验历史运行。
 
 本轮已授权的最小文档增补完成。完整rank解析继续暂缓，重复需求出现或用户明确建设时再评估，不因本次批准自动扩展；提交/推送仍沿用用户审核边界。
-
-## 本机来源指纹
-
-| 本机路径（local-only） | 字节数 | SHA256（2026-10-15 复核） |
-|---|---:|---|
-| `tasks/1012/hccl_topology_override_audit.json` | 9980 | `b5036d3d595f7ff0da0b916b9151e93c3d2a137dd48ab61cd539f217d139a5ec` |
-| `tasks/1012/ccu_ms_first.log` | 15226 | `2164b5d466a8f04e4b5c41c787b8def8c7907fe8bf240a0157d1444cc9f4b284` |
-| `tasks/1012/ccu_ms_first_summary.json` | 1049 | `2d37cba19e2f299cca98496bc2ac41d051bf7dc356c7b7744b838b2bf5de2a55` |
-| `tasks/1012/hccl_ccu_auto_postcheck.json` | 22163 | `435585931c03a6f6f806b88dd583473cab9d767efb590b09b16e370a4156c170` |
-| `tasks/1012/ccu_ms_auto.log` | 110484 | `64586452d79fd73fabfa68ce7d1c3bee0a7879537166d141736bb469fc1e19df` |
-| `tasks/1012/aicpu_ts_auto.log` | 110484 | `d7b85bd57c23bd14847ff79b8244f684c2548622b674743e5891141147559584` |
-| `tasks/1012/ccu_ms_auto_summary.json` | 6825 | `6a54bbbdb6516bfef84ab8c182bc1b314c88150e5b0779741e4618de67094a1a` |
-| `tasks/1012/scripts/summarize_attempt.py` | 4181 | `58ea18f9ce8bed5fd883c24e71d79c379cf9a19ac88bce37da2f021a12a41318` |
-| `tasks/1012/hccl_prelaunch_admission.json` | 20733 | `998b084e88f800dd594e6f5eaa8fa293b87605b47af55069a45ec3b1bcd2da03` |
-| `tasks/1012/hccl_residual_device_owners.json` | 3581 | `a109e2ea1d382f6d6a907d0bcd35678939c3a353bba16c71fe7ed2206b8e09ed` |
-| `tasks/1012/hccl_final_prelaunch_gate.json` | 11179 | `397d9f90acdab6015f4862eb132d3206485793e6d9f90a8e6bde985a2c2ccf46` |
-| `tasks/1012/hccl_environment_probe.json` | 38318 | `15a52efd5dffd6fe140de3768dd60eaa8bb62b46be3e7b68379ad8001ccff9f3` |
-| `tasks/1012/hccl_reuse_inventory.json` | 22357 | `be2ba78ce6dc4e928e0a08728ab6157a6de09294a131fe0746513ada18bcb3f2` |
-| `tasks/1012/hccl_host_cann_baseline.json` | 44503 | `6e03760d26eb76c2ea5129c9a385754f6dc7e4d66daec1a37cbb0d4ea769fb4b` |
