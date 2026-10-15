@@ -42,9 +42,11 @@ spec.loader.exec_module(driver)
 root = Path(sys.argv[2])
 hook = sys.argv[4]
 if hook:
-    original = getattr(driver, hook)
+    original = getattr(driver, 'atomic_json' if hook == 'client_recorded' else hook)
     def pause(*args, **kwargs):
         result = original(*args, **kwargs)
+        if hook == 'client_recorded' and not any(item.get('process') for item in args[1]['groups']):
+            return result
         (root / 'ready').write_text('ready')
         deadline = time.monotonic() + 15
         while not (root / 'release').exists():
@@ -52,7 +54,7 @@ if hook:
                 raise RuntimeError('test gate timed out')
             time.sleep(.01)
         return result
-    setattr(driver, hook, pause)
+    setattr(driver, 'atomic_json' if hook == 'client_recorded' else hook, pause)
 driver.supervise(root / 'plan.json', root / 'state.json', sys.argv[3] == '1')
 ''', encoding='utf-8')
         kwargs = {'creationflags': subprocess.CREATE_NO_WINDOW} if sys.platform == 'win32' else {}
@@ -62,9 +64,9 @@ driver.supervise(root / 'plan.json', root / 'state.json', sys.argv[3] == '1')
         self.processes.append(process)
         return process
 
-    def wait_for_gate(self, process):
+    def wait_for_gate(self, process, marker='ready'):
         deadline = time.monotonic() + 10
-        while not (self.root / 'ready').exists():
+        while not (self.root / marker).exists():
             if process.poll() is not None:
                 self.fail('supervisor exited before gate: ' + str(process.communicate()))
             if time.monotonic() >= deadline:
@@ -123,30 +125,31 @@ driver.supervise(root / 'plan.json', root / 'state.json', sys.argv[3] == '1')
     def test_running_client_is_preserved_after_supervisor_crash(self):
         groups = self.make_plan(1)
         root = Path(groups[0]['root'])
-        groups[0]['command'] = [sys.executable, '-c', '''import time
+        groups[0]['command'] = [sys.executable, '-c', '''import importlib.util, os, sys, time
 from pathlib import Path
+spec = importlib.util.spec_from_file_location('driver', sys.argv[1])
+driver = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(driver)
+driver.atomic_json(Path('client-process.json'), driver.identity(os.getpid()))
 Path('sent.txt').write_text('x')
+Path('client.ready').touch()
 deadline = time.monotonic() + 10
 while not Path('client.release').exists():
     if time.monotonic() > deadline:
         raise RuntimeError('client gate timed out')
     time.sleep(.01)
 Path('result.json').write_text('{"samples":1}')
-''']
+''', str(spec.origin)]
         self.plan.write_text(json.dumps({'groups': groups}))
-        owner = self.start_supervisor()
-        client = None
+        owner = self.start_supervisor(pause_at='client_recorded')
         try:
-            deadline = time.monotonic() + 10
-            while time.monotonic() < deadline:
-                if self.state.exists():
-                    state = json.loads(self.state.read_text())
-                    client = state['groups'][0].get('process')
-                    if client and (root / 'sent.txt').exists():
-                        break
-                self.assertIsNone(owner.poll(), 'supervisor exited before starting client')
-                time.sleep(.01)
-            self.assertIsNotNone(client, 'client was not recorded')
+            # The owner pauses after recording the child, so state reads cannot
+            # race its writes. The second marker proves the child is running.
+            self.wait_for_gate(owner)
+            self.wait_for_gate(owner, 'g0/client.ready')
+            state = json.loads(self.state.read_text())
+            client = state['groups'][0]['process']
+            self.assertTrue(driver.same_live(client))
             before = self.state.read_bytes()
             self.assert_contender_rejected(self.start_supervisor(resume=True))
             self.assertEqual(self.state.read_bytes(), before)
@@ -159,12 +162,22 @@ Path('result.json').write_text('{"samples":1}')
             self.assertEqual(self.state.read_bytes(), before)
             self.assertEqual((root / 'sent.txt').read_text(), 'x')
         finally:
+            # Stop only this fixture's owner before it can launch a late child.
+            # The child publishes its own identity independently of state reads,
+            # so failure before the main assertion assigns client is still safe.
+            if owner.poll() is None:
+                owner.kill()
+            owner.communicate(timeout=10)
             (root / 'client.release').touch()
-            if client:
-                deadline = time.monotonic() + 10
-                while driver.same_live(client) and time.monotonic() < deadline:
+            deadline = time.monotonic() + 10
+            if (root / 'evaluate.client.log').exists():
+                while not (root / 'client.ready').exists() and time.monotonic() < deadline:
                     time.sleep(.01)
-                self.assertFalse(driver.same_live(client), 'task client did not exit')
+                self.assertTrue((root / 'client.ready').exists(), 'fixture client identity was not published')
+                owned_client = json.loads((root / 'client-process.json').read_text())
+                while driver.same_live(owned_client) and time.monotonic() < deadline:
+                    time.sleep(.01)
+                self.assertFalse(driver.same_live(owned_client), 'task client did not exit')
 
     def test_exception_releases_lock_and_preserves_state(self):
         self.make_plan(1)

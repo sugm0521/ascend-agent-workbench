@@ -35,6 +35,8 @@
 
 以下代码是命令构造示例，不是公共启动脚本或已实测的通用镜像配方。ENV_SCRIPT须在镜像内存在且加载本次全部必需CANN/NNAL/OPP；不把某个版本固定路径当通用入口。
 
+本例已确认使用`--privileged`，按[Docker设备权限语义](https://docs.docker.com/engine/containers/run/#runtime-privilege-and-linux-capabilities)，容器可访问全部宿主设备，下面的逐卡`--device`清单不构成设备访问隔离。仅授权子集卡时，须在实际NPU进程入口落实该后端支持的选卡机制并核对物理/逻辑映射，未落实前不启动NPU负载；若要求设备访问隔离，则使用经验证且符合该要求的非privileged或托管方案，运行时选卡不能代替访问隔离。
+
 ```bash
 # 在目标宿主设置本次实际值，不将占位符直接执行。
 : "${IMAGE:?}" "${CONTAINER:?}" "${MODEL_DIR:?}" "${ENV_SCRIPT:?}"
@@ -103,7 +105,7 @@ docker exec --env "ENV_SCRIPT=$ENV_SCRIPT" "$CONTAINER" bash -lc '
 '
 ```
 
-核对最终退出码和可见卡范围；此检查不覆盖模型配置、所有原生组件、NPU计算或数值精度。
+核对最终退出码和实际进程的可见卡范围；子集卡按已核对的运行时选卡机制确认映射，不能以`docker inspect`中的`--device`清单代替。此检查不覆盖模型配置、所有原生组件、NPU计算或数值精度。
 
 ## 版本清单与服务参数
 

@@ -4,83 +4,52 @@
 
 工作台采用项目规则、项目级 skill、Markdown 任务记录和固定版本的领域依赖。没有自建 agent 平台、资源调度器或 GUI。
 
-## 开始使用
+## 快速开始
 
-在 Codex 中打开本仓库作为项目主目录。首次接入请提出：
-
-> 使用 $ascend-workbench-init 初始化本工作台。先检查上层与各启用下层的初始化要求，汇总所有适用的必需信息后集中确认，再只补缺失项；不要重复初始化依赖中的业务仓库。
-
-下层按用途初始化：workspace 的本机身份、工具与服务器接入分别准备，cannbot/Matt 的资料或方法引用不要求全量安装插件。现有工具与 SSH 优先复用，远程目标需实际连接并确认 NPU；源码可读、接口能启动、实际调用可用和客户端已接入分别报告。具体清单见 [init 操作约定](.agents/skills/ascend-workbench-init/references/operations.md#下层初始化清单)。
-
-需要专用业务副本时可补充：
-
-> 为 vLLM 和 vLLM-Ascend 在 repos/ 下独立克隆；沿用可用的 GitHub 身份，核对 fork，并按目标 vLLM-Ascend 的 CI 版本配对。
-
-这两种接入方式会在初始化中确认。当前仓库已构建；业务 checkout、个人本机配置和运行环境尚未由本次建设初始化。
-
-技能目录是 `.agents/skills/`，符合 [官方本地 skill 发现入口](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)。若当前客户端没有自动发现，先明确读取对应 `SKILL.md`；发现能力和实际工具能力分别核对。项目不自动安装全局副本。
-
-## 在另一台机器取得项目
-
-使用有本私仓读取权限的 GitHub 身份克隆：
+先准备 Git 和有本私仓读取权限的 GitHub 身份，取得工作台：
 
 ```bash
 git clone https://github.com/sugm0521/ascend-agent-workbench.git
 cd ascend-agent-workbench
-git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-workspace deps/cannbot-skills deps/matt-pocock-skills
 ```
 
-该命令准备三个基础顶层来源仓库。可选模型分析能力按所选用途另行准备：
+在 Codex 中打开本仓库作为项目主目录，先读取 [AGENTS.md](AGENTS.md)，再按用途选择接入范围：
 
-```bash
-git -c submodule.recurse=false submodule update --init -- deps/model-analysis
-```
+| 用途 | 准备范围 | 可直接提出的请求 |
+|---|---|---|
+| 只读资料、源码分析或规划 | 读取所需 skill、资料和可访问源码；采用轻量初始化，列出尚未准备的开发条件 | “使用 $ascend-workbench-init，只做资料与分析准备。” |
+| 本地开发与 PR | 标准初始化核对或准备业务仓库、版本组合、Git 作者、GitHub 认证、remotes 与 PR 条件 | “使用 $ascend-workbench-init，准备本地开发与 PR 条件。” |
+| 远程实验或 NPU 验证 | 在所选接入范围上补齐实际执行工具、服务器/容器、软件环境和可用设备；按具体任务验收 | “补齐远程 NPU 接入，复用已有工具与 SSH，先核对环境和占用。” |
 
-使用服务性能压测入口时，准备固定版本的工具源码：
+初始化会先检查上层与各启用下层的要求，汇总必需信息后集中确认，再只补缺失项；已有选择和可用配置直接复用。业务代码默认优先绑定已有 checkout，也可明确选择在 `repos/` 下独立克隆；新准备的版本按目标 vLLM-Ascend 的 CI 声明配对。执行工具与服务器接入单独确定，不要求所有使用者准备 NPU。具体步骤见 [init 操作约定](.agents/skills/ascend-workbench-init/references/operations.md#下层初始化清单)。
 
-```bash
-git -c submodule.recurse=false submodule update --init -- deps/aisbench-auto-tools-prefix
-```
+克隆只带来工作台规则、skill、工具与依赖指针。业务 checkout、个人身份、客户端接入和运行环境由每位使用者按需准备；缺少远程环境时仍可推进就绪的本地工作。
 
-该步骤只取得源码；AISBench、tokenizer等运行依赖按需在请求发起端准备，无需在全部服务节点安装。
+技能维护在 `.agents/skills/`。若客户端未自动发现，显式读取下表对应的 `SKILL.md`，项目不自动安装全局副本。首次接入后直接描述目标即可，日常任务不重复运行完整初始化。
 
-使用独立模型精度 skill 的上游诊断手册时，只准备其固定来源：
+## 按任务选择入口
 
-```bash
-git -c submodule.recurse=false submodule update --init -- deps/awesome-agent-skills
-```
+例如“定位这个问题单的根因”“优化现有服务的吞吐”“核查模型输出复读”或“实现算子替换”。不确定入口时使用 workflow，明确的小任务可直接使用领域 skill，无需完整采访或多个 agent。
 
-该来源只作资料读取，不安装同仓其他 skill 或执行其快照、服务器管理和迁移脚本。项目适配与工具选择维护在精度 skill 自己的目录。
+| 类别 | 入口 | 用途 |
+|---|---|---|
+| 接入与维护 | [init](.agents/skills/ascend-workbench-init/SKILL.md) | 首次接入、补齐缺失配置及初始化报告 |
+| 接入与维护 | [dependencies](.agents/skills/ascend-workbench-dependencies/SKILL.md) | 版本核对、相关传递依赖、升级与组合验证 |
+| 任务推进 | [workflow](.agents/skills/ascend-agent-workflow/SKILL.md) | 查证目标与事实、必要澄清、领域路由与整体推进 |
+| 任务推进 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 子任务、依赖、写入归属与资源边界 |
+| 任务推进 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
+| 任务推进 | [review](.agents/skills/ascend-task-review/SKILL.md) | 复核结论与覆盖，组织交付、交接与回顾 |
+| 模型与环境 | [performance-benchmark](.agents/skills/ascend-performance-benchmark/SKILL.md) | 用 AISBench 核验现有服务吞吐、时延、并发与公共前缀负载 |
+| 模型与环境 | [model-accuracy](.agents/skills/ascend-model-accuracy/SKILL.md) | 模型乱码、复读、异常空输出和精度下降的诊断、修复与回归 |
+| 模型与环境 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/SKILL.md) | 只读采集指定环境的 CANN、代码、PR、依赖与启动条件 |
+| 模型与环境 | [container-ssh](.agents/skills/ascend-container-ssh/SKILL.md) | 给手工部署的已有容器建立或恢复独立 SSH，并验证登录 |
+| 模型与环境 | [HCCL 打流](.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用 MPI/CANN 验证单机或多机 alltoallvc 双模式通信 |
+| 知识与总结 | [knowledge-curation](.agents/skills/ascend-knowledge-curation/SKILL.md) | 检索、核实、归纳和复查知识，保留历史与适用边界 |
+| 知识与总结 | [weekly-report](.agents/skills/ascend-weekly-report/SKILL.md) | 生成个人工作及项目/知识改进两份周报，交付 Markdown 和 HTML |
+| Skill 建设 | [skill-candidate-review](.agents/skills/ascend-skill-candidate-review/SKILL.md) | 评估价值、已有覆盖与维护成本，给出最小修改或不改的结论 |
+| Skill 建设 | [skill-development](.agents/skills/ascend-skill-development/SKILL.md) | 创建或优化已确认范围的项目自有 skill，验证入口与代表行为 |
 
-不要对整个依赖树无条件执行递归初始化，否则可能另外克隆 workspace 内的业务代码；model_analysis 当前也缺少内部 gitlink 的来源声明。目标提交由父仓库 gitlink 和 [sources.lock.yaml](upstream/sources.lock.yaml) 固定。
-
-使用每日知识归纳时，准备独立skill所引用的固定方法来源：
-
-```bash
-git -c submodule.recurse=false submodule update --init -- deps/compound-engineering
-```
-
-只读取ce-compound/ce-compound-refresh的方法，不安装整套插件；项目入口为[ascend-knowledge-curation](.agents/skills/ascend-knowledge-curation/SKILL.md)，知识写入knowledge/，过期内容完整归档并说明原因。
-
-## 后续任务
-
-初始化后可以直接描述需求，例如“定位这个问题单的根因”“优化这个模型的吞吐”或“实现算子替换”。[workflow skill](.agents/skills/ascend-agent-workflow/SKILL.md) 负责查证与必要澄清，再按收益动态分工；明确的小任务无需完整采访或多个 agent。
-
-| 入口 | 用途 |
-|---|---|
-| [init](.agents/skills/ascend-workbench-init/SKILL.md) | 本机接入、业务仓库/身份准备、初始化报告；按状态复用下层步骤 |
-| [dependencies](.agents/skills/ascend-workbench-dependencies/SKILL.md) | 版本变化、相关传递依赖、升级与组合验证 |
-| [workflow](.agents/skills/ascend-agent-workflow/SKILL.md) | 目标、事实、验收、领域路由与整体推进 |
-| [performance-benchmark](.agents/skills/ascend-performance-benchmark/SKILL.md) | 现有服务吞吐、时延、并发与公共前缀压测；优先调用AISBench工具并核验原生结果 |
-| [model-accuracy](.agents/skills/ascend-model-accuracy/SKILL.md) | 独立维护模型乱码、复读和精度下降的诊断、修复与回归；可直接调用 `$ascend-model-accuracy`，复用原验证工具 |
-| [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/SKILL.md) | 只读输出指定环境复现清单，记录CANN/代码/PR/依赖替换；部署前也调用，不自动启动或升级 |
-| [container-ssh](.agents/skills/ascend-container-ssh/SKILL.md) | 给手工已有容器配置或恢复独立SSH入口，选择可用端口并验证实际登录；可直接调用 `$ascend-container-ssh` |
-| [planning](.agents/skills/ascend-task-planning/SKILL.md) | 依赖、子任务、写入归属与资源边界 |
-| [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
-| [review](.agents/skills/ascend-task-review/SKILL.md) | 关键结论复核、覆盖、交付与回顾 |
-| [skill-candidate-review](.agents/skills/ascend-skill-candidate-review/SKILL.md) | 评估改进价值、去重与检查触发条件，给出最小修改或不改的结论 |
-| [skill-development](.agents/skills/ascend-skill-development/SKILL.md) | 复用候选评估，建设已确认的自有 skill |
-| [HCCL 打流](.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用 MPI/CANN，验证单机或多机 alltoallvc 双模式及限时故障诊断；真实覆盖另行验收 |
+算子、模型适配、部署、profiling、CI/PR 和源码学习由 workflow 按[领域映射](upstream/skill-mapping.md)选用已有流程，不要求每个领域都另建一个项目 skill。
 
 定位/分析默认交付证据与建议；明确要求修复/优化/实现才推进业务修改。提交、推送和发布按本次授权处理，未授权时提供可审核结果。数值语义、支持范围和必需验收的变化由用户决定。
 
@@ -88,27 +57,60 @@ git -c submodule.recurse=false submodule update --init -- deps/compound-engineer
 
 生成式AISBench评测的指标、有效回答与输出审计可使用[证据报告工具](docs/aisbench-evidence.md)，消费已有明确run，分别给出逐组和总体报告；官方分数与格式异常不混为一个通过结论。
 
-需要模型架构报告、版本比较或参数/KVCache 估算时，workflow 按[模型分析调用说明](.agents/skills/ascend-agent-workflow/references/model-analysis.md)引用可选 model_analysis 依赖。原 skill 和模板保持只读，报告写任务目录，支持缺口对照实际源码，计算独立复核；本机配置选择是否启用。全仓许可尚未明确，当前接入为本机资料引用；原仓代码/模板的再分发许可未核实。
+## 按用途准备领域来源
+
+初始化按已选能力准备来源；手工准备时，在工作台根对下表选定路径执行：
+
+```bash
+git -c submodule.recurse=false submodule update --init -- <来源路径>
+```
+
+`<来源路径>` 替换为下表路径，可在同一命令中指定多个所需路径。仅使用自有文档或本地合成测试时，无需全量准备这些来源。目标版本由父仓库 gitlink 和 [sources.lock.yaml](upstream/sources.lock.yaml) 固定；升级走 dependencies，避免直接跟随远端最新提交。
+
+| 来源路径 | 启用条件与边界 |
+|---|---|
+| `deps/vllm-ascend-workspace` | 使用其领域流程或执行工具；按用途准备身份、工具与服务器，不重复克隆已绑定业务代码 |
+| `deps/cannbot-skills` | 使用 AscendC 等领域方法；资料引用不要求安装整套插件 |
+| `deps/matt-pocock-skills` | 使用澄清、拆分、实现与交接的方法来源 |
+| `deps/model-analysis` | 模型架构报告、版本比较或参数/KVCache 估算，按[调用说明](.agents/skills/ascend-agent-workflow/references/model-analysis.md)使用；原仓许可尚未明确、内部 gitlink 声明缺口保留，仅作资料引用，再分发前需核实许可 |
+| `deps/aisbench-auto-tools-prefix` | 服务性能压测工具源码；AISBench、tokenizer 等依赖在请求发起端按需准备，不要求全部服务节点安装 |
+| `deps/awesome-agent-skills` | 模型精度诊断只读手册，不安装同仓其他 skill 或执行其服务器管理、快照、迁移脚本 |
+| `deps/compound-engineering` | 知识归纳与复查的只读方法，不安装整套插件；项目适配由 knowledge-curation 维护 |
+
+不要对整个依赖树无条件递归初始化，以免连带克隆 workspace 内的业务代码。取得来源不代表工具可调用、客户端已接入或远程运行就绪。
+
+## 环境要求与验收边界
+
+| 使用或验证内容 | 前提与能证明的范围 |
+|---|---|
+| 阅读文档、行为走查、规划 | 仓库及所需来源可读；能检查入口和决策边界，不能证明真实运行成功 |
+| 工作台本地统一回归 | Python 3.10+、Git、Node.js 22.12+ 及锁定的渲染依赖；覆盖根测试、周报真实渲染和 HCCL helper 合成测试，不连接服务器或占用 NPU |
+| 本地开发与 PR | 实际业务代码、版本组合、作者/DCO、认证及目标仓库权限就绪；以本机初始化报告和当前 Git 状态核对 |
+| 远程 NPU、模型、服务或 CI 验收 | 所需工具和实际环境就绪；按任务记录代码、设备、输入及原生结果，分别验收正确性、性能和覆盖范围 |
+
+本地回归在工作台根运行：
+
+```bash
+npm ci --ignore-scripts
+python scripts/validate_workbench.py
+```
+
+依赖缺口和条件跳过须明确报告；平台权限或 POSIX 分支跳过不能算作已实测。可选 skill 格式校验器、引用检查和最终候选树的复用验收见[本地验证说明](docs/validation.md)。
+
+工作台建设与维护状态见[开发计划](docs/开发计划.md)和[开发记录](docs/开发记录.md)；每台机器的接入状态保存在本机 `.workbench-local/init-report.md`。具体工程验收以对应任务的当前代码、环境和证据为准，有限设备或单一场景的结果不推广为所有模型、芯片、拓扑或部署方式均已通过。
 
 ## 文档与记录
 
-后续提到“性能压测”“吞吐/延迟测试”或“prefix cache测试”，默认由[性能压测skill](.agents/skills/ascend-performance-benchmark/SKILL.md)调用 `aisbench_auto_tools_prefix`。工具源码锁定且保持只读，服务地址、模型路径和负载参数放在每次任务的可写副本；不因发起压测自动重启既有服务。精度评测、算子打流和纯profiling保持原有入口。
+性能压测的服务地址、模型路径和负载参数放在任务可写副本，固定工具源码保持只读；发起压测不自动重启既有服务。精度评测、算子打流和纯 profiling 按各自入口执行。
 
 - [AGENTS.md](AGENTS.md)：所有会话共享的行为规则与导航。
 - [项目框架](docs/项目框架.md)：架构、职责、init 去重与建设标准。
 - [开发计划](docs/开发计划.md)：工作台自身待办和完成状态。
 - [开发记录](docs/开发记录.md)：实际变化、验证和决定。
 - [归档与知识维护](docs/daily-sync.md)：个人任务归档和调度配置留本机，仅按授权发布skill与知识维护内容；实际推送后逐项反馈变化、验证和保留项。
-- [两份工程周报](.agents/skills/ascend-weekly-report/SKILL.md)：个人具体工作与项目/知识改进分别组织，Markdown正文生成HTML阅读和打印版；报告只保存在本机，时间由本机调用方决定。
 - [五种任务模板](docs/templates/任务说明.md)：任务说明、实验、验证矩阵、CI、交付与回顾。
 - [领域映射](upstream/skill-mapping.md)：锁定版本中的真实入口和能力边界。
 - [配置示例](config/workbench.example.yaml)：本机配置的参考结构，`null` 不是默认授权。
 - [流程演练](tasks/2026-10-05-流程演练/任务说明.md)：明确标记的模拟场景，真实工程验收另行完成。
 
 只有用户明确提到任务名字时，才新建对应任务目录存放日志和记录；否则统一放入当前日期命名的 `tasks/MMDD/`，例如 2026-10-12 使用 `tasks/1012/`。当天多个事项用文件名及索引区分，同名文档加事项前缀。具体状态只在各事项的任务说明文件维护，目录归并不改变已有 task_id。大型原始数据与本机报告放 `.workbench-local/`，本机配置放 `config/workbench.local.yaml`；均不提交。`repos/` 下业务仓库各自维护 Git 历史，父项目只记录定位和证据。
-
-## 验证边界
-
-本地回归先按 `package-lock.json` 执行 `npm ci --ignore-scripts` 准备固定渲染依赖，再运行 `python scripts/validate_workbench.py`，覆盖根测试、真实周报渲染和 HCCL helper 测试。Python 3.10+、Git、Node.js 22.12+ 是声明的运行前提，不依赖客户端私有模块目录；可选 skill 格式校验器及提交树检查方式见[本地验证说明](docs/validation.md)。
-
-首版验证涵盖 skill 格式、引用、领域入口、隔离的行为走查和模拟流程。标准初始化与真实 NPU、模型、服务、CI 验收需要实际任务与环境；来源 checkout 可读不代表远程能力已就绪。实际结果与待完成项见开发计划和开发记录。
