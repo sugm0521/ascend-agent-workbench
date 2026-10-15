@@ -63,5 +63,18 @@ sources:
       - vllm-ascend-accuracy/references/final-report-template.md
       - vllm-ascend-accuracy/references/issue-report.md
 
+
+  compound_engineering:
+    path: deps/compound-engineering
+    url: https://github.com/EveryInc/compound-engineering-plugin.git
+    commit: bdc53d034ccfa5baf01b6139cd46082145ff95cc
+    purpose: 工程知识沉淀与过期复查的只读方法；项目独立skill适配，不安装整套插件
+    declared_dependencies:
+      - LICENSE
+      - skills/ce-compound/SKILL.md
+      - skills/ce-compound/references/lightweight.md
+      - skills/ce-compound-refresh/SKILL.md
+
+
 # 仅固定顶层来源。下层版本要求从父提交的原声明读取，
 # 不在这里复制另一套 pin；业务版本与本机能力另行初始化。

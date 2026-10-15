@@ -79,3 +79,12 @@
 ## 已有个人能力
 
 若当前环境提供 `ascend-source-walkthrough` 或 `ascend-service-deploy`，按实际可读 SKILL 路径复用。它们不是本项目的强制安装依赖，其他主机缺失时不宣称可用；先用已接入来源或说明缺口。CI 工作读取实际业务仓库的 workflow/head/run，不存在能替代当前 CI 证据的静态通用结论。
+
+## 工程知识维护：独立入口与只读方法
+
+| 需求 | 入口 | 接入条件与边界 |
+|---|---|---|
+| 检索、核实、去重、写入或复查任务知识 | [ascend-knowledge-curation](../.agents/skills/ascend-knowledge-curation/SKILL.md) | 知识维护在knowledge/；过期内容保存完整历史与原因；仅检索请求不自动写入，Git发布由每日流程或具体授权统一处理 |
+| 已验证问题的长期经验与旧知识复查方法 | [ce-compound](../deps/compound-engineering/skills/ce-compound/SKILL.md)、[ce-compound-refresh](../deps/compound-engineering/skills/ce-compound-refresh/SKILL.md) | EveryInc来源按lock固定；原skill只读参考，项目适配不运行其自动提交、删除、CONCEPTS或整套多agent流程 |
+
+日常Ascend/CANN算子资料查询仍可按现有cannbot knowledge-query/ingest/lint消费领域知识；其OKF、图谱和算子卡片规范不整套迁入任务知识库。每日任务按[同步说明](../docs/daily-sync.md)调用独立入口，不扩写workflow正文。

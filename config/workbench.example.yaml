@@ -7,6 +7,9 @@ paths:
   init_report: .workbench-local/init-report.md
 
 dependencies:
+  compound_engineering:
+    path: deps/compound-engineering
+    enabled: false  # 可选：工程知识归纳方法，仅资料引用
   workspace:
     path: deps/vllm-ascend-workspace
     enabled: true

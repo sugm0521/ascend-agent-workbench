@@ -16,3 +16,6 @@
 [submodule "deps/awesome-agent-skills"]
 	path = deps/awesome-agent-skills
 	url = https://github.com/zhaochuang001/awesome-agent-skills.git
+[submodule "deps/compound-engineering"]
+	path = deps/compound-engineering
+	url = https://github.com/EveryInc/compound-engineering-plugin.git

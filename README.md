@@ -54,6 +54,14 @@ git -c submodule.recurse=false submodule update --init -- deps/awesome-agent-ski
 
 不要对整个依赖树无条件执行递归初始化，否则可能另外克隆 workspace 内的业务代码；model_analysis 当前也缺少内部 gitlink 的来源声明。目标提交由父仓库 gitlink 和 [sources.lock.yaml](upstream/sources.lock.yaml) 固定。
 
+使用每日知识归纳时，准备独立skill所引用的固定方法来源：
+
+```bash
+git -c submodule.recurse=false submodule update --init -- deps/compound-engineering
+```
+
+只读取ce-compound/ce-compound-refresh的方法，不安装整套插件；项目入口为[ascend-knowledge-curation](.agents/skills/ascend-knowledge-curation/SKILL.md)，知识写入knowledge/，过期内容完整归档并说明原因。
+
 ## 后续任务
 
 初始化后可以直接描述需求，例如“定位这个问题单的根因”“优化这个模型的吞吐”或“实现算子替换”。[workflow skill](.agents/skills/ascend-agent-workflow/SKILL.md) 负责查证与必要澄清，再按收益动态分工；明确的小任务无需完整采访或多个 agent。
@@ -90,6 +98,7 @@ git -c submodule.recurse=false submodule update --init -- deps/awesome-agent-ski
 - [项目框架](docs/项目框架.md)：架构、职责、init 去重与建设标准。
 - [开发计划](docs/开发计划.md)：工作台自身待办和完成状态。
 - [开发记录](docs/开发记录.md)：实际变化、验证和决定。
+- [每日同步](docs/daily-sync.md)与[知识库](knowledge/README.md)：每周一至周五北京时间09:00归档任务、核实并维护知识、检查遗漏发布；推送后逐事项反馈实际变化、验证、提交和保留项。
 - [五种任务模板](docs/templates/任务说明.md)：任务说明、实验、验证矩阵、CI、交付与回顾。
 - [领域映射](upstream/skill-mapping.md)：锁定版本中的真实入口和能力边界。
 - [配置示例](config/workbench.example.yaml)：本机配置的参考结构，`null` 不是默认授权。
