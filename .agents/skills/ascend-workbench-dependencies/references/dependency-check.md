@@ -2,7 +2,7 @@
 
 ## 事实源与记录
 
-上层 `sources.lock.yaml` 的 `sources.workspace/cannbot/matt` 保存顶层 `{path, url, commit, purpose, declared_dependencies}`；本机配置的对应 `dependencies.<id>.path` 可以复用已有外部维护源。先查真实源和 SHA，报告差异，不仅以目录名认来源。
+上层 `sources.lock.yaml` 的 `sources.<id>` 保存顶层 `{path, url, commit, purpose, declared_dependencies}`；本机配置的对应 `dependencies.<id>.path` 可以复用已有外部维护源。先查真实源和 SHA，报告差异，不仅以目录名认来源。
 
 `declared_dependencies` 是下层原文件引用，必须从本次所选父提交读取；它不是一个可以独立更新的上层 pin 列表。候选父新增声明时主动识别相关入口，不能只检查旧 lock 已列文件。下层 pin 保持原文件权威，上层保存检查快照与引用即可。
 
@@ -56,4 +56,4 @@ provider 安装是配置变更，需要原预览与本轮授权；保留用户�
 - 业务：保留实际开发 branch 与任务基线，核对 CI pin/双 SHA 不触发 checkout；静态配对不证明精度或性能。
 - 可选测试：只在相关测试/CI 启用时核对 kit 并运行适用测试，未启用保持 not_enabled。
 
-日常核对不默认联网更新；正式性能/精度实验记录固定基线，升级单独形成记录。最终结论限定检查范围，不能因三个顶层 HEAD 正确声称所有传递依赖或 NPU 能力已验收。
+日常核对不默认联网更新；正式性能/精度实验记录固定基线，升级单独形成记录。最终结论限定检查范围，不能因顶层 HEAD 正确声称所有传递依赖或 NPU 能力已验收。

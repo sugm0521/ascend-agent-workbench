@@ -29,11 +29,11 @@
 | `execution.provider_refs` | mapping | 已有底层 provider/profile/config/id 的引用 |
 | `execution.artifact_root` | 路径 | 本机缓存及大型原始产物位置 |
 
-`dependencies` 与 lock 的 `sources` 使用相同 id：`workspace`、`cannbot`、`matt` 及服务性能压测首选 `aisbench_auto_tools_prefix`。lock 保存 `{path, url, commit, purpose, declared_dependencies}`，其中 `declared_dependencies` 是父仓原声明的相对文件路径引用。配置 path 可绑定已有外部 checkout；与 lock 记录不同则核对来源和实际 SHA，并报告偏离，不能悄悄改 lock 或切版本。没有配置时使用 lock 路径查询资料现状，不替用户决定业务绑定。
+`dependencies` 与 lock 的 `sources` 使用相同 id，以 lock 的键为准；可选来源按本次用途启用，不维护另一份固定来源名单。lock 保存 `{path, url, commit, purpose, declared_dependencies}`，其中 `declared_dependencies` 是父仓原声明的相对文件路径引用。配置 path 可绑定已有外部 checkout；与 lock 记录不同则核对来源和实际 SHA，并报告偏离，不能悄悄改 lock 或切版本。没有配置时使用 lock 路径查询资料现状，不替用户决定业务绑定。
 
 enabled 只表示选择来源，仍须逐个核对其适用初始化。本轮消费方式、下层身份、直接工具/协调/服务器各自状态与用户选择保存于 init_report，原状态与 pin 仍由下层管理。remote_execution=false 不代表 workspace 本机身份/profile 可以默认跳过；也不代表用户已决定本轮所有执行组件的范围。
 
-lock 的三个顶层 commit 是上层选择；传递依赖期望版本仍以所选父提交的原声明为准。不把父声明中的 pin 手工复制进本机配置，也不新建平行 pin 表。
+lock 的顶层 commit 是上层选择；传递依赖期望版本仍以所选父提交的原声明为准。不把父声明中的 pin 手工复制进本机配置，也不新建平行 pin 表。
 
 ## 每个业务仓库的字段
 

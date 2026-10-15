@@ -18,7 +18,7 @@ description: 核对 Ascend agent 工作台的领域依赖与相关传递依赖�
 
 ## 从父版本构造受影响依赖图
 
-对 lock 的 `sources.workspace/cannbot/matt` 及本次相关能力，记录当前与候选父 SHA。读取目标父的 `declared_dependencies` 引用、实际依赖文件、gitlink、脚本/参数/结果协议和环境要求；不能先启动旧父的 bootstrap 再猜目标约束。
+对 lock 的 `sources` 中本次启用的来源及相关能力，记录当前与候选父 SHA。读取目标父的 `declared_dependencies` 引用、实际依赖文件、gitlink、脚本/参数/结果协议和环境要求；不能先启动旧父的 bootstrap 再猜目标约束。
 
 每个相关节点记录：父依赖/父 SHA、声明文件、用途和启用条件、期望约束、实际路径/版本、拟用版本、检查结果与验证引用。递归读取可访问声明，按真实来源/环境/路径去重，检查同一节点的冲突与循环；不可访问项明确写出文件/父版本缺口。
 

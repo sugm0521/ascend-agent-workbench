@@ -16,6 +16,9 @@ dependencies:
   matt:
     path: deps/matt-pocock-skills
     enabled: true
+  model_analysis:
+    path: deps/model-analysis
+    enabled: false  # 可选：模型架构报告、版本比较及参数/KVCache 估算
   aisbench_auto_tools_prefix:
     path: deps/aisbench-auto-tools-prefix
     enabled: true  # 服务性能压测首选；仅在请求发起端准备运行环境

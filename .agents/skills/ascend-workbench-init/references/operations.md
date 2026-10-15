@@ -13,6 +13,7 @@
 | workspace 任务协调 | 是否本轮使用任务绑定/池执行、coordinator 接口与原状态目录、客户端 hooks 适用性 | 本机任务与远程池分别验收；池执行才要求现有 manager/显式配置。消费方不自动启动或重配 manager；缺口不自动授权安装另一操作系统或迁移整套协议 |
 | cannbot 资料/领域方法，或原生插件 | 固定来源、所需入口与引用可读；选原生插件时补具体插件、客户端、项目/全局位置及安装冲突 | 资料读取无需全量安装器；选中插件才检查原 init/quickstart 与外部依赖，保留维护源和版本，针对性 tests 按需 |
 | Matt 方法参考，或原版工程流程 | 方法来源与上层引用；选原版流程时补实际目标仓、tracker/工具、domain 与适用 triage 配置 | 原版 setup 配置写入实际目标仓，不写 deps 维护源；方法提炼不要求插件/npm 发布依赖或 tracker |
+| model_analysis 可选分析方法 | 固定来源、原 skill/模板、输入来源、项目侧调用说明及实际声明缺口 | 按[调用说明](../../ascend-agent-workflow/references/model-analysis.md)消费；本机资料引用无需新身份/provider，内部 gitlink 来源不明时保持未初始化，产物写任务目录 |
 | 其他传递测试/任务环境 | 启用条件、父声明、所需工具/环境与现有状态 | 未选能力明确不启用，不用全量安装使所有行变绿 |
 
 准备方案前核对本机 OS/Python/SSH、既有客户端 provider 与必要模块/接口；可用的只读 summary/status 优先。`workspace_identity.py summary`、`workspace_profile.py summary` 与完整 init 的 probe/plan 有不同副作用，须按当前实现查证。下层版本不可读取或 URL 重定向时查实际来源、目标 commit 与接口布局；替代方案写清原约束、差异与验证，取得用户选择后才 bootstrap，不修改原 pin 隐藏偏离。

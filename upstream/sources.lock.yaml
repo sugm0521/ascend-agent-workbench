@@ -26,6 +26,15 @@ sources:
     purpose: 澄清、拆分、实现与交接方法参考
     declared_dependencies: []
 
+  model_analysis:
+    path: deps/model-analysis
+    url: https://gitcode.com/gcw_hasgjVbP/model_analysis.git
+    commit: b4b1dc1b0f742da29f054c91086aac373134a19d
+    purpose: 可选模型架构、参数/KVCache 估算与报告方法；原仓许可尚未明确
+    declared_dependencies:
+      - README.md
+      - skills/ascend-model-analysis/SKILL.md
+
   aisbench_auto_tools_prefix:
     path: deps/aisbench-auto-tools-prefix
     url: https://github.com/rayn-zzz/aisbench_auto_tools_prefix.git

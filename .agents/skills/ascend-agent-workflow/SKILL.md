@@ -23,6 +23,7 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 | 目标 | 需要发现的能力 | 交付依据 |
 |---|---|---|
 | 问题单定位 | 复现、日志、源码与适用 graph/distributed/operator 诊断 | 触发条件、影响范围、根因证据与未确认项 |
+| 模型架构报告、版本比较或参数/KVCache 估算 | 按[模型分析调用说明](references/model-analysis.md)读取 model_analysis 的原 skill 与模板 | 固定输入版本、独立计算、对照实际实现；报告与待适配清单不代替运行验证 |
 | 模型适配或功能实现 | 实际接口、注册/执行路径、当前测试与运行工具 | 功能、兼容范围及所需集成证据 |
 | 服务性能压测、吞吐/延迟、prefix cache 测试 | [ascend-performance-benchmark](../ascend-performance-benchmark/SKILL.md) | 实际请求结果、工作负载、指标与日志；保留既有服务 |
 | 其他模型性能分析、profiling 或性能回归 | profiling、memory 与 regression 工具；需要服务负载时使用上述压测入口 | 可比工作负载下端到端指标和资源变化 |

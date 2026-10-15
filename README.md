@@ -30,6 +30,12 @@ cd ascend-agent-workbench
 git -c submodule.recurse=false submodule update --init -- deps/vllm-ascend-workspace deps/cannbot-skills deps/matt-pocock-skills
 ```
 
+该命令准备三个基础顶层来源仓库。可选模型分析能力按所选用途另行准备：
+
+```bash
+git -c submodule.recurse=false submodule update --init -- deps/model-analysis
+```
+
 使用服务性能压测入口时，准备固定版本的工具源码：
 
 ```bash
@@ -38,8 +44,6 @@ git -c submodule.recurse=false submodule update --init -- deps/aisbench-auto-too
 
 该步骤只取得源码；AISBench、tokenizer等运行依赖按需在请求发起端准备，无需在全部服务节点安装。
 
-该命令只准备三个顶层来源仓库。不要对整个依赖树无条件执行递归初始化，否则可能另外克隆 workspace 内的业务代码。目标提交由父仓库 gitlink 和 [sources.lock.yaml](upstream/sources.lock.yaml) 固定。
-
 使用独立模型精度 skill 的上游诊断手册时，只准备其固定来源：
 
 ```bash
@@ -47,6 +51,8 @@ git -c submodule.recurse=false submodule update --init -- deps/awesome-agent-ski
 ```
 
 该来源只作资料读取，不安装同仓其他 skill 或执行其快照、服务器管理和迁移脚本。项目适配与工具选择维护在精度 skill 自己的目录。
+
+不要对整个依赖树无条件执行递归初始化，否则可能另外克隆 workspace 内的业务代码；model_analysis 当前也缺少内部 gitlink 的来源声明。目标提交由父仓库 gitlink 和 [sources.lock.yaml](upstream/sources.lock.yaml) 固定。
 
 ## 后续任务
 
@@ -73,6 +79,8 @@ git -c submodule.recurse=false submodule update --init -- deps/awesome-agent-ski
 涉及产物搬迁/安装来源或原生扩展兼容问题时，可按需使用 [通用运行探针与产物核对](docs/runtime-tools.md)。两个 Python 标准库工具独立运行，复用原远程执行能力；普通业务任务不默认增加导入、NPU 或 PD 检查。
 
 生成式AISBench评测的指标、有效回答与输出审计可使用[证据报告工具](docs/aisbench-evidence.md)，消费已有明确run，分别给出逐组和总体报告；官方分数与格式异常不混为一个通过结论。
+
+需要模型架构报告、版本比较或参数/KVCache 估算时，workflow 按[模型分析调用说明](.agents/skills/ascend-agent-workflow/references/model-analysis.md)引用可选 model_analysis 依赖。原 skill 和模板保持只读，报告写任务目录，支持缺口对照实际源码，计算独立复核；本机配置选择是否启用。全仓许可尚未明确，当前接入为本机资料引用；原仓代码/模板的再分发许可未核实。
 
 ## 文档与记录
 

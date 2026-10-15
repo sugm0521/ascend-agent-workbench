@@ -1,6 +1,6 @@
 # 领域入口与能力边界
 
-此映射按 [sources.lock.yaml](sources.lock.yaml) 的三个固定提交核对；升级后重核受影响入口。表中“入口已核对”仅表示文件存在且用途经阅读确认，不代表脚本、MCP、目标环境或联合流程已运行。
+此映射按 [sources.lock.yaml](sources.lock.yaml) 的固定提交核对；升级后重核受影响入口。表中“入口已核对”仅表示文件存在且用途经阅读确认，不代表脚本、MCP、目标环境或联合流程已运行。
 
 领域来源保持只读。先明确业务路径与启用能力，再读取相关 SKILL；目录存在不等于已安装插件或获得远程执行能力。直接引用的 skill 使用其本身相对资源，不能从工作台根目录猜脚本工作目录。
 
@@ -61,6 +61,14 @@
 | 中断与交接 | [handoff](../deps/matt-pocock-skills/skills/productivity/handoff/SKILL.md) | 简洁记录现状、证据和下一步，以任务文件为权威状态 |
 
 上层 skill 独立编写，仅提炼这些方法，按本项目授权/工具/记录格式适配。来源里的 Skill 工具语法和安装前提不能直接假定在当前会话可用；也不复制其广泛触发范围。
+
+## model_analysis：模型架构与报告方法（可选）
+
+| 需求 | 已核对入口 | 接入条件与边界 |
+|---|---|---|
+| 新模型架构报告、版本比较、参数/KVCache 及量化并行权重估算 | [ascend-model-analysis](../deps/model-analysis/skills/ascend-model-analysis/SKILL.md)、[报告模板](../deps/model-analysis/skills/ascend-model-analysis/references/css-template.md) | 通过[项目调用说明](../.agents/skills/ascend-agent-workflow/references/model-analysis.md)读取；固定输入，独立重算，对照实际实现，产物进任务目录 |
+
+本来源按本机 `dependencies.model_analysis.enabled` 选用，资料/方法消费不要求全量插件或模型源码导入。原仓无 `.gitmodules` 的两个 gitlink 保持未初始化；全仓许可尚未明确，当前接入为用户授权的本机方法引用，不宣称再分发许可已核实。报告给出分析与待验证项，部署、精度和性能继续走原领域入口。
 
 ## awesome-agent-skills：模型精度诊断手册（可选）
 
