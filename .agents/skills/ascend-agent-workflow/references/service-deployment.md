@@ -134,6 +134,8 @@ if [[ "$NODE_RANK" != 0 ]]; then args+=(--headless); fi
 
 PD按当前连接器明确P/D角色、engine标识、KV端口、TP/PP/DP及必要状态元数据；参数化形状是追加`--kv-transfer-config "$KV_TRANSFER_JSON"`，不提供与模型无关的万能JSON。使用原实现核对代理启动参数和连接器要求的顺序；[PD流程](../../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-pd-serving/SKILL.md)的proxy生命周期在其边界之外，不把启动代理误称其wrapper已管理。准备角色命令后同环境解析，确认master/rendezvous与实际监听一致。
 
+仅当本次计划启用EPLB时，可按需参考[MRV2/STAIR版本化启用样例](../../../../knowledge/topics/eplb-enable-reference.md)，先核对模型/量化、runner与并行约束；该样例不作为所有服务的默认配置，P/D角色分别确认，不因套用样例自动叠加历史PR或修改环境。
+
 ## 启动、验收和交接
 
 1. 刷新资源/端口及前次进程状态，通过所选原工具启动，保存最终配置、attempt、日志及PID/starttime/进程组或cgroup等归属证据。

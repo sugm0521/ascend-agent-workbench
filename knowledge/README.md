@@ -78,6 +78,7 @@ sources:
 
 - [Mooncake同步batch与底层建链的分层超时](topics/mooncake-nested-timeout.md)：固定版本下的独立计时层、冷peer排队、证据边界与复查条件。
 - [EPLB运行阶段与日志指标判读](topics/eplb-runtime-evidence.md)：限定实现下的初始化/真实提交、预测均衡度、迁移计数、局部耗时与开关边界。
+- [MRV2下EPLB启用参考](topics/eplb-enable-reference.md)：D侧参数、模型/量化支持前置、角色差异与实际运行证据；限定版本而非全局默认。
 - [AISBench证据报告](../docs/aisbench-evidence.md)：官方分数、有效输出和结束状态的现有权威说明；不在知识库复制同一规则。
 
 知识条目只在本库维护一份；项目规则与领域skill已有的通用要求直接引用，不重复抄写。
