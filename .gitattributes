@@ -1,0 +1,2 @@
+# Preserve archived evidence bytes, including original line endings.
+knowledge/history/*/[0-9]*.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

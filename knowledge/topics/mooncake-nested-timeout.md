@@ -2,45 +2,87 @@
 id: mooncake-nested-timeout
 title: Mooncake同步批量等待与底层建链预算需要分层核对
 status: verified
-updated_at: 2026-10-15T16:23:49.631130+08:00
-tags: [Mooncake, KV传输, 超时, 冷启动]
-applies_to: v0.3.11.post1固定源码的Python同步batch与Ascend ADXL建链路径；运行观察仅限所述2026-10-15任务
+updated_at: '2026-10-15T16:52:33+08:00'
+verified_at: '2026-10-15T16:52:33+08:00'
+tags:
+- Mooncake
+- KV传输
+- 超时
+- 冷启动
+applies_to: Mooncake v0.3.11.post1固定提交的Python同步batch/Ascend ADXL路径；vLLM-Ascend helper限所列文件指纹；运行观察限2026-10-15历史任务
 sources:
-  - path: https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-integration/transfer_engine/transfer_engine_py.cpp
-    revision: e9c61075720039bcfc5fffd19f847608402be3d0
-    evidence: source
-  - path: https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-transfer-engine/src/transport/ascend_transport/ascend_direct_transport/transfer_executor_base.cpp
-    revision: e9c61075720039bcfc5fffd19f847608402be3d0
-    evidence: source
-  - path: tasks/eplb/当前KV传输超时与DYNAMIC_EPLB核查-20261015-1138.md
-    revision: sha256:91cb1524415a8be737befdc10a259dffab2cfaa8a5ae06f3062ddcd007cf55cc
-    evidence: source
-    access: local-only
+- id: mc-binding
+  path: https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-integration/transfer_engine/transfer_engine_py.cpp
+  revision: e9c61075720039bcfc5fffd19f847608402be3d0
+  locator: TransferEnginePy构造函数L100–107；batchTransferSync的超时检查L547–551
+  observed_at: '2026-10-15T16:50:45+08:00'
+  evidence: source
+  access: published
+- id: mc-connect
+  path: https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-transfer-engine/src/transport/ascend_transport/ascend_direct_transport/transfer_executor_base.cpp
+  revision: e9c61075720039bcfc5fffd19f847608402be3d0
+  locator: ParseExecutorEnvIntoInitParams L66–82；checkAndConnect L245起
+  observed_at: '2026-10-15T16:50:45+08:00'
+  evidence: source
+  access: published
+- id: ascend-helper
+  path: tasks/eplb/results/187-pr-timeout-warmup-20261015/installed-timeout-source.json
+  revision: sha256:15797ff645e66b176f2a198ce991ab0e540c9ed000bdf691879600b47b88a559
+  locator: files中的distributed/kv_transfer/utils/utils.py::get_transfer_timeout_value
+    L87–94
+  observed_at: '2026-10-15T11:01:59+08:00'
+  evidence: source
+  access: local-only
+- id: historical-report
+  path: tasks/eplb/当前KV传输超时与DYNAMIC_EPLB核查-20261015-1138.md
+  revision: sha256:91cb1524415a8be737befdc10a259dffab2cfaa8a5ae06f3062ddcd007cf55cc
+  locator: 第1–3节的30秒外层失败、连续三peer建链与人工停止边界
+  observed_at: '2026-10-15'
+  evidence: source
+  access: local-only
 ---
 
 # Mooncake同步批量等待与底层建链预算需要分层核对
 
 ## 结论与适用条件
 
-遇到调整底层连接/传输等待后，调用仍在接近固定时长失败的情况，先定位实际返回超时的调用层。该版本的Python同步batch另有自己的预算；一次batch等待还可能包含冷peer建链排队。各条底层连接在各自期限内成功，不能推出外层请求已及时完成。
+调整内层等待后仍在固定时长失败时，先定位实际返回超时的调用层。本版本Python同步batch有独立外层预算；冷peer的串行建链和排队可能使其提前返回。单条连接在各自期限内成功，不能推出调用已在外层期限内完成。
 
-这条知识记录的是固定实现和一次任务调查得到的判断方法，不提供适用于所有模型/后端的默认超时值。
+本条verified覆盖固定源码事实及已归档报告的来源复核，不是本次重新验证服务已修复。历史报告的原证据时间仅按日期记录，运行片段为当日11:27–11:35；本次重读不能把它刷新为当前运行状态。
+
+## 三个变量的分工
+
+| 变量 | 单位与控制层 | 消费时机及证据 |
+|---|---|---|
+| ASCEND_CONNECT_TIMEOUT | 毫秒，单次ADXL Connect等待 | Ascend执行器初始化参数解析；mc-connect |
+| ASCEND_TRANSFER_TIMEOUT | 毫秒，底层数据传输预算 | Ascend执行器初始化参数解析；当前vLLM-Ascend helper显式值优先；mc-connect、ascend-helper |
+| MC_TRANSFER_TIMEOUT | 秒，Python同步batch外层基础等待 | TransferEnginePy构造函数读取；该版本缺省30秒、显式值最小按5秒处理；mc-binding |
+
+mc-binding的batch截止条件为基础等待加`total_length`纳秒，后者是源码中的按字节数增加的预算。不能把基础预算当成精确且与数据长度无关的硬截止，也不能用底层传输预算替代外层接口预算。
+
+ascend-helper中`get_transfer_timeout_value()`优先返回显式ASCEND_TRANSFER_TIMEOUT；未设置时按HCCL_RDMA_TIMEOUT/RETRY_CNT推导，再由连接器初始化写入。故“没有手写export”不等于“没有底层传输预算”。该helper结论限定于本机已保存源码，不能替代其他版本消费逻辑。
+
+变量应进入相应引擎构造/初始化使用的环境。启动命令里的export、进程初始环境和组件实际解析日志分别记录；仅修改另一个shell不证明存量worker生效。
 
 ## 证据与复核方式
 
-- [Python绑定构造函数](https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-integration/transfer_engine/transfer_engine_py.cpp#L100)在构造时读取MC_TRANSFER_TIMEOUT，按秒换算为纳秒；缺省基础预算为30秒。
-- [同步batch检查](https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-integration/transfer_engine/transfer_engine_py.cpp#L547)使用基础预算加total_length计算本次截止条件，和底层连接参数不属于同一个计时层。
-- [Ascend建链实现](https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-transfer-engine/src/transport/ascend_transport/ascend_direct_transport/transfer_executor_base.cpp#L245)在checkAndConnect内持有connection_mutex_再调用Connect；同一实例的冷建链会发生串行等待。
-- 本机任务报告保存了一条工作路径上连续三次约26.449、25.384、25.330秒的建链记录；每条小于当次60秒连接预算，累计却超过外层30秒基础预算。该运行观察来自已归档任务报告，本次仅复核报告及上述固定源码，没有重新采集或运行服务器。
-
-复用时先匹配实际安装版本、对应日志与调用路径，再核对计时单位、构造/读取时机和队列等待是否落在外层期限内。若实际失败层不同，应回到该层取证。
+- mc-binding：[固定提交构造函数](https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-integration/transfer_engine/transfer_engine_py.cpp#L100)及[batch检查](https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-integration/transfer_engine/transfer_engine_py.cpp#L547)，本次重新读取；原文文件SHA256为`c25c03eee8db4ae80a26a31517cac17880958844b7423b3bf2f2ac14cd24a8d3`。
+- mc-connect：[参数读取](https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-transfer-engine/src/transport/ascend_transport/ascend_direct_transport/transfer_executor_base.cpp#L66)及[Connect互斥](https://github.com/kvcache-ai/Mooncake/blob/e9c61075720039bcfc5fffd19f847608402be3d0/mooncake-transfer-engine/src/transport/ascend_transport/ascend_direct_transport/transfer_executor_base.cpp#L245)，同一实例的冷连接可能串行等待；本次读取原文SHA256为`6b21496e26d1ae6b0b08558655a6fd7a2743f261406bd4768dce6daca0e2359e`。
+- ascend-helper：本机源码记录见frontmatter，helper所在完整utils.py文本SHA256为`2cf74ca0c1fb2a562e1f24d210cef8c4cb4562ce9b42d0ba45d8aa84d94b8546`，不随知识条目上传源码全集。
+- historical-report：已归档报告记录连续三次26.449、25.384、25.330秒建链，每条小于该次60秒预算，累计超过外层30秒。当前仅复核报告及固定源码，未重新配对全量原生日志或运行服务器。
 
 ## 不能推出的结论
 
-放宽预算只是容错调整；没有新运行证据不能声称冷建链变快、所有KV请求成功或底层故障根因已修复。不能把一个路径上的采样外推为全节点证据，也不能把随后人工停止导致的退出当成此前通信失败的直接结果。
+60秒建链、180秒底层传输、300秒外层等待只是该任务试验配置，不是本条提供的通用默认值。历史证据支持避免单次建链/外层等待提前超时；没有独立证据证明底层传输180秒始终必要。
 
-原始任务报告和日志仅本机可访问，来源哈希用于对应记录；正文中的源码链接可独立访问。当前verified只覆盖源码事实和明确归属的历史报告，未增加NPU或端到端验收。
+放宽预算是容错调整，不能证明冷链变快、所有KV请求成功或根因修复。EPLB/HIXL共存抢核是可能解释，缺少隔离证据，不能写成已确认根因。一个路径的采样不能外推全节点；人工停止后的退出也不能统一归因于此前通信失败。
+
+本机报告和helper记录为local-only；其他agent若无这些材料，不能声称独立复验本机部署或运行，只可在上述限定范围参考已发布结论。当前EPLB日志含义另见[运行阶段与指标判读](eplb-runtime-evidence.md)。
 
 ## 失效与复查条件
 
-安装版本、Python绑定预算算法、变量读取时机或连接互斥实现改变时，重新对照源码和实际调用；不能无条件沿用这里的默认值和排队解释。发生实质修正前按[知识库历史规则](../README.md#过期与历史保留)保存完整旧条目及具体原因，不直接删除。
+安装版本、Python预算算法、变量读取/覆盖顺序或Connect互斥实现改变时，重查相应来源。来源暂不可读时保留已核实范围和缺口，不按更新时间延长结论效力，不默认重跑实验。
+
+## 历史
+
+本次补全变量分工与统一证据字段，旧结论仍有效。完整旧条目及修订依据见[历史记录](../history/mooncake-nested-timeout/README.md)。
