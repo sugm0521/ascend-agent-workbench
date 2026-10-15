@@ -1,0 +1,4 @@
+interface:
+  display_name: "模型精度诊断"
+  short_description: "复现并定位模型乱码、复读和精度下降，复用现有验证工具完成可回滚修复与目标场景回归"
+  default_prompt: "使用 $ascend-model-accuracy 复现并定位当前模型精度或输出质量问题，按已有授权推进修复和目标场景回归，交付证据与结论。"

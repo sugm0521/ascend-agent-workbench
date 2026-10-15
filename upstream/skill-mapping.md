@@ -14,6 +14,7 @@
 | 手工已有容器的独立SSH登录入口 | [ascend-container-ssh](../.agents/skills/ascend-container-ssh/SKILL.md) | 选择/复用可用端口，按指定认证配置并验证实际登录；托管目标按原契约交接，不自动重建容器或做NPU smoke |
 | 指定环境复现清单 | [ascend-runtime-snapshot](../.agents/skills/ascend-runtime-snapshot/SKILL.md) | 每次启动前及独立只读输出；字段统一维护，区分历史/模拟/实际加载，不自动部署、升级或NPU验证 |
 | 服务性能压测、吞吐/延迟和公共前缀测试 | [ascend-performance-benchmark](../.agents/skills/ascend-performance-benchmark/SKILL.md)、[aisbench_auto_tools_prefix](../deps/aisbench-auto-tools-prefix/README.md) | 默认优先使用；只在请求端运行，独立可写副本与AISBench环境；精度、算子打流和纯profiling走原入口 |
+| 模型精度下降、乱码、复读与参考结果不一致 | [ascend-model-accuracy](../.agents/skills/ascend-model-accuracy/SKILL.md) | 独立维护症状诊断、消融与修复回归；复用 correctness/graph/distributed/operator，不把定位扩为修复 |
 | 生成式AISBench评测结果与输出质量证据 | [证据报告工具](../docs/aisbench-evidence.md) | 离线消费显式run/解析器，每组与总汇分开；基础检查和按需审计，不改官方评分、不发请求 |
 
 ## workspace：流程与执行
@@ -60,6 +61,12 @@
 | 中断与交接 | [handoff](../deps/matt-pocock-skills/skills/productivity/handoff/SKILL.md) | 简洁记录现状、证据和下一步，以任务文件为权威状态 |
 
 上层 skill 独立编写，仅提炼这些方法，按本项目授权/工具/记录格式适配。来源里的 Skill 工具语法和安装前提不能直接假定在当前会话可用；也不复制其广泛触发范围。
+
+## awesome-agent-skills：模型精度诊断手册（可选）
+
+| 需求 | 已核对入口 | 接入条件与边界 |
+|---|---|---|
+| 乱码、复读、空输出与精度分数异常的模型层诊断 | [原精度 skill](../deps/awesome-agent-skills/vllm-ascend-accuracy/SKILL.md)、[诊断手册](../deps/awesome-agent-skills/vllm-ascend-accuracy/references/diagnostic-playbook.md)、[修复手册](../deps/awesome-agent-skills/vllm-ascend-accuracy/references/remediation-playbook.md) | 通过独立项目 skill 的[来源与接入](../.agents/skills/ascend-model-accuracy/references/source-and-tools.md)按需读取；MIT 来源只读，快照/比较/资源与任务状态沿用项目工具，不安装同仓其他 skill 或自动执行原脚本 |
 
 ## 已有个人能力
 

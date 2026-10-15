@@ -40,5 +40,19 @@ sources:
       - cal_prefix_hit_rate.py
       - save_file.py
 
+  awesome_agent_skills:
+    path: deps/awesome-agent-skills
+    url: https://github.com/zhaochuang001/awesome-agent-skills.git
+    commit: 836e239f80cb76c45a5dd667839e40f336789472
+    purpose: 模型精度诊断只读手册；由独立 ascend-model-accuracy 消费，不安装其生态工具
+    declared_dependencies:
+      - LICENSE
+      - vllm-ascend-accuracy/SKILL.md
+      - vllm-ascend-accuracy/references/diagnostic-playbook.md
+      - vllm-ascend-accuracy/references/remediation-playbook.md
+      - vllm-ascend-accuracy/references/remote-container-workflow.md
+      - vllm-ascend-accuracy/references/final-report-template.md
+      - vllm-ascend-accuracy/references/issue-report.md
+
 # 仅固定顶层来源。下层版本要求从父提交的原声明读取，
 # 不在这里复制另一套 pin；业务版本与本机能力另行初始化。

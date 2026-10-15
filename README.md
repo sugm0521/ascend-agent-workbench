@@ -40,6 +40,14 @@ git -c submodule.recurse=false submodule update --init -- deps/aisbench-auto-too
 
 该命令只准备三个顶层来源仓库。不要对整个依赖树无条件执行递归初始化，否则可能另外克隆 workspace 内的业务代码。目标提交由父仓库 gitlink 和 [sources.lock.yaml](upstream/sources.lock.yaml) 固定。
 
+使用独立模型精度 skill 的上游诊断手册时，只准备其固定来源：
+
+```bash
+git -c submodule.recurse=false submodule update --init -- deps/awesome-agent-skills
+```
+
+该来源只作资料读取，不安装同仓其他 skill 或执行其快照、服务器管理和迁移脚本。项目适配与工具选择维护在精度 skill 自己的目录。
+
 ## 后续任务
 
 初始化后可以直接描述需求，例如“定位这个问题单的根因”“优化这个模型的吞吐”或“实现算子替换”。[workflow skill](.agents/skills/ascend-agent-workflow/SKILL.md) 负责查证与必要澄清，再按收益动态分工；明确的小任务无需完整采访或多个 agent。
@@ -50,6 +58,7 @@ git -c submodule.recurse=false submodule update --init -- deps/aisbench-auto-too
 | [dependencies](.agents/skills/ascend-workbench-dependencies/SKILL.md) | 版本变化、相关传递依赖、升级与组合验证 |
 | [workflow](.agents/skills/ascend-agent-workflow/SKILL.md) | 目标、事实、验收、领域路由与整体推进 |
 | [performance-benchmark](.agents/skills/ascend-performance-benchmark/SKILL.md) | 现有服务吞吐、时延、并发与公共前缀压测；优先调用AISBench工具并核验原生结果 |
+| [model-accuracy](.agents/skills/ascend-model-accuracy/SKILL.md) | 独立维护模型乱码、复读和精度下降的诊断、修复与回归；可直接调用 `$ascend-model-accuracy`，复用原验证工具 |
 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/SKILL.md) | 只读输出指定环境复现清单，记录CANN/代码/PR/依赖替换；部署前也调用，不自动启动或升级 |
 | [container-ssh](.agents/skills/ascend-container-ssh/SKILL.md) | 给手工已有容器配置或恢复独立SSH入口，选择可用端口并验证实际登录；可直接调用 `$ascend-container-ssh` |
 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 依赖、子任务、写入归属与资源边界 |

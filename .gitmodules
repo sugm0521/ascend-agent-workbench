@@ -10,3 +10,6 @@
 [submodule "deps/aisbench-auto-tools-prefix"]
 	path = deps/aisbench-auto-tools-prefix
 	url = https://github.com/rayn-zzz/aisbench_auto_tools_prefix.git
+[submodule "deps/awesome-agent-skills"]
+	path = deps/awesome-agent-skills
+	url = https://github.com/zhaochuang001/awesome-agent-skills.git
