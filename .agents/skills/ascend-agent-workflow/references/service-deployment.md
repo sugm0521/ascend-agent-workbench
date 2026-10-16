@@ -29,11 +29,17 @@
 
 模型专属量化字段、旧开关失效或接口变化按实际实现核对，不能固化某次修复为所有启动必做步骤。代码/环境变更后必要reload由执行方在授权范围内完成。
 
+### 通信分支与必需挂载的执行检查
+
+新建/重建容器、相关挂载或通信方式变化时，按[部署预检说明](../../../../docs/deployment-preflight.md)先确定本次采用静态端点、受支持的自动资源方式或不适用该路径。静态方式按实际物理NPU检查端点JSON及挂载；自动方式确认当前版本/拓扑支持、声明设备与工具前提，并清除冲突静态配置；不能因文件缺失擅自切换方案。
+
+手工Docker入口使用同一份本次声明生成首台与批量的挂载/env参数，调用[只读检查工具](../../../../scripts/deployment_preflight.py)的`docker-args`阶段；创建后对照该节点实际`docker inspect`执行`verify`，缺必需项时停止对应后续启动。托管入口已有等价检查时复用原契约，不插入另一套生命周期。只核对本次声明范围；容器内路径/工具和后续通信/业务请求仍分别验收，普通状态查看不触发此流程。
+
 ## A5新建容器示例
 
 仅用于已确认host网络、runc/privileged方案的A5手工容器。根据实际授权卡范围和宿主设备填写变量；托管容器使用原工具，不执行此模板。已有本会话任务容器或明确指定复用时跳过创建。保存镜像有正确默认入口时优先保留；下例用于已确认需显式加载环境的镜像。
 
-以下代码是命令构造示例，不是公共启动脚本或已实测的通用镜像配方。ENV_SCRIPT须在镜像内存在且加载本次全部必需CANN/NNAL/OPP；不把某个版本固定路径当通用入口。
+以下代码是设备/基础选项的命令构造示例，不是公共启动脚本或已实测的通用镜像配方。实际入口按上一节声明统一生成所需mount/env并验收，不能把示例中手写列表当作另一套批量配置。本例声明须包含模型与driver挂载及env中的ENV_SCRIPT。ENV_SCRIPT须在镜像内存在且加载本次全部必需CANN/NNAL/OPP；不把某个版本固定路径当通用入口。
 
 本例已确认使用`--privileged`，按[Docker设备权限语义](https://docs.docker.com/engine/containers/run/#runtime-privilege-and-linux-capabilities)，容器可访问全部宿主设备，下面的逐卡`--device`清单不构成设备访问隔离。仅授权子集卡时，须在实际NPU进程入口落实该后端支持的选卡机制并核对物理/逻辑映射，未落实前不启动NPU负载；若要求设备访问隔离，则使用经验证且符合该要求的非privileged或托管方案，运行时选卡不能代替访问隔离。
 
@@ -41,6 +47,7 @@
 # 在目标宿主设置本次实际值，不将占位符直接执行。
 : "${IMAGE:?}" "${CONTAINER:?}" "${MODEL_DIR:?}" "${ENV_SCRIPT:?}"
 : "${NPU_IDS:?逗号分隔的已授权卡号}" "${SHM_SIZE:?}" "${NOFILE_LIMIT:?}"
+: "${DEPLOYMENT_PLAN:?本节点部署声明JSON}" "${DEPLOYMENT_PREFLIGHT:?已上传的预检脚本路径}"
 docker image inspect "$IMAGE" >/dev/null || exit 1
 if docker container inspect "$CONTAINER" >/dev/null 2>&1; then
     echo '容器名冲突，停止；不自动复用、删除或覆盖'
@@ -51,7 +58,7 @@ test -d /usr/local/Ascend/driver || exit 1
 run_args=(--runtime=runc --user root -it -d --name "$CONTAINER"
     --network host --privileged --shm-size="$SHM_SIZE"
     --ulimit "nofile=$NOFILE_LIMIT:$NOFILE_LIMIT" --workdir /workspace
-    --entrypoint /bin/bash --env "ENV_SCRIPT=$ENV_SCRIPT")
+    --entrypoint /bin/bash)
 IFS=, read -r -a card_ids <<< "$NPU_IDS"
 for card in "${card_ids[@]}"; do
     [[ "$card" =~ ^[0-9]+$ ]] || exit 1
@@ -64,16 +71,27 @@ for device in /dev/davinci_manager /dev/hisi_hdc /dev/ummu /dev/uburma; do
     test -e "$device" || exit 1
     run_args+=(--device "$device")
 done
-run_args+=(--mount type=bind,src=/usr/local/Ascend/driver,dst=/usr/local/Ascend/driver)
-for path in /usr/local/Ascend/firmware /usr/local/dcmi /usr/local/sbin/npu-smi /usr/local/bin/npu-smi; do
-    if test -e "$path"; then
-        run_args+=(--mount "type=bind,src=$path,dst=$path")
-    fi
-done
-run_args+=(--mount "type=bind,src=$MODEL_DIR,dst=$MODEL_DIR,readonly")
-# 必需源码/共享/通信挂载按本次方案补入，先确认源存在及类型。
-docker run "${run_args[@]}" "$IMAGE" -lc 'set -e; source "$ENV_SCRIPT"; exec /bin/bash'
-docker inspect "$CONTAINER" --format '{{.State.Running}} {{.Image}}'
+# 模型、driver及本次必需源码/共享/通信挂载统一写入声明。
+# 下面同一入口用于首台和批量；verify失败时不进入后续模型启动。
+python3 - "$DEPLOYMENT_PREFLIGHT" "$DEPLOYMENT_PLAN" "$IMAGE" "$CONTAINER" \
+    "$MODEL_DIR" "$ENV_SCRIPT" "${run_args[@]}" <<'PY'
+import json, pathlib, subprocess, sys
+helper, plan_path, image, container, model, env_script, *base_args = sys.argv[1:]
+plan = json.loads(pathlib.Path(plan_path).read_text())
+if plan['container'] != container or plan.get('env', {}).get('ENV_SCRIPT') != env_script:
+    raise SystemExit('声明container/ENV_SCRIPT与本次启动参数不一致')
+for source in (model, '/usr/local/Ascend/driver'):
+    if not any(m['source'] == source and m['target'] == source for m in plan['mounts']):
+        raise SystemExit('声明缺少本例必需挂载: ' + source)
+declared = json.loads(subprocess.check_output(
+    [sys.executable, helper, 'docker-args', '--plan', plan_path], text=True))
+subprocess.run(['docker', 'run', *base_args, *declared, image, '-lc',
+                'set -e; source "$ENV_SCRIPT"; exec /bin/bash'], check=True)
+inspection = pathlib.Path(plan_path + '.inspect.json')
+inspection.write_text(subprocess.check_output(['docker', 'inspect', container], text=True))
+subprocess.run([sys.executable, helper, 'verify', '--plan', plan_path,
+                '--inspect', str(inspection)], check=True)
+PY
 ```
 
 不覆盖整个宿主/usr/lib64或/usr/local/sbin；rootinfo/hixlep先核对内容和本次拓扑。镜像保存不包含外部模型挂载及其元数据修改，需另行记录和准备。容器running不代表基础导入、通信或推理通过。
