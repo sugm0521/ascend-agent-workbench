@@ -74,6 +74,9 @@ sources:
 
 ## 主题入口
 
+- [KDA预编译调用参数边界](topics/kda-compiled-launcher-arguments.md)：JIT常量绑定、直接launcher签名和首次请求参数错误；固定源码与历史运行分级，其他后端适用性待确认（candidate）。
+- [A5独立能力检测与host launcher](topics/a5-triton-capability-detection.md)：目标架构正确仍可能选择错误启动分支；容器检测输入、编译metadata和207000的历史证据边界（candidate）。
+- [Profiler停止与窗口边界](topics/profiler-stop-window-boundaries.md)：控制请求、原生时长、严格裁剪、硬件counter及性能对照口径（candidate）。
 - [Mooncake同步batch与底层建链的分层超时](topics/mooncake-nested-timeout.md)：固定版本下的独立计时层、冷peer排队、证据边界与复查条件。
 - [EPLB运行阶段与日志指标判读](topics/eplb-runtime-evidence.md)：历史实现的初始化/真实提交、预测均衡度、迁移计数、局部耗时与开关边界；当前适用性待复核。
 - [MRV2下EPLB启用参考](topics/eplb-enable-reference.md)：历史D侧参数、模型/量化支持前置、角色差异与验收边界；当前适用性待复核，不是全局默认。
