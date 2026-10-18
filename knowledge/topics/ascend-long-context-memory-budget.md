@@ -7,7 +7,7 @@ verified_at: '2026-10-18'
 observed_at: '2026-10-18'
 tags: [长序列, KVCache, KimiK3, DCP, PP, workspace, 显存]
 applies_to: 指定vLLM/vLLM-Ascend固定源码的MLA workspace与混合KV分组规则；容量数值和失败点仅属于正文限定的历史Kimi K3配置
-evidence_scope: 源码事实已只读复核；历史容量及请求摘要的原始运行材料未公开，本次没有重新请求模型或测试内存边界
+evidence_scope: 源码事实已只读复核；历史容量及请求、2026-10-16分配重试案例仅复核已有摘要和小型统计，原始运行及完整叠加补丁未公开；本次没有重新请求模型或测试内存边界
 sources:
   - id: workspace-allocation
     path: https://github.com/vllm-project/vllm-ascend/blob/6ef97a0d9709029047d4ab5a44a1cafcd7536aad/vllm_ascend/attention/utils.py
@@ -27,6 +27,20 @@ sources:
     path: https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/v1/core/kv_cache_utils.py
     revision: ced6857afa0ea7b2e3f0846a62e1394e90f15607
     locator: check_enough_kv_cache_memory L975起；get_max_concurrency_for_kv_cache_config L1067-1100
+    observed_at: '2026-10-18'
+    evidence: source
+    access: published
+  - id: mla-chunk-expansion
+    path: https://github.com/vllm-project/vllm-ascend/blob/7759ceecee1c3ea21a4d47d55f93545fca895088/vllm_ascend/attention/mla_v1.py
+    revision: 7759ceecee1c3ea21a4d47d55f93545fca895088
+    locator: build_chunked_metadata L561-579；_compute_prefill_context的kv_b_proj及K/V准备L1289-1311
+    observed_at: '2026-10-18'
+    evidence: source
+    access: published
+  - id: allocator-retry
+    path: https://github.com/Ascend/pytorch/blob/5dd8ef3f9b375b5ae4a83538d5785754148c3302/torch_npu/csrc/core/npu/NPUCachingAllocator.cpp
+    revision: 5dd8ef3f9b375b5ae4a83538d5785754148c3302
+    locator: malloc的缓存回收重试L1175-1189；ExpandableSegment::unmapHandles L562-585
     observed_at: '2026-10-18'
     evidence: source
     access: published
@@ -98,8 +112,28 @@ PP划分的数量和层数约束见[P/D配置参考](kimik3-pd-configuration-ref
 
 workspace增加与后续失败有时间关联；没有受控显存分配轨迹或充分A/B，不能断言它是该次OOM的唯一原因，也不提供“固定留出1.56GiB即可解决”的规则。失败位置和已知条件足以保留，不据此自动展开其他组件调查。
 
+## 分块减少仍可能因可恢复分配失败而变慢
+
+本节是独立于上述1M请求边界的历史案例，原观察日期为2026-10-16；2026-10-18仅复核已有小型统计和新增公共源码，没有新增运行。原有章节及来源的证据日期不变。
+
+固定MLA实现用workspace预算、有上下文的请求数和block对齐共同决定chunk大小，再对每块展开latent K/V并准备FIA输入；因此预算不是字节数，减少迭代次数也可能扩大单次临时张量。[mla-chunk-expansion]
+
+固定torch_npu分配器在申请失败后同步设备、清理workspace、释放缓存并重试；虚拟段解除映射前也会同步。这是源码机制，不代表每条申请都失败，也不代表失败一定导致进程退出。[allocator-retry]
+
+历史条件为Kimi K3八机PD、P侧PP4/TP8、DSpark推测、输入131072/输出1、90%公共前缀、并发10、120条正式请求。基线为vLLM `ced6857afa0ea7b2e3f0846a62e1394e90f15607`、vLLM-Ascend `7759ceecee1c3ea21a4d47d55f93545fca895088`，叠加PR18756 `70544faec4c28743ddc2222433fb041facbca285`及本地KDA/MLA兼容修改，CANN9.2.0、torch_npu2.10.0.post4；对照修改为helper最终固定返回524288，原配置计算值131072。完整本地补丁与运行材料未公开，这些基线和PR不等于完整可复现实现；案例保持candidate，不外推到其他构建。
+
+| 历史观察 | 能支持的判断 |
+|---|---|
+| 采样内chunk约129K扩大到368–376K；同总Q/K条件的prefix FIA累计下降 | FIA调用减少或局部加速不能单独代表端到端收益 |
+| PP3物理显存申请返回207001/out of memory，随后缓存释放和重试；两个未采profile的压测时段也分别记录335和348次失败/重试 | 可恢复分配失败可以在请求成功的同时引入大量同步与回收开销，不能只检查最终成功率 |
+| PP3反复出现物理页申请、释放、映射及设备同步，融合TP算子跨度扩大，上游PP计算空窗增加 | 支持“临时内存压力→分配回收/同步→融合通信等待→流水线背压”的主要瓶颈解释；精确各rank因果仍需更全证据 |
+
+定位时，先把同一进程同一时段的分配失败、重试日志与CPU `empty_tensor`、分配/释放/映射API、设备同步和后续kernel关联；再查无profile负载是否复现。不能把包含同步的CPU matmul调用时长当成设备矩阵乘kernel耗时。融合事件的判读见[空泡与分块性能方法](profiling-fused-communication-bubbles.md)。
+
+没有匹配回退A/B、allocator快照及完整rank归因，不能精确分摊全部端到端退化，不能区分缓存占用与碎片的比例，也不能把131072推荐为通用最优值。本案例的失败通过重试恢复，区别于前节请求HTTP500；没有实际回退验收时，只记录恢复原逻辑为待验证建议。
+
 ## 复用与失效条件
 
 复用时记录明确整数token长度，重新核对实际cache groups、block大小、DCP、speculative宽度、PP划分、workspace、图模式、EPLB冗余专家、内存利用率和并发。P和D分别核对；PP以各stage约束为准，DP副本各自保有预算。
 
-参数变化后先验实际分配，再按目标长度/输出/并发完成请求契约；模型权重或量化、缓存布局、Mamba模式、FlashMLA builder、通信器或图捕获策略改变时复查。上述公共源码支持分组和workspace规则，不能替代未公开的历史运行材料或新环境验收。
+参数变化后先验实际分配，再按目标长度/输出/并发完成请求契约；模型权重或量化、缓存布局、Mamba模式、FlashMLA builder、通信器、allocator及expandable_segments策略、图捕获或PP负载划分改变时复查。上述公共源码支持分组、workspace与分配器规则，不能替代未公开的历史运行材料或新环境验收。
