@@ -37,6 +37,16 @@ python aisbench_test.py \
 
 `PREFILL_DP`、`NPU_COUNT`须先按真实拓扑赋值。普通无前缀测试用`--dataset_type normal`并去掉前缀参数；指定数据集使用`--dataset`，当前只支持工具声明的GSM8K格式。`--repeat_rate`是数据集公共前缀比例，不是保证的实际命中率；`--prefix_test`在正式负载前预热，`--dp`按需预热的域数填写，PD不得误用总机器数或D域数。固定版`--repeat`仅在normal分支生效，且汇总仅采集最后一次；前缀多轮或需要逐轮结果时，使用独立目录顺序执行，保留各轮日志。
 
+## 同数据对照与重放
+
+仅在需要比较同一批输入的配置、重复轮或性能回归时，固定正式dataset和公共prefix两份文件的内容、行序与完整SHA；相同seed、名义长度或命中率不足以证明同数据。
+
+固定提交中，`generate_dataset.py:create_multi_prefix_dataset`先生成前缀，随后`generate_unique_tokens`才设置seed；`data_picker.py`的prefix选择使用`random.choice`及持久化的已选集合。`write_data`还会以写入模式覆盖目标，预先放入同名文件不能保证重放。公开源码定位见[PD性能对照知识](../../../../knowledge/topics/pd-performance-comparison.md#固定负载不只固定seed)。
+
+对照时保留原件，在新run中复制或只读引用已固定的两份文件，发请求前后校验身份和实际token统计。当前CLI的`--dataset`分支只指定正式集、将prefix路径置空，不能仅加该参数就声称同时复用两份文件。若目标版本没有成对重放入口，只在隔离执行副本将数据生成分支改为校验既定参数和两份文件SHA后返回它们的路径，保存diff；HTTP请求及性能统计路径保持不变，不修改`deps/`或服务端。
+
+固定数据不等于固定服务预热史；需要解释PD吞吐或长尾差异时，按[PD性能对照与归因](../../../../knowledge/topics/pd-performance-comparison.md)分开检查P计算、D排队、KV传输和实际D分流。普通单轮测量继续原流程，不为此新增默认采样或全量检查。
+
 ## 固定版本的已知边界
 
 - [default_api.py](../../../../deps/aisbench-auto-tools-prefix/default_api.py)写死`temperature=0, ignore_eos=True`；CLI尝试替换的`generation_kwargs_for_replace`标记实际不存在。不能声称`--enable_think`或`--test_accuracy`已生效，也不能用它替代GPQA采样精度流程。需要其他采样语义时先核对实际生成的API配置与请求，在执行副本做明确适配并留证。
