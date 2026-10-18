@@ -74,7 +74,8 @@ sources:
 
 ## 主题入口
 
-- [KDA预编译调用参数边界](topics/kda-compiled-launcher-arguments.md)：JIT常量绑定、直接launcher签名和首次请求参数错误；固定源码与历史运行分级，其他后端适用性待确认（candidate）。
+- [MemFabric的HAL与Notify兼容边界](topics/memfabric-hal-notify-compatibility.md)：全局符号加载、真实接口输出及device_urma/device_rdma调用路径分别判定；历史单卡失败与替代接口缺口（candidate）。
+- [KDA预编译调用参数边界](topics/kda-compiled-launcher-arguments.md)：JIT绑定、首次请求参数错误及两套安装构建九/十二参数反例；固定源码与历史运行分级，其他构建适用性待确认（candidate）。
 - [A5独立能力检测与host launcher](topics/a5-triton-capability-detection.md)：目标架构正确仍可能选择错误启动分支；容器检测输入、编译metadata和207000的历史证据边界（candidate）。
 - [Profiler停止与窗口边界](topics/profiler-stop-window-boundaries.md)：控制请求、原生时长、严格裁剪、硬件counter及性能对照口径（candidate）。
 - [Mooncake同步batch与底层建链的分层超时](topics/mooncake-nested-timeout.md)：固定版本下的独立计时层、冷peer排队、证据边界与复查条件。
