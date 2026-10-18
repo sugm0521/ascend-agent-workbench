@@ -74,6 +74,7 @@ sources:
 
 ## 主题入口
 
+- [A5 MemCache池化配置与前置操作](topics/a5-memcache-pooling-setup.md)：三份配置、Python动态库路径及P/D增量；rootinfo、engine_id、layerwise图模式及元数据/真实后端预检边界（candidate）。
 - [MemFabric的HAL与Notify兼容边界](topics/memfabric-hal-notify-compatibility.md)：全局符号加载、真实接口输出及device_urma/device_rdma调用路径分别判定；历史单卡失败与替代接口缺口（candidate）。
 - [KDA预编译调用参数边界](topics/kda-compiled-launcher-arguments.md)：JIT绑定、首次请求参数错误及两套安装构建九/十二参数反例；固定源码与历史运行分级，其他构建适用性待确认（candidate）。
 - [A5独立能力检测与host launcher](topics/a5-triton-capability-detection.md)：目标架构正确仍可能选择错误启动分支；容器检测输入、编译metadata和207000的历史证据边界（candidate）。
