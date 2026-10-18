@@ -81,6 +81,9 @@ sources:
 - [Mooncake同步batch与底层建链的分层超时](topics/mooncake-nested-timeout.md)：固定版本下的独立计时层、冷peer排队、证据边界与复查条件。
 - [EPLB运行阶段与日志指标判读](topics/eplb-runtime-evidence.md)：历史实现的初始化/真实提交、预测均衡度、迁移计数、局部耗时与开关边界；当前适用性待复核。
 - [MRV2下EPLB启用参考](topics/eplb-enable-reference.md)：历史D侧参数、模型/量化支持前置、角色差异与验收边界；当前适用性待复核，不是全局默认。
+- [Kimi K3的P/D配置参考](topics/kimik3-pd-configuration-reference.md)：角色并行、PP分层、主/草稿长度、调度和图模式的版本化组合，含历史验证范围与复现缺口（candidate）。
+- [长序列的KV与workspace预算](topics/ascend-long-context-memory-budget.md)：长度配置、混合cache groups、workspace最终分配和运行时临时内存分别验收；保留1M请求的成功及失败边界（candidate）。
+- [目标与草稿CPU长度同步门控](topics/spec-decode-cpu-length-sync-gates.md)：固定PR19038的FlashMLA/PP/PCP/DCP条件，目标False日志及草稿分支的独立判断（candidate）。
 - [AISBench证据报告](../docs/aisbench-evidence.md)：官方分数、有效输出和结束状态的现有权威说明；不在知识库复制同一规则。
 
 知识条目只在本库维护一份；项目规则与领域skill已有的通用要求直接引用，不重复抄写。
