@@ -74,6 +74,7 @@ sources:
 
 ## 主题入口
 
+- [DSpark预算与PD状态布局](topics/dspark-pd-spec-state-layout.md)：固定两个分支下KDA卷积状态长度、V1/V2搬运与选块差异；56组合成元数据验证，真实PD适用性仍需核验（candidate）。
 - [PD性能对照与归因](topics/pd-performance-comparison.md)：固定dataset/prefix身份，区分P阶段、D排队与KV传输长尾；通信预热、占用采样和跨机请求关联的证据边界（candidate）。
 - [A5 MemCache池化配置与前置操作](topics/a5-memcache-pooling-setup.md)：三份配置、Python动态库路径及P/D增量；rootinfo、engine_id、layerwise图模式及元数据/真实后端预检边界（candidate）。
 - [MemFabric的HAL与Notify兼容边界](topics/memfabric-hal-notify-compatibility.md)：全局符号加载、真实接口输出及device_urma/device_rdma调用路径分别判定；历史单卡失败与替代接口缺口（candidate）。
