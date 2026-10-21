@@ -85,6 +85,8 @@ sources:
 - [Profiler停止与窗口边界](topics/profiler-stop-window-boundaries.md)：控制请求、原生时长、严格裁剪、硬件counter及性能对照口径（candidate）。
 - [融合通信算子的空泡与分块性能判读](topics/profiling-fused-communication-bubbles.md)：事件区间并集、融合核内部等待、同工作量匹配及流水线填充反例；与可恢复显存分配失败分层关联（candidate）。
 - [Mooncake同步batch与底层建链的分层超时](topics/mooncake-nested-timeout.md)：固定版本下的独立计时层、冷peer排队、证据边界与复查条件。
+- [HIXL的URMA/EID枚举失败](topics/hixl-no-urma-devices.md)：区分空列表、peer端口缺EID与跨rank连带退出；重拉仅属临时恢复，底层查询失败未闭环（candidate）。
+- [AICPU公共库部署不完整与缓存复用](topics/aicpu-partial-deploy-cache.md)：从507018回溯loader首错，核对设备NUMA小页、部署错误返回及成功标记；模型退出不自动修复设备文件，恢复未验收（candidate）。
 - [EPLB运行阶段与日志指标判读](topics/eplb-runtime-evidence.md)：历史实现的初始化/真实提交、预测均衡度、迁移计数、局部耗时与开关边界；当前适用性待复核。
 - [MRV2下EPLB启用参考](topics/eplb-enable-reference.md)：历史D侧参数、模型/量化支持前置、角色差异与验收边界；当前适用性待复核，不是全局默认。
 - [Kimi K3的P/D配置参考](topics/kimik3-pd-configuration-reference.md)：角色并行、PP分层、主/草稿长度、调度和图模式的版本化组合，含历史验证范围与复现缺口（candidate）。

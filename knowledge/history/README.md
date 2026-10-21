@@ -7,3 +7,5 @@
 已保存[Mooncake条目修订前的历史版本](mooncake-nested-timeout/README.md)，原因是补全公开源码定位与变量分工，旧结论仍有效；修订留存不等于确认过期。历史版本随后按发布边界清理私有索引，原证据时间和工程结论保持。
 
 已保存[KDA条目补充两套launcher ABI反例前的完整版本](kda-compiled-launcher-arguments/README.md)，保留原证据日期；旧限定结论仍有效，当前主题增加另一构建的实际失败与兼容边界。
+
+已保存[HIXL条目补充EID查询失败案例前的历史版本](hixl-no-urma-devices/README.md)，区分空列表与对端端口缺EID的分支，原临时恢复结论仍有效；公开历史已去除个人决定的来源说明。
