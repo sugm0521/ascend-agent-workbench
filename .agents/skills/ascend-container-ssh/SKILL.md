@@ -13,6 +13,7 @@ description: 为手工部署的已有Linux容器建立或恢复独立SSH登录�
 - 先核对容器是否运行、网络模式及已有sshd。通过执行工具的明确容器目标或宿主侧inspect + exec锁定容器；容器标记和namespace用于交叉验证。`command -v docker`不能单独证明执行位置，容器内可能也有Docker客户端。
 - 托管目标只识别并交接其原SSH契约、端口与修复入口；完整机器接入/ready请求交[machine-management](../../../deps/vllm-ascend-workspace/.agents/skills/machine-management/SKILL.md)。仅SSH请求不调用完整bootstrap/readiness来代替有界修复；原工具若只能运行整套初始化或NPU smoke，说明额外副作用与所需授权范围，不复制第二套托管流程或覆盖密钥策略。
 - 密码、公钥和登录账号按用户选择或既有有效配置使用；没有通用密码或固定端口。密码经安全输入、内存和加密连接stdin传递；按已确认的[本机容器总表规则](../../../docs/task-records.md#容器总表与最小环境记录)，容器 SSH 明文口令只持久记录在忽略的本机总表，不写入命令参数、生成脚本、聊天、任务报告或日志。配置口令与宿主登录凭据分开。
+- 用户已授权默认补齐免密时，对本轮要求接入的目标账号沿用[现有公钥追加和新连接验证规则](../ascend-workbench-init/references/operations.md#新服务器免密接入)，不重复询问；仅检查入口不触发写入。容器授权文件与宿主分开，托管目标继续交原工具，不借此重配宿主。
 
 ## 确认对外入口与可用端口
 

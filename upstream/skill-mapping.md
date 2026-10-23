@@ -9,6 +9,10 @@
 | 需求 | 入口 | 接入条件与边界 |
 |---|---|---|
 | skill 改进候选筛选与去重 | [ascend-skill-candidate-review](../.agents/skills/ascend-skill-candidate-review/SKILL.md) | 明确评估/优化请求才启用；优先最小增量，新增检查须有触发条件，不自动建设工具 |
+| 代码仓同步与升级分流 | [ascend-repository-update](../.agents/skills/ascend-repository-update/SKILL.md) | 核对实际仓库、目标和 dirty，默认安全快进；业务版本配对、工作台与固定依赖分别处理，日常状态查询不自动 fetch |
+| 已保存及已登记服务器的可达性快照 | [init 保存目标发现](../.agents/skills/ascend-workbench-init/references/operations.md#保存目标与-npu-接入)、[服务器总表](../docs/task-records.md#服务器可达性总表) | 有界只读查询；旧/新管理来源分别读取，不创建另一套注册/租约，不从 SSH 成功推断设备可用 |
+| 正式性能、精度及 SWE 数据集评测登记 | [三类测试表](../docs/task-records.md#三类正式测试总表)、[手动测试接手](../docs/task-records.md#接手手动测试) | 三类字段独立，实际工具/runner决定原生指标；正式手动测试缺项先补登记，调参排障留任务，不声明 AISBench 覆盖 SWE 执行 |
+| 算子开发进度和完整运行日志 | [共用记录规范](../docs/task-records.md#算子开发进度与运行日志) | 原领域方法/工具执行，上层关联进度与逐轮完整日志；不自动建第二状态源或委派 |
 | 个人工作、项目与知识库改进两份周报 | [ascend-weekly-report](../.agents/skills/ascend-weekly-report/SKILL.md) | 从当前项目及手工/自动变更取证，Markdown与HTML展示；只读汇报与候选评估，不维护知识、实施skill或发布，不承载个人调度时间 |
 | HCCL alltoallvc 单机/多机打流 | [ascend-hccl-traffic-test](../.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用原运行工具与 MPI/CANN；支持本地 fork、有限诊断及已明确授权的宿主直接路径，不携带大二进制；日志摘要不代替规模/rank 覆盖 |
 | 服务部署准备与验收 | [部署说明](../.agents/skills/ascend-agent-workflow/references/service-deployment.md) | 通用流程与A5条件命令；区分运行方式、同会话容器延续与显式复用；命令结构模拟不代表远端运行 |
@@ -38,6 +42,19 @@
 外部依赖约束来自 workspace 的 [remote-dev](../deps/vllm-ascend-workspace/.agents/deps/remote-dev.json)、[coordinator](../deps/vllm-ascend-workspace/.agents/deps/coordinator.json) 和 [knowledge kit](../deps/vllm-ascend-workspace/.agents/deps/vaws-knowledge.json) 原声明。remote-dev 是私有运行依赖，coordinator 是执行协议依赖，knowledge kit 是测试依赖；本轮仅核对声明，没有下载或 bootstrap 这些外部提供者。
 
 部分领域工具具有 workspace/session 或固定代码布局前提。对独立 repos/ 不承诺所有工具已适配；若实际入口不能绑定所选代码路径，记录能力缺口并提出最小适配方案，不初始化第二套业务代码。相关 `.agents/knowledge/` 只按任务查询，不全量加载。
+
+## 运行体系与执行入口
+
+仅在调用实际执行入口或复用已有结果时区分下列契约；按当前工具发现、实际绑定及固定版本说明判断，不把某台机器的接入方式当作其他机器的默认配置。资料可读、JSON可生成不代表执行后端兼容。
+
+| 当前目标 | 可用路径与范围 | 不满足时如何处理 |
+|---|---|---|
+| 已有可达HTTP服务，只做性能压测 | `ascend-performance-benchmark`在请求端运行AISBench，记录实际服务与运行身份；不要求为压测另建旧session | 服务或客户端缺项按原职责补齐，不自行重启服务 |
+| 已有合法VAWS ready session | 在该版本支持范围内使用原serving、benchmark、profiling等session入口，保留原代码一致性及资源机制 | 缺session或前置条件时报告缺口，不能拿其他体系的绑定值代替 |
+| MindIE或prepared-runtime的task/binding/execution | 生命周期与执行沿用当前已接入原工具。serving原文已把pool binding与legacy wrapper分开；是否有兼容的profiling、基准或精度执行入口需按实际工具接口确认 | 当前映射中的部分benchmark/profiling脚本仍只解析旧session；未有兼容入口时标待适配，可引用方法，不直接运行旧wrapper或重复分配资源 |
+| 已有测量、trace或诊断事件，只需离线处理 | 仅复用输入契约确实满足的解析、比较或计算部分。AISBench与回归按[交接约定](../.agents/skills/ascend-performance-benchmark/references/aisbench-auto-tools.md#与性能回归工具交接)处理；纯方法参考不承诺所有子命令都可离线运行 | 工具仍要求session解析或实测观测而材料不满足时，保留分析范围或缺口，不伪造session/观测，也不为离线分析申请资源 |
+
+旧 `vllm-ascend-benchmark`、profiling collection/analysis 的session解析不能由新binding透明替代；performance-regression的执行流程仍调用该benchmark。新体系可通过其原执行工具消费适用方法，但本映射没有实现这些旧wrapper的MindIE适配。精度/graph/distributed的证据处理同样先核对输入契约，原始运行与采集仍归当前工具。缺口只阻塞相关调用，不触发整套初始化、依赖升级、裸SSH绕行或第二套状态系统。
 
 ## cannbot：AscendC 方法与工具
 

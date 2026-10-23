@@ -45,6 +45,8 @@ CI 核查 PR、当前 head SHA、workflow/job、run 和终态是否一致，关�
 
 记录有效/无效假设、重复探索或返工、覆盖/CI 追踪问题及值得改善的流程。没有候选也正常。
 
+配置用法、启动指令、失败经验等知识候选交[知识维护](../ascend-knowledge-curation/SKILL.md)按宽口径逐条建议，由用户决定，不套用新 skill 建设的重复性/维护成本门槛，也不自动写入。用户暂不接收问题时保留任务待答项；具体收录授权与发布授权分别沿用。
+
 发现可复用操作时只提出具体候选：来源任务与证据、重复性、稳定输入输出、已有能力覆盖、边界、维护成本和验证方式。有持续跟踪价值时交主 agent 记入 `docs/reviews/`，状态遵循 proposed/approved/deferred/rejected/implemented。
 
 不自动复制任务脚本到公共 scripts/，不创建新 skill、不改外部维护源、不全局安装。候选确认后才用 [skill-development](../ascend-skill-development/SKILL.md) 建设；无新增证据不重复推荐已拒绝候选。

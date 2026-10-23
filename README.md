@@ -35,6 +35,7 @@ cd ascend-agent-workbench
 |---|---|---|
 | 接入与维护 | [init](.agents/skills/ascend-workbench-init/SKILL.md) | 首次接入、补齐缺失配置及初始化报告 |
 | 接入与维护 | [dependencies](.agents/skills/ascend-workbench-dependencies/SKILL.md) | 版本核对、相关传递依赖、升级与组合验证 |
+| 接入与维护 | [repository-update](.agents/skills/ascend-repository-update/SKILL.md) | 安全同步业务代码，分流工作台与固定依赖升级，保留现有工作 |
 | 任务推进 | [workflow](.agents/skills/ascend-agent-workflow/SKILL.md) | 查证目标与事实、必要澄清、领域路由与整体推进 |
 | 任务推进 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 子任务、依赖、写入归属与资源边界 |
 | 任务推进 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
@@ -110,7 +111,7 @@ python scripts/validate_workbench.py
 - [开发记录](docs/开发记录.md)：实际变化、验证和决定。
 - [归档与知识维护](docs/daily-sync.md)：个人任务归档和调度配置留本机，仅按授权发布skill与知识维护内容；实际推送后逐项反馈变化、验证和保留项。
 - [任务材料与台账规范](docs/task-records.md)：目录、编号、日志、完整启动文件，以及两张本机总表的维护边界。
-- [任务与台账模板](docs/templates/任务说明.md)：任务说明、详细记录，以及容器和 AISBench 总表。
+- [任务与台账规范](docs/task-records.md)：任务材料、算子进度与完整日志、服务器快照、容器及性能/精度/SWE 三类正式测试表。
 - [领域映射](upstream/skill-mapping.md)：锁定版本中的真实入口和能力边界。
 - [配置示例](config/workbench.example.yaml)：本机配置的参考结构，`null` 不是默认授权。
 - [流程演练](tasks/2026-10-05-流程演练/任务说明.md)：明确标记的模拟场景，真实工程验收另行完成。

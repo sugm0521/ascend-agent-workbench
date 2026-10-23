@@ -19,13 +19,13 @@ description: 对 vLLM-Ascend 推理服务进行证据驱动的性能调优，连
 
 使用[性能压测入口](../ascend-performance-benchmark/SKILL.md)驱动 AISBench，保留原生结果。检查成功/失败请求、实际输出 token、长度/提前停止、重复测量波动。正式性能轮与 profiling 轮分开。已有有效基线先复用，环境/负载变化会影响结论时再刷新。
 
-按[统一登记边界](../../../docs/task-records.md#aisbench-总表)，用户明确要求的测试、正式基线和最终验收进入 AISBench 总表；内部摸底与候选筛选只保留在本调优任务，包括失败和中断。精度诊断按对应 skill 的远端材料规则执行。
+按[统一登记边界](../../../docs/task-records.md#三类正式测试总表)，正式基线和最终验收按目标进入性能或精度测试表；内部摸底、候选筛选和排障只保留在本调优任务，包括失败和中断，不因用户要求查看结果或日志就进入正式表。精度诊断按对应 skill 的远端材料规则执行。
 
 PD、每卡归一化指标或跨机环境复刻时，读取[PD 与验收口径](references/pd-and-acceptance.md)。
 
 ## 从证据选择候选
 
-根据当前缺口选择轻量检查；已有 profiling 足够时直接分析，仅当新增采样能区分关键假设时采集。通过[能力映射](../../../upstream/skill-mapping.md)发现当前可用的 NPU profiling、memory、graph、distributed 和 operator 入口。工具/旧脚本的身份、目标解析与当前运行系统必须兼容；无法调用时说明缺口，不创建另一套资源或会话状态。
+根据当前缺口选择轻量检查；已有 profiling 足够时直接分析，仅当新增采样能区分关键假设时采集。通过[按运行体系区分的能力映射](../../../upstream/skill-mapping.md#运行体系与执行入口)发现当前可用的 NPU profiling、memory、graph、distributed 和 operator 入口。工具/旧脚本的身份、目标解析与当前运行系统必须兼容；无法调用时说明缺口，不创建另一套资源或会话状态。
 
 先确认瓶颈位于 prefill、decode、调度/Host、内存还是通信，结合关键路径和源码实际分支解释；按需读取[Ascend 候选选择](references/ascend-candidates.md)。算子耗时之和、占比和理论上界都不能直接作为端到端可获得收益。
 

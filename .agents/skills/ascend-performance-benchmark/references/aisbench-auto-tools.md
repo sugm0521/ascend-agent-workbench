@@ -47,6 +47,24 @@ python aisbench_test.py \
 
 固定数据不等于固定服务预热史；需要解释PD吞吐或长尾差异时，按[PD性能对照与归因](../../../../knowledge/topics/pd-performance-comparison.md)分开检查P计算、D排队、KV传输和实际D分流。普通单轮测量继续原流程，不为此新增默认采样或全量检查。
 
+## 与性能回归工具交接
+
+仅在使用 `performance-regression` 判定基线/候选时进入本节；普通单轮测量不做额外封装。先按[运行体系与执行入口](../../../../upstream/skill-mapping.md#运行体系与执行入口)核对目标接口，再读固定来源的[回归行为契约](../../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-performance-regression/references/behavior.md)。AISBench 的 CSV 不能直接当作该工具的 Benchmark JSON；封装和映射保存在本次任务，不改原生结果或新增一套运行状态。
+
+1. 每个实际 run 对应一个结果。先核对原生正式阶段、成功/失败数、输出完整性及解析有效性，保留失败；只有证据满足本轮测量要求时才将交接 JSON 标为 `status: "ok"`。外层退出0、汇总文件存在或 `9999/99999` 占位值不足以作此判断。
+2. 从本轮原生统计读取数值，组织 `{"status":"ok","metrics":{...}}`，按下表映射。延迟须核对实际单位并转换为毫秒；`--metric-map` 只重命名，不换算单位。吞吐保持 token/s，不用请求吞吐、总吞吐或每卡值替代输出 token 吞吐。缺失指标不填0、不以P90替代均值；必需指标缺失时保留无定论，不能因其他指标可解析而通过。
+
+| 固定版 CSV 列或原生统计 | 交接 `metrics` 字段 | 含义与单位 |
+|---|---|---|
+| `output_throughput` / Output Token Throughput | `output_throughput` | 完整run的输出 token/s |
+| `TTFT avg` / TTFT均值 | `mean_ttft_ms` | 均值，毫秒 |
+| `TPOT avg` / TPOT均值 | `mean_tpot_ms` | 均值，毫秒 |
+| 原生ITL均值，确有该项时 | `mean_itl_ms` | 均值，毫秒；没有则缺省 |
+
+3. 将该 JSON 交给原 `performance_regression.py normalize`。`--state`、`--phase`、`--ordinal` 和 `--config-hash` 取自本实验 `schedule.json`；预热和正式测量分别归档，不把AISBench内部预热当成另一条正式观测。若保留CSV列名，只有数值单位已对齐后才使用 `--metric-map 'ttft=TTFT avg'` 等显式映射。`normalize` 成功只表示已解析字段，仍须检查本任务必需指标是否齐全。
+4. 当前 `normalize` 不复制输入中的 `observation`。在 `record` 前，为每条正式测量单独关联该次运行实际采集的代码、环境、模型、拓扑、参数、并发、速率、设备及原生产物身份，按原契约加入测量 JSON 的 `observation` 并保留证据来源。不能照抄 `shared` 声明、首轮观测或计划哈希来冒充后续实测；缺少兼容的观测证据时停在指标汇总，不伪造字段来获得 `passed`。
+5. 严格按原 `plan → schedule → normalize/record → analyze` 顺序处理，保留原生文件、映射/单位换算与失败。原比较器负责配置一致性、逐轮观测、预热排除和波动判定；本节不放宽其门槛，也不把只允许代码变化的对照契约套给改变拓扑等条件的配置搜索。
+
 ## 固定版本的已知边界
 
 - [default_api.py](../../../../deps/aisbench-auto-tools-prefix/default_api.py)写死`temperature=0, ignore_eos=True`；CLI尝试替换的`generation_kwargs_for_replace`标记实际不存在。不能声称`--enable_think`或`--test_accuracy`已生效，也不能用它替代GPQA采样精度流程。需要其他采样语义时先核对实际生成的API配置与请求，在执行副本做明确适配并留证。

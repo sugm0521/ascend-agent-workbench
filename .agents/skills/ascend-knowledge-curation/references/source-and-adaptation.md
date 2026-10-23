@@ -4,7 +4,7 @@
 
 按目的查阅：
 
-- [ce-compound](../../../../deps/compound-engineering/skills/ce-compound/SKILL.md)：把解决且验证的问题转成值得长期保留的工程推理；已有文档不重复创建。采用其是否值得长期保留的判断，不把每次完成或改动量当作收录理由。
+- [ce-compound](../../../../deps/compound-engineering/skills/ce-compound/SKILL.md)：参考其工程推理、证据与适用条件的整理方法；候选范围和收录决定按本项目规则执行。归纳范围内可能保留的内容逐条交用户决定，不采用上游的重要性、已解决/已验证或已有文档门槛静默过滤；已有覆盖时提出更新、合并或补检索入口的建议。
 - [ce-compound-refresh](../../../../deps/compound-engineering/skills/ce-compound-refresh/SKILL.md)：对照当前实现复查旧知识的准确性、重叠、矛盾与被替代关系。只检查本次范围实际关联的条目。
 - [MIT许可](../../../../deps/compound-engineering/LICENSE)：此处为方法参考和本项目独立适配，没有复制完整上游skill或模板。
 
@@ -12,6 +12,7 @@
 
 | 上游行为或假设 | 本项目处理 |
 |---|---|
+| 先判断问题是否值得长期保留，已有文档不再创建 | 归纳范围内完整提出候选和已有覆盖项，说明证据与建议；用户逐条决定，证据不足保持 candidate，不自动写入或排除 |
 | 解决方案默认在docs/solutions，可能维护CONCEPTS.md | 仅维护用户指定的knowledge/；不创建另一份概念库、记忆库或修改项目指令 |
 | Full模式包含多角色研究与会话历史探测 | 按具体证据量决定读取范围；不为普通每日维护默认创建agent或扫描全部会话 |
 | Lightweight省略语义重叠检查 | 不直接调用该快捷模式；保留本库实际语义去重、来源核验和条件检查 |

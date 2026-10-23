@@ -33,11 +33,13 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 | 推理性能调优、吞吐/时延目标与 PD 每卡吞吐 | [ascend-inference-optimization](../ascend-inference-optimization/SKILL.md)串联基线、NPU 瓶颈证据、候选及可比回归 | 原生指标、实际资源分母、精度与端到端收益证据 |
 | 单份性能分析、profiling 或独立性能回归 | profiling、memory 与 regression 工具；需要服务负载时使用上述压测入口 | 可比工作负载下端到端指标和资源变化 |
 | 模型精度、乱码或复读 | [ascend-model-accuracy](../ascend-model-accuracy/SKILL.md) | 可复现偏差、根因/规避边界与目标场景回归 |
+| 正式模型精度或 SWE 数据集评测 | 实际数据集/评测器或 agent runner，按[三类表](../../../docs/task-records.md#三类正式测试总表)选择对应字段 | 原生评分与分母、版本和完整运行证据；不假定 AISBench 覆盖 SWE |
 | 手工已有容器独立SSH登录入口 | [ascend-container-ssh](../ascend-container-ssh/SKILL.md) | 实际端口、认证和容器归属及用户访问端的登录结果；托管目标按原契约交接 |
 | 算子开发/替换 | 原语义、适用 AscendC 方法与框架运行验证 | 接口/支持范围、正确性、生产场景与集成 |
 | 部署 | 按[部署说明](references/service-deployment.md)选择运行方式、准备容器与环境，再调用适用serving/PD或已核对执行入口 | 启动前版本清单与当前目标路径的真实请求 |
 | 指定环境复现清单 | [ascend-runtime-snapshot](../ascend-runtime-snapshot/SKILL.md)只读整理当前/历史环境，区分选用与实际加载 | 实际版本/代码/PR/依赖替换、来源和未知项；不自动部署或升级 |
 | CI/PR | 当前仓库 workflow、失败 job、提交与 review | 当前 head SHA 的实际终态 |
+| 更新代码仓、同步分支或更新工作台 | [repository-update](../ascend-repository-update/SKILL.md)按业务同步/依赖升级分流 | 实际仓库与目标、更新前后 SHA、保留的工作及验证边界 |
 | 源码学习 | 实际源码；可用时使用 `ascend-source-walkthrough` | 连续调用链、版本与事实/推断边界 |
 
 跨环境部署能力可包括 `ascend-service-deploy`。这两个个人 skill 在其他主机可能不存在：查找可用入口并报告缺口，不把个人绝对路径当作依赖、不假装已加载。找不到能力时可查证源码/现有工具，缺设备或远程入口不编造实测。首次接入或升级分别路由到 init/dependencies，不在业务任务中顺带完整初始化或升级。
@@ -49,6 +51,7 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 - 需要可独立交付的拆分时用 [planning](../ascend-task-planning/SKILL.md)；明确小任务直接执行，不为了分工固定团队。
 - 按授权用 [execution](../ascend-task-execution/SKILL.md) 推进调查/实现/实验；用 [review](../ascend-task-review/SKILL.md) 核查结果与交接。明确评估 skill 候选时用 [skill-candidate-review](../ascend-skill-candidate-review/SKILL.md)，创建/优化用 [skill-development](../ascend-skill-development/SKILL.md)复用评估。
 - 关键判断反馈可查证的证据、当前假设、方案理由、风险/替代项和下一步验证；不公开内部逐步思维链。假设推翻、路线改变、精度失败、退化或 CI 归因变化及时说明。
+- 形成有用的配置、操作命令或工程结论时，按[知识维护](../ascend-knowledge-curation/SKILL.md)逐条提出收录建议，由用户决定后写入；配置和用法同样可以提案，不自动收录。
 - 默认在确定范围内连续工作，提交、推送、发布前提供可审核结果；沿用已获得的具体授权，不重复确认。改变语义、支持范围、必需验收或扩大授权时准备证据与选项，等待用户决定。
 
 涉及拟入仓产物时，在确定范围与路由时带入[跨机器复用规则](../../../docs/validation.md#开发与发布的跨机器复用规则)：标明本机调查输入与公开交付边界，由 planning/execution/review 分别落实委派、参考转化与候选验收。简单问答和纯本机运行不增加发布流程。
