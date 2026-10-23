@@ -132,30 +132,40 @@ docker exec --env "ENV_SCRIPT=$ENV_SCRIPT" "$CONTAINER" bash -lc '
 
 ## 版本清单与服务参数
 
-每次实际启动/重启前调用[ascend-runtime-snapshot](../../ascend-runtime-snapshot/SKILL.md)，输出并保存该attempt选用的CANN、代码SHA/dirty/PR、依赖替换及模型/最终argv/env。字段与证据边界仅在[共同清单定义](../../ascend-runtime-snapshot/references/snapshot-fields.md)维护。启动后在变更或来源歧义影响判断时补实际加载证据。
+每次实际启动/重启前调用[ascend-runtime-snapshot](../../ascend-runtime-snapshot/SKILL.md)核对容器总表中的最小环境记录和当时版本。按[完整启动材料约定](../../../../docs/task-records.md#服务启动材料)保存该轮完整 P/D 或单机脚本、实际配置、逐节点命令及差异说明；多节点差异由节点命令传入，两份角色文件只含 export 和 vLLM 命令。部署前向用户明确远端实际文件位置；校验和生命周期管理在脚本外进行。启动后仅在来源歧义影响判断时补必要加载证据。
 
-单机进程参数示例（在实际容器已加载环境，管理生命周期仍由原工具负责）：
+下面两段只展示参数组织，先将占位值替换为本轮实际值，再补齐必要的环境 export；环境初始化步骤由执行方在准备阶段展开，完整角色文件只保留 export 和 vLLM 命令。
+
+单机角色文件示例：
 
 ```bash
-set -e
-source "$ENV_SCRIPT"
+export MODEL_DIR="<本次模型绝对路径>"
+export BIND_IP="<本节点监听地址>"
+export PORT="<本次API端口>"
+export SERVED_MODEL="<本次服务模型名>"
+export TP="<本次TP>"
 vllm serve "$MODEL_DIR" --host "$BIND_IP" --port "$PORT" \
     --served-model-name "$SERVED_MODEL" --tensor-parallel-size "$TP"
 ```
 
-多机multiproc的参数形状如下，完整额外参数、executor和环境须由现场版本接受；headless仅适用于该方式的worker角色，不能套到Ray或其他后端。以该版本正确解释物理/逻辑卡映射，不对非连续卡号猜可见索引：
+多机 multiproc 角色文件示例，公共参数在文件内导出，节点差异由逐节点命令传入。完整参数、executor 和环境须由现场版本接受；headless 仅适用于该方式的 worker 角色，不能套到 Ray 或其他后端。以实际版本解释物理/逻辑卡映射：
 
 ```bash
-set -e
-source "$ENV_SCRIPT"
-args=(vllm serve "$MODEL_DIR" --host "$BIND_IP" --port "$PORT"
-    --served-model-name "$SERVED_MODEL" --tensor-parallel-size "$TP"
-    --pipeline-parallel-size "$PP" --nnodes "$NNODES" --node-rank "$NODE_RANK"
-    --master-addr "$MASTER_ADDR" --master-port "$MASTER_PORT"
-    --distributed-executor-backend mp)
-if [[ "$NODE_RANK" != 0 ]]; then args+=(--headless); fi
-"${args[@]}"
+export MODEL_DIR="<本次模型绝对路径>"
+export SERVED_MODEL="<本次服务模型名>"
+export TP="<本次TP>"
+export PP="<本次PP>"
+export NNODES="<本角色节点总数>"
+export MASTER_ADDR="<本角色master地址>"
+export MASTER_PORT="<本角色master端口>"
+vllm serve "$MODEL_DIR" --host "$BIND_IP" --port "$PORT" \
+    --served-model-name "$SERVED_MODEL" --tensor-parallel-size "$TP" \
+    --pipeline-parallel-size "$PP" --nnodes "$NNODES" --node-rank "$NODE_RANK" \
+    --master-addr "$MASTER_ADDR" --master-port "$MASTER_PORT" \
+    --distributed-executor-backend mp $HEADLESS_FLAG
 ```
+
+在同轮 `启动命令与差异.md` 中，为每个节点给出完整命令，先 export 该节点的 BIND_IP、PORT、NODE_RANK 和 HEADLESS_FLAG，再执行已确认远端位置的对应角色文件。rank 0 的 HEADLESS_FLAG 为空，使用 headless 的 worker 为 `--headless`；该变量仅承载这个可选开关。节点判断在准备逐节点命令时完成，角色文件中不增加分支。
 
 PD按当前连接器明确P/D角色、engine标识、KV端口、TP/PP/DP及必要状态元数据；参数化形状是追加`--kv-transfer-config "$KV_TRANSFER_JSON"`，不提供与模型无关的万能JSON。使用原实现核对代理启动参数和连接器要求的顺序；[PD流程](../../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-pd-serving/SKILL.md)的proxy生命周期在其边界之外，不把启动代理误称其wrapper已管理。准备角色命令后同环境解析，确认master/rendezvous与实际监听一致。
 
@@ -163,7 +173,7 @@ PD按当前连接器明确P/D角色、engine标识、KV端口、TP/PP/DP及必�
 
 ## 启动、验收和交接
 
-1. 刷新资源/端口及前次进程状态，通过所选原工具启动，保存最终配置、attempt、日志及PID/starttime/进程组或cgroup等归属证据。
+1. 刷新资源/端口及前次进程状态，通过所选原工具启动，关联本轮服务编号、完整配置/脚本、日志及 PID/starttime/进程组或 cgroup 等归属证据，更新所属任务和容器登记入口。
 2. 跟踪初始化、权重加载、编译/图捕获、API ready。headless worker按初始化日志与进程判断，不要求每个worker有HTTP接口。首次编译耗时不当稳态性能。
 3. 核对health/models和目标路径短请求，保留原始文本。PD关联request_id与P/D传输日志；任务要求的流式/非流式路径分别验收。仅检查启动且用户排除请求时记功能未验证。
 4. 分别报告启动、接口、传输、输出；HTTP200、token数或传输完成不能掩盖异常文本。异常时必要同输入单D/手动PD对照，不自动扩大源码修复。

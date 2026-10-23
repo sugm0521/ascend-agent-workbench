@@ -5,6 +5,7 @@ __pycache__/
 /config/workbench.local.yaml
 /.workbench-local/
 /tasks/
+/records/
 /knowledge/daily/
 /repos/
 /.codex/config.toml

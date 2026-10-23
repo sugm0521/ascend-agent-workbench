@@ -11,7 +11,7 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 
 1. 识别用户目标、排除项与已有授权。定位/分析/审查交付证据和建议；修复/解决/优化/实现可在确定范围内修改和验证。不要把定位自动升级为业务修复。
 2. 新任务或目标、范围、验收条件发生实质变化时，先复用已确认的信息与授权，再查证代码、日志和环境中可获取的事实；仅对影响目标、方案、授权或验收的未决取舍，按项目特化的 `grill-me` 分轮集中提问并给出推荐。用户明确要求 `grill-me` / `grilling` 时也从本入口执行。已有答复不重问；目标、范围、约束与验收充分时结束澄清并继续。
-3. 简单问答直接回答。涉及代码、实验、验证、CI、委派或交接时，用 `docs/templates/` 的适用模板建立或恢复 `tasks/<任务>/`；显式完全只读时不写记录。`任务说明.md` 是唯一状态入口，主 agent 是唯一整合负责人。
+3. 简单问答直接回答。涉及代码、实验、验证、CI、委派或交接时，按[材料与台账规范](../../../docs/task-records.md)选择每日事项、明确命名任务或模型分析工作目录，使用适用模板建立或恢复任务。显式完全只读时不写记录；`任务说明.md` 是唯一状态与材料入口，主 agent 是唯一整合负责人。
 4. 恢复先读任务说明与最新交接，核对 owner、`plan_revision`、实际 repo/worktree、SHA、dirty 内容以及底层运行/资源状态。保留原失败；旧证据只能在条件仍一致时复用，不重复未知服务或运行。
 
 任务说明记录稳定 `task_id`、`status`、`owner`、`plan_revision` 和带时区的 `updated_at`，以及目标、授权、验收、基线、阻塞和下一步。目标/计划改变时递增 revision 并写原因。状态定义遵循根规则；缺环境仅阻塞依赖它的步骤。
@@ -30,7 +30,8 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 | 模型架构报告、版本比较或参数/KVCache 估算 | 按[模型分析调用说明](references/model-analysis.md)读取 model_analysis 的原 skill 与模板 | 固定输入版本、独立计算、对照实际实现；报告与待适配清单不代替运行验证 |
 | 模型适配或功能实现 | 实际接口、注册/执行路径、当前测试与运行工具 | 功能、兼容范围及所需集成证据 |
 | 服务性能压测、吞吐/延迟、prefix cache 测试 | [ascend-performance-benchmark](../ascend-performance-benchmark/SKILL.md) | 实际请求结果、工作负载、指标与日志；保留既有服务 |
-| 其他模型性能分析、profiling 或性能回归 | profiling、memory 与 regression 工具；需要服务负载时使用上述压测入口 | 可比工作负载下端到端指标和资源变化 |
+| 推理性能调优、吞吐/时延目标与 PD 每卡吞吐 | [ascend-inference-optimization](../ascend-inference-optimization/SKILL.md)串联基线、NPU 瓶颈证据、候选及可比回归 | 原生指标、实际资源分母、精度与端到端收益证据 |
+| 单份性能分析、profiling 或独立性能回归 | profiling、memory 与 regression 工具；需要服务负载时使用上述压测入口 | 可比工作负载下端到端指标和资源变化 |
 | 模型精度、乱码或复读 | [ascend-model-accuracy](../ascend-model-accuracy/SKILL.md) | 可复现偏差、根因/规避边界与目标场景回归 |
 | 手工已有容器独立SSH登录入口 | [ascend-container-ssh](../ascend-container-ssh/SKILL.md) | 实际端口、认证和容器归属及用户访问端的登录结果；托管目标按原契约交接 |
 | 算子开发/替换 | 原语义、适用 AscendC 方法与框架运行验证 | 接口/支持范围、正确性、生产场景与集成 |

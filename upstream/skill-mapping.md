@@ -15,6 +15,7 @@
 | 手工已有容器的独立SSH登录入口 | [ascend-container-ssh](../.agents/skills/ascend-container-ssh/SKILL.md) | 选择/复用可用端口，按指定认证配置并验证实际登录；托管目标按原契约交接，不自动重建容器或做NPU smoke |
 | 指定环境复现清单 | [ascend-runtime-snapshot](../.agents/skills/ascend-runtime-snapshot/SKILL.md) | 每次启动前及独立只读输出；字段统一维护，区分历史/模拟/实际加载，不自动部署、升级或NPU验证 |
 | 服务性能压测、吞吐/延迟和公共前缀测试 | [ascend-performance-benchmark](../.agents/skills/ascend-performance-benchmark/SKILL.md)、[aisbench_auto_tools_prefix](../deps/aisbench-auto-tools-prefix/README.md) | 默认优先使用；只在请求端运行，独立可写副本与AISBench环境；精度、算子打流和纯profiling走原入口 |
+| vLLM-Ascend 推理性能调优与 PD 每卡吞吐目标 | [ascend-inference-optimization](../.agents/skills/ascend-inference-optimization/SKILL.md) | 串联现有 AISBench、NPU 分析和回归；确认指标与真实资源分母，配置搜索/代码 A/B 分开，真实调优结果按目标环境验收 |
 | 模型精度下降、乱码、复读与参考结果不一致 | [ascend-model-accuracy](../.agents/skills/ascend-model-accuracy/SKILL.md) | 独立维护症状诊断、消融与修复回归；复用 correctness/graph/distributed/operator，不把定位扩为修复 |
 | 生成式AISBench评测结果与输出质量证据 | [证据报告工具](../docs/aisbench-evidence.md) | 离线消费显式run/解析器，每组与总汇分开；基础检查和按需审计，不改官方评分、不发请求 |
 

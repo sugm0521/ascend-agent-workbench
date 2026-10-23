@@ -1,0 +1,4 @@
+interface:
+  display_name: "vLLM-Ascend 推理性能调优"
+  short_description: "连接 AISBench、NPU 瓶颈定位与可比回归的推理性能调优"
+  default_prompt: "使用 $ascend-inference-optimization，根据当前模型、负载和目标指标制定并推进 vLLM-Ascend 性能调优。"
