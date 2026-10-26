@@ -2,6 +2,7 @@
   "name": "ascend-agent-workbench",
   "version": "0.0.0",
   "private": true,
+  "license": "Apache-2.0",
   "description": "Local rendering dependency for workbench reports",
   "engines": {
     "node": ">=22.12.0"
