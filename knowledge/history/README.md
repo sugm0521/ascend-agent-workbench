@@ -11,3 +11,5 @@
 已保存[HIXL条目补充EID查询失败案例前的历史版本](hixl-no-urma-devices/README.md)，区分空列表与对端端口缺EID的分支，原临时恢复结论仍有效；公开历史已去除个人决定的来源说明。
 
 已保存[A5池化参考的示例修正前版本](a5-memcache-pooling-setup/README.md)，保留1.2.0历史适用条件；当前参考纠正layerwise默认值与lookup标识表述，1.3.0教程和诊断独立维护。
+
+已保存[池化诊断补充公开源码证据前的完整版本](a5-memcache-pooling-diagnostics/README.md)：补齐错误枚举、补偿取片和prefill统计来源，历史运行和回收机制仍保持候选边界。

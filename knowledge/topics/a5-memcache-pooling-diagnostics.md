@@ -2,13 +2,55 @@
 id: a5-memcache-pooling-diagnostics
 title: A5三级池化的初始化、查询等待与回收停滞诊断
 status: candidate
-updated_at: '2026-10-26T14:40:16.513692+08:00'
-verified_at: '2026-10-26T14:40:16.513692+08:00'
+updated_at: '2026-10-26T14:54:10.075160+08:00'
+verified_at: '2026-10-26T14:54:10.075160+08:00'
 observed_at: '2026-10-24'
 tags: [A5, MemCache, UBSIO, UDMA, 大页, rewarm, batch_query, reclaim_throttle]
 applies_to: memcache_hybrid/memfabric_hybrid1.3.0、CANN9.2及历史叠加Ascend连接器；SDK二进制与模型源码须另行固定，错误码不可跨版本套用
-evidence_scope: 保存的原生日志、计数、线程栈、配置及已部署库的静态符号/反汇编摘要；完整构建与原始材料未公开，不能由仓库独立复验；本次仅整理并复核已有小型证据，不执行修复或故障注入
-sources: []
+evidence_scope: 保存的原生日志、计数、线程栈、配置及已部署库的静态符号/反汇编摘要；完整构建与原始材料未公开，不能由仓库独立复验；本次仅整理并复核已有小型证据，不执行修复或故障注入；本次另核对固定公开UBSIO错误枚举、Put/补偿取片及vLLM阶段统计源码；源码关系不证明部署SDK逐字节一致或历史索引空洞因果
+sources:
+  - id: kvc-error
+    path: https://github.com/openeuler-mirror/ubs-io/blob/90ece96c110ec0ca34de8271cda821643e479523/ubsio-kv/src/csrc/utils/ubsio_kvc_err.h
+    revision: 90ece96c110ec0ca34de8271cda821643e479523
+    locator: KvcError L21-31
+    observed_at: '2026-10-26'
+    evidence: source
+    access: published
+  - id: bio-error
+    path: https://github.com/openeuler-mirror/ubs-io/blob/90ece96c110ec0ca34de8271cda821643e479523/ubsio-boostio/src/common/bio_err.h
+    revision: 90ece96c110ec0ca34de8271cda821643e479523
+    locator: Error L23-51
+    observed_at: '2026-10-26'
+    evidence: source
+    access: published
+  - id: put-offset
+    path: https://github.com/openeuler-mirror/ubs-io/blob/90ece96c110ec0ca34de8271cda821643e479523/ubsio-boostio/src/sdk/mirror_client.cpp
+    revision: 90ece96c110ec0ca34de8271cda821643e479523
+    locator: MirrorClient::PutImpl L1139-1160
+    observed_at: '2026-10-26'
+    evidence: source
+    access: published
+  - id: tombstone
+    path: https://github.com/openeuler-mirror/ubs-io/blob/90ece96c110ec0ca34de8271cda821643e479523/ubsio-boostio/src/cache/write/wcache.cpp
+    revision: 90ece96c110ec0ca34de8271cda821643e479523
+    locator: WCache::Put L186-238; CreateMemoryTombstone L261-295
+    observed_at: '2026-10-26'
+    evidence: source
+    access: published
+  - id: meta-data-slice
+    path: https://github.com/openeuler-mirror/ubs-io/blob/90ece96c110ec0ca34de8271cda821643e479523/ubsio-boostio/src/cache/write/wcache_tier.cpp
+    revision: 90ece96c110ec0ca34de8271cda821643e479523
+    locator: WCacheTier::GetMetaDataSlice L212-229
+    observed_at: '2026-10-26'
+    evidence: source
+    access: published
+  - id: vllm-phase-stats
+    path: https://github.com/vllm-project/vllm/blob/ced6857afa0ea7b2e3f0846a62e1394e90f15607/vllm/v1/metrics/stats.py
+    revision: ced6857afa0ea7b2e3f0846a62e1394e90f15607
+    locator: IterationStats.update_from_finished_request L531-584; queued_time L543; prefill_time L547
+    observed_at: '2026-10-26'
+    evidence: source
+    access: published
 ---
 
 # 按实例、rank和调用层诊断池化
@@ -52,6 +94,16 @@ NFS权重加载停滞也要独立排除：历史NO-CARRIER、VLAN LOWERLAYERDOWN
 
 ## 4. 同号错误码按组件解释
 
+公开UBSIO固定提交的枚举可提供明确对照；以下值仅适用于所列源码版本，安装二进制仍需独立核对：
+
+| 所属层 | 名称与值 | 不能直接推出 |
+|---|---|---|
+| BIO | `BIO_ALLOC_FAIL=5`、`BIO_INNER_RETRY=14` | 14不是内存池满专用码。[bio-error] |
+| UBSIO-KVC | `UBSIO_KVC_ALLOC_FAIL=4`、`UBSIO_KVC_EAGAIN=5` | KVC的5不能套用BIO的5解释。[kvc-error] |
+
+固定源码中`MirrorClient::PutImpl`先分配flow offset/index再发送Put，失败后flow处理受运行模式影响。[put-offset] 内存写入失败时可进入`CreateMemoryTombstone`，其`GetMetaDataSlice`继续取得元数据和数据切片。[tombstone][meta-data-slice] 这些可复核的源码事实支持检查“补偿也申请资源”的路径；仍未证明实际SDK版本相同、留下了哪一个索引空洞，或该空洞导致历史回收停滞。UBSIO源码采用Mulan PSL v2，本条只概述调用关系，不复制实现。
+
+
 记录组件、函数、源文件/构建、输入对象和首个返回码。历史BIO、UBSIO-KVC及上层Batch put出现同号返回时，所属枚举/包装不同；不能将一个层的`5`解释直接移植到另一个层，也不能仅凭`14`宣布池满。配置解析、分配、写入、异步flush和模型请求失败要分别计数。
 
 历史8机20/64问题worker的连续样本中，成功alloc/free/evict差分为0，而失败计数继续增加，支持“这些rank的回收/写入进展停滞”的判断。它不是失败模型请求数，也不表示其余rank相同。保存成功和失败计数的同窗差分比只报累计错误行数更有用。
@@ -89,6 +141,9 @@ BatchGetKeyInfo → mmcc_batch_query → BatchQuery
 若工具不支持所需的非阻塞native采样，保留缺口；不能为拿到栈自动切换会暂停业务的采样方式。精确关键词尾部出现0次，也不能证明整个日志不存在其他格式的错误。
 
 ## 7. 关联模型等待与当前状态
+
+固定vLLM源码用首次SCHEDULED减QUEUED得到排队时间，用首次NEW_TOKEN减SCHEDULED得到prefill墙钟。[vllm-phase-stats] 若部署调度器在起点取时、随后同步查询再记录SCHEDULED，查询及同轮工作可能落入该prefill区间；公开统计公式本身不证明部署侧查询所占时长。部署侧三份连接器源码在记录基线下的固定公开路径不可取得，相关分支仍限历史快照，不把基线SHA当作完整可公开复现条件。
+
 
 用response UUID、调度事件和同窗日志关联请求。一例tool→assistant间隔570.383秒、输出142 token包含可能的Agent编排等待，不能全归池查询。P侧`prefill`墙钟包含哪些等待取决于SCHEDULED等打点位置；一次4样本窗口的均值不能代替NPU算子时间或整个SWE吞吐。
 
