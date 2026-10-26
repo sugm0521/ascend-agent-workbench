@@ -78,6 +78,16 @@ sources:
 
 ## 主题入口
 
+- [A5三级池化配置教程](topics/a5-memcache-tiered-pooling-tutorial.md)：HBM/DRAM/SSD与UBSIO预算、专用盘、配置、P/D增量及真实回读验收（candidate）。
+- [池化初始化与慢查询诊断](topics/a5-memcache-pooling-diagnostics.md)：大页整理、SDK退出、同号错误码、回收停滞和调用链证据边界（candidate）。
+- [容器环境与网络入口](topics/container-environment-network-lifecycle.md)：SSH生命周期、CANN继承、DNS分层及transient转发的残留端口（candidate）。
+- [HCCL与MPI分层](topics/hccl-topology-mpi-evidence.md)：UB-only、rootinfo/Entity、非幂等脚本、GLIBC/Hydra及正确性表（candidate）。
+- [Kimi K3逻辑shape](topics/kimik3-shape-parallel-layout.md)：固定双仓下SP、DCP、latent MoE、AttnRes、PP和融合分支（candidate）。
+- [原生评测与请求证据](topics/evaluation-native-results-and-request-evidence.md)：正式/预热/stable、MMMU评分、SWE分母、usage与采样偏差（candidate）。
+- [监控兼容边界](topics/monitoring-hook-and-output-compatibility.md)：缺失profile_memory与npu-smi输出变化，unknown不当空闲（candidate）。
+- [模型与源码材料完整性](topics/model-artifact-and-source-update-integrity.md)：权重分片、共享数据身份、Windows换行及恢复失败（candidate）。
+- [长期验证交接](topics/continuous-validation-handoff.md)：模板冻结、独立检查、实例停止条件和固定截止（candidate）。
+
 - [流式HTTP收包损坏与挂起](topics/http-receive-corruption-and-payload-hang.md)：接收校验、重传、payload异常与有限预算分层验证；历史1280条完整性回归，底层损坏根因未闭环（candidate）。
 - [EPLB全层映射的Host锁页申请](topics/eplb-full-map-pinned-host-allocation.md)：644MiB整表与1GiB分配的推导/实测区别，Host与HBM、扩展段候选及故障时资源缺口（candidate）。
 - [DSpark预算与PD状态布局](topics/dspark-pd-spec-state-layout.md)：固定两个分支下KDA卷积状态长度、V1/V2搬运与选块差异；56组合成元数据验证，真实PD适用性仍需核验（candidate）。

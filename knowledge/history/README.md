@@ -9,3 +9,5 @@
 已保存[KDA条目补充两套launcher ABI反例前的完整版本](kda-compiled-launcher-arguments/README.md)，保留原证据日期；旧限定结论仍有效，当前主题增加另一构建的实际失败与兼容边界。
 
 已保存[HIXL条目补充EID查询失败案例前的历史版本](hixl-no-urma-devices/README.md)，区分空列表与对端端口缺EID的分支，原临时恢复结论仍有效；公开历史已去除个人决定的来源说明。
+
+已保存[A5池化参考的示例修正前版本](a5-memcache-pooling-setup/README.md)，保留1.2.0历史适用条件；当前参考纠正layerwise默认值与lookup标识表述，1.3.0教程和诊断独立维护。

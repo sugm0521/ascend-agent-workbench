@@ -2,8 +2,8 @@
 id: a5-memcache-pooling-setup
 title: A5 MemCache池化的配置、前置检查与分阶段验收
 status: candidate
-updated_at: '2026-10-18T15:05:13+08:00'
-verified_at: '2026-10-18T15:05:13+08:00'
+updated_at: '2026-10-26T14:40:16.513692+08:00'
+verified_at: '2026-10-26T14:40:16.513692+08:00'
 observed_at: '2026-10-17'
 tags: [A5, MemCache, MemFabric, vLLM-Ascend, 池化, MultiConnector, device_urma, rootinfo, engine_id, PIECEWISE, 预检]
 applies_to: Ascend950DT、CANN9.2.0、memcache_hybrid与memfabric_hybrid1.2.0、vLLM0.30系列及对应Ascend连接器的历史配置参考；实际构建含额外叠加修改，包版本号不代表完整复现条件
@@ -14,6 +14,8 @@ sources: []
 # A5 MemCache池化配置与启动前准备
 
 本条保留可复用的配置结构和排错顺序，不能当作已经跑通Kimi K3池化的一键部署方案。以下是加入已有P/D启动入口的增量，模型、原并行策略、Mooncake版本及其他参数由原服务配置提供；依赖、拓扑和后端功能仍须在目标环境验收。
+
+> 本条主体保留历史1.2.0条件；1.3.0的DRAM/SSD配置、普通文件要求及实际验收请读[三级池化教程](a5-memcache-tiered-pooling-tutorial.md)。旧版完整内容见[修订历史](../history/a5-memcache-pooling-setup/README.md)。本次示例不再默认开启layerwise；后续新实例启动成功不等于旧退出/回收缺陷修复。
 
 ## 1. 确认环境与资源
 
@@ -136,7 +138,6 @@ store = {
     "kv_connector_extra_config": {
         "backend": "memcache",
         "lookup_rpc_port": os.environ["POOL_LOOKUP_ID"],
-        "use_layerwise": True,
     },
 }
 parent["kv_connector_extra_config"] = {"connectors": [moon, store]}
@@ -148,7 +149,7 @@ print(json.dumps(parent, ensure_ascii=False))
 PY
 ```
 
-把输出JSON作为已有serve命令的`--kv-transfer-config`参数。P侧父配置及两个子项均为`kv_producer`，D侧均为`kv_consumer`。为连接器的独立lookup服务按当前实现规划不冲突的`lookup_rpc_port`值；示例可按P侧`"0"`–`"3"`、D侧`"4"`–`"7"`分配，但不能脱离真实实例/rank关系照抄节点编号，实际监听端口也应核对。
+把输出JSON作为已有serve命令的`--kv-transfer-config`参数。P侧父配置及两个子项均为`kv_producer`，D侧均为`kv_consumer`。`lookup_rpc_port`在对应实现中参与构造本地lookup IPC标识，不能只按外部TCP端口理解。按实际DP rank、启动单元及namespace规划隔离，检查`get_zmq_rpc_path_lookup`；不按节点编号分配固定范围。P写池、D默认不回写，不擅自添加`consumer_is_to_put=true`或改变原Mooncake的prefill描述。
 
 ### 4.1 配置版本兼容性：engine_id与原生字段
 
@@ -159,6 +160,8 @@ PY
 ### 4.2 layerwise连接器与实际图模式
 
 同时记录最终图模式。本次layerwise的AscendMultiConnector将D侧`FULL_DECODE_ONLY`自动覆盖为`PIECEWISE`；argv保持不变不意味着最终执行模式不变，也不能据此推断性能收益。
+
+不能只为开启池化就添加`use_layerwise=true`。保留默认/当前选定分支，若确需layerwise，先核对模型和图模式兼容，再验证目标worker真实capture。Breakable图是待验证候选，不在通用示例默认启用。
 
 ## 5. rootinfo前置条件：核对实际消费路径
 
@@ -184,4 +187,4 @@ PY
 
 本次已核对配置解析、环境路径、有效Mooncake继承及部分实际初始化路径，但服务没有完成完整池化读写验收。P侧还出现独立的profile/HCCL/AICPU错误，不能把D侧拓扑文件错误套用为P侧根因。因此本条保持`candidate`，不将配置模板、换HAL或补rootinfo表述为已验证修复。
 
-原证据日期为2026-10-17；本次文档及示例复核不刷新原实验时间。更换MemCache/MemFabric构建、驱动/CANN、UB/UBOE、连接器实现、并行策略、拓扑或图模式后重新核实。HAL问题复用[已有条目](memfabric-hal-notify-compatibility.md)，模型角色参数参见[Kimi K3 P/D参考](kimik3-pd-configuration-reference.md)，不在本条复制模型整套启动参数。
+原证据日期为2026-10-17；本次文档及示例复核不刷新原实验时间；2026-10-26的修订仅纠正示例默认值与补入口，新增1.3.0历史观测独立见教程和诊断。更换MemCache/MemFabric构建、驱动/CANN、UB/UBOE、连接器实现、并行策略、拓扑或图模式后重新核实。HAL问题复用[已有条目](memfabric-hal-notify-compatibility.md)，模型角色参数参见[Kimi K3 P/D参考](kimik3-pd-configuration-reference.md)，不在本条复制模型整套启动参数。
