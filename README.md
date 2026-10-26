@@ -6,7 +6,7 @@
 
 ## 快速开始
 
-先准备 Git 和有本私仓读取权限的 GitHub 身份，取得工作台：
+先准备 Git，克隆本公开仓库：
 
 ```bash
 git clone https://github.com/sugm0521/ascend-agent-workbench.git
