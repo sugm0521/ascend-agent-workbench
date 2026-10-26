@@ -6,11 +6,11 @@
 
 通用 skill 保留跨任务的决策条件和证据边界；具体 P/D 对照顺序、下载进度字段、机器和版本放在任务方案。只有多次独立任务显示同一缺口、现有工具不足，并且收益大于维护成本，才重新评估新增 reference 或工具。不能把本次“全八机替换后验证”的显式要求推广为所有升级任务的默认屏障。
 
-核对了本项目 execution/review/dependencies/planning，以及下层 PD serving、机器清单入口和既有候选。证据来自 tasks/1012 的 CANN/FLA 更新、停止服务和 NPU 占用查询记录；本次没有重新运行远端实验。
+核对了本项目 execution/review/dependencies/planning，以及下层 PD serving、机器清单入口和既有候选。历史依据为 CANN/FLA 更新、停止服务和 NPU 占用查询；原件与个人索引留本机，本摘要不能由仓库独立复验，本次未重新运行远端实验。
 
 ## deferred：P/D 输出异常的最短诊断分支
 
-直接证据：四 D 单独请求正常，P 本地首 token 正常；代理非流式、流式和手动 P→D 都输出 32 个!。代理请求关联的四 P→D 八 TP 传输记录完整，但输出仍失败。详见 ../../tasks/1012/results/cann-fla-upgrade-reviewed.json。
+直接证据：四 D 单独请求正常，P 本地首 token 正常；代理非流式、流式和手动 P→D 都输出 32 个!。代理请求关联的四 P→D 八 TP 传输记录完整，但输出仍失败。该描述仅保留原观察及限制，不作为当前版本的故障复现证据。
 
 已有覆盖：review 已区分产物、原生退出、模型和 PD 验证。下层 pd_serving.py 的 smoke.status=passed 仅表示 HTTP 请求路径通过，其 claim 和 acceptance 已明确不能代替正确性结论；不应把它描述成完整精度验收的实现缺陷。
 
@@ -24,7 +24,7 @@
 
 这是 2026-10-11-kimi-k3-reuse-candidates.md 中 ascend_runtime_inventory.py 的新增支持证据，不另建同类候选或资源管理器。本项目当前没有该公共脚本；下层 inventory.py 是共享机器登记表，不提供本次需要的实时 NPU PID→容器关联。
 
-直接证据：本任务所有进程组和端口已经关闭，27 节点仍有其他 Docker 容器的 DeepSeek 服务。整机 NPU 空闲检查失败并不代表本任务未停止；20:08 后续只读查询又显示八机均无占用。22/23 另有只持有 davinci_manager 的导入探针，不等同 per-card 业务占用。详见 ../../tasks/1012/results/pd-user-shutdown-reviewed.json 和 npu-current-ownership-2006-report.json。
+直接证据：本任务所有进程组和端口已经关闭，宿主仍有其他容器的服务。整机 NPU 空闲检查失败并不代表本任务未停止；20:08 后续只读查询又显示八机均无占用。另有只持有 davinci_manager 的导入探针，不等同 per-card 业务占用；这些历史状态不能作为当前资源归属证据。
 
 最小增量：优先复用原 provider 能提供的字段；手工 Docker 环境缺失时才参数化任务中的只读采集/归属解析，并在 execution/review 条件化接入。输出采集时间、卡/PID/UID、PID namespace/cgroup、容器 ID、未知/消失/解析失败状态；分开报告本任务进程是否退出和整机是否空闲。正常空闲到此结束；有占用才查对应 PID/容器，不默认扫描全机 FD、挂载或镜像。
 

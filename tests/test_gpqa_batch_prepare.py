@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('gpqa_prepare', ROOT / 'tasks/1014/scripts/gpqa_batch_prepare.py')
+spec = importlib.util.spec_from_file_location('gpqa_prepare', ROOT / 'scripts/gpqa_batch_prepare.py')
 prepare = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(prepare)
 
@@ -30,7 +30,7 @@ class BatchPrepareTests(unittest.TestCase):
             'config_hashes': {name: hashlib.sha256((self.source / name).read_bytes()).hexdigest() for name in files},
             'samples': 1, 'settings': {'max_tokens': 81920, 'temperature': 1, 'top_p': 1}}
         (self.source / 'setup/eval-manifest.json').write_text(json.dumps(manifest))
-        self.collector = ROOT / 'tasks/1014/scripts/gpqa_collect_run.py'
+        self.collector = ROOT / 'scripts/gpqa_collect_run.py'
 
     def tearDown(self):
         self.temp.cleanup()

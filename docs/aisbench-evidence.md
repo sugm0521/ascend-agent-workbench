@@ -61,8 +61,10 @@ request证据只核对显式expected_request中的生成字段（model/max_token
 
 退出码：0完整生成报告（不代表模型精度通过）；1已生成但输入证据不完整；2配置、输入或写入错误。读取结果前核对status及原生证据，不能把控制命令exit0当业务完成。
 
-## 本任务SSH通道和多组脚本
+## 已有通道的输出与多组客户端
 
-[image_batch_session.py](../tasks/1014/scripts/image_batch_session.py)继续原连接方式，仅将输出读取交给[ssh_output_capture.py](../tasks/1014/scripts/ssh_output_capture.py)。两个流均持续排空，保留有界尾部，记录observed_bytes/retained_bytes/truncated和保留文本UTF-8解码问题。`command_exit_code`与`business_completion=not_checked`分开；旧每节点`exit_code`仅为兼容字段，批次不再输出含糊的passed。解析JSON前要求`output_complete=true`；不完整时按已有传输路径取得文件，不直接解析尾部或将通道截断误认模型截断。超时关闭控制channel，不推断远端进程已退出，也不自动重试。完整上传payload（含TASK_NODE前缀）必须小于1MB。
+[ssh_output_capture.py](../scripts/ssh_output_capture.py)只读取调用方已建立的 SSH channel，不创建连接、身份或资源状态。持续排空 stdout/stderr，保留有界尾部并记录 observed_bytes、retained_bytes、truncated 和 UTF-8 解码问题。`command_exit_code` 与 `business_completion=not_checked` 分开；解析 JSON 前要求 `output_complete=true`。输出不完整时沿原通道按文件取得结果，不能直接解析尾部。超时关闭控制 channel，远端进程状态仍由原执行工具核对。
 
-本任务的多组客户端重构和已有服务profiling步骤见[任务调用说明](../tasks/1014/多组评测与Profiling-调用说明.md)，没有建设新的SSH、资源或服务调度系统。
+调用方按当前环境检查完整 payload 的单次与累计限制；helper 自带的单条命令大小检查不能证明整项任务或客户端完整请求合规。
+
+已有 GPQA 精度客户端的多组准备、监督、结果收集和恢复见[调用说明](gpqa-batch.md)。服务、SSH 与 profiling 生命周期继续使用[领域映射](../upstream/skill-mapping.md#运行体系与执行入口)中适用的原工具。

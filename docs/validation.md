@@ -17,7 +17,9 @@ python scripts/validate_workbench.py
 
 客户端提供的 skill-creator `quick_validate.py` 是可选的附加格式检查；可通过 `--skill-validator` 指向实际可用校验器，缺省会明确报告未执行。它不参与项目代码、报告渲染或根测试的必需执行路径。涉及 skill 修改时仍按相应 skill 开发规范完成适用校验，不伪造未运行的结果。
 
-仅运行 `python -m unittest discover -s tests -v` 不包含历史路径下的 HCCL 套件。直接运行根测试时缺 Node/marked 可能跳过渲染；统一入口会提前报告依赖缺口，不以漏测代替完整通过。
+根目录 `tests/` 已包含 HCCL helper 的合成套件，统一入口和直接执行 `python -m unittest discover -s tests -v` 都会发现它。直接运行根测试时缺 Node/marked 可能跳过渲染；统一入口会提前报告依赖缺口，不以漏测代替完整通过。
+
+历史任务中的个人进度、原始回执和运行资料留本机；公共文档引用维护中的说明、源码和测试。可复用的流程走查输入见[框架演练场景](项目框架.md#15-第一轮流程演练)，GPQA 客户端辅助代码见[调用说明](gpqa-batch.md)。干净副本的本地回归不需要 `tasks/`、作者初始化报告或历史运行目录。
 
 ## 开发与发布的跨机器复用规则
 

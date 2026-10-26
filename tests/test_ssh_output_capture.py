@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('ssh_capture', ROOT / 'tasks/1014/scripts/ssh_output_capture.py')
+spec = importlib.util.spec_from_file_location('ssh_capture', ROOT / 'scripts/ssh_output_capture.py')
 capture = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(capture)
 

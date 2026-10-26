@@ -10,7 +10,7 @@ import unittest
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('gpqa_supervisor', ROOT / 'tasks/1014/scripts/gpqa_batch_supervisor.py')
+spec = importlib.util.spec_from_file_location('gpqa_supervisor', ROOT / 'scripts/gpqa_batch_supervisor.py')
 driver = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(driver)
 
@@ -308,7 +308,7 @@ Path('result.json').write_text('{"samples":1}')
     def test_status_reads_matching_plan_without_writing_state(self):
         self.make_plan(1)
         driver.supervise(self.plan, self.state)
-        spec = importlib.util.spec_from_file_location('batch_status', ROOT / 'tasks/1014/scripts/gpqa_batch_status.py')
+        spec = importlib.util.spec_from_file_location('batch_status', ROOT / 'scripts/gpqa_batch_status.py')
         reader = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(reader)
         before = self.state.read_bytes()

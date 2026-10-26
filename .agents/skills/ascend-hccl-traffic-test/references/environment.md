@@ -54,4 +54,4 @@ ssh -o BatchMode=yes -o ConnectTimeout=6 -o StrictHostKeyChecking=yes root@ACTUA
 - `passed_observed` 仍要求人工按实际程序的规模表和 rank/阶段核对覆盖；不得靠成功标记个数证明全部完成，不同版本的输出差异需保留原证据再适配。
 - 本次真实服务器的 CANN 9.2.0 `common/src/hccl_opbase_rootinfo_base.cc` 中，结果表只打印一次 `check_result:` 表头，数据行是 `字节数 | 平均微秒 | 算法带宽 | success/failed/NULL`；非 root 校验失败另打印 `local rank_id N, check result failed`。helper 按该协议解析，不能只搜索重复的 `check_result: success`，也不能把 root 成功当作跨 rank 汇总成功。表数据最多保留 64 行，超出时显式标记摘要截断，完整原日志仍需保留。
 - 方法参考来自用户提供的通信测试说明；当前文档与helper独立编写，采用alltoallvc双模式顺序、进程数核对和正确性验收方法。
-- 本版本独立编写文档和 Python helper，未复制原脚本或二进制。包内没有发现版本/许可声明；不据此授权再分发原资源。移除固定 IP/网卡、MPI 资源部署及另一套远程生命周期，补充配置校验、日志摘要和覆盖限制。本地行为验证与真实单机有限范围成功/初始化失败路径已验证，具体范围和未完成的多机验收见[任务记录](../../../../tasks/2026-10-08-hccl-light-skill/任务说明.md)。
+- 本版本独立编写文档和 Python helper，未复制原脚本或二进制。包内没有发现版本/许可声明；不据此授权再分发原资源。移除固定 IP/网卡、MPI 资源部署及另一套远程生命周期，补充配置校验、日志摘要和覆盖限制。本地行为验证与真实单机有限范围成功/初始化失败路径已验证，历史结果不作为当前环境就绪证明，多机验收仍按实际任务完成。可独立复验的合成用例见[HCCL测试](../../../../tests/test_hccl_traffic.py)。

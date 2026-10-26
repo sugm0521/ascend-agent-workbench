@@ -1,10 +1,10 @@
 # Kimi K3 任务复用候选评估
 
-评估日期：2026-10-11。状态：部分候选已按用户后续确认本地实现；机器清单仍为 proposed。AISBench证据报告于2026-10-14在用户确认后实现，见[修复任务](../../tasks/1014/AISBench证据与通道修复-任务说明.md)；其余具体结果见 [实施任务](../../tasks/2026-10-11-runtime-tools-skill-improvement/任务说明.md)。
+评估日期：2026-10-11。状态：部分候选已按用户后续确认本地实现；机器清单仍为 proposed。AISBench证据报告于2026-10-14在用户确认后实现，当前用法见[证据报告说明](../aisbench-evidence.md)；其余已实现功能与限制见[公共工具说明](../runtime-tools.md)。
 
 ## 后续确认与实施
 
-用户确认前两个 Python 工具和条件化 skill 改进后，新增公共 `scripts/native_import_probe.py`、`scripts/artifact_manifest.py`；后者仅提供只读清单、比较与 wheel 已安装文件核对，本轮未实现打包/恢复。execution/review/dependencies 接入按需参考；既有全局算子 skill 补充持久状态连续调用，无新建 skill 或全局安装。使用范围见 [公共工具说明](../runtime-tools.md)，验证见 [矩阵](../../tasks/2026-10-11-runtime-tools-skill-improvement/验证矩阵.md)。以下为原候选设计与来源，不代表所有设计项均已实施。
+用户确认前两个 Python 工具和条件化 skill 改进后，新增公共 `scripts/native_import_probe.py`、`scripts/artifact_manifest.py`；后者仅提供只读清单、比较与 wheel 已安装文件核对，本轮未实现打包/恢复。execution/review/dependencies 接入按需参考；既有全局算子 skill 补充持久状态连续调用，无新建 skill 或全局安装。使用范围见 [公共工具说明](../runtime-tools.md)，可复验的本地行为见[功能回归](../../tests/test_runtime_tools.py)。以下保留历史候选设计，不代表所有设计项均已实施或当前环境已验收。
 
 本次根据 2026-10-08 的任务代码和已保存实验记录评估，未重新连接服务器或重新执行 NPU、模型、PD 验证。历史机器占用和容器状态不代表当前状态。
 
@@ -12,14 +12,14 @@
 
 优先提取确定性、可独立验证的 Python 工具，再给现有 skill 增加调用入口和判断规则。无需再建一个覆盖部署、算子、精度、交接的总 skill，也无需重复已有 PD serving 流程。
 
-| 优先级 | 候选名（拟定，尚未实现） | 解决的问题 | 已有任务来源 |
+| 优先级 | 原候选名 | 解决的问题 | 当前公共入口 / 状态 |
 | --- | --- | --- | --- |
-| P1 | `native_import_probe.py` | 原生扩展导入和输出结束后，进程仍可能在析构阶段崩溃；必须检查退出状态 | `probe_import_matrix.py` |
-| P1 | `artifact_manifest.py` | 核对 wheel、安装来源、源码、原生库和编译缓存，证明环境实际一致 | `verify_runtime.py`、`bundle_runtime.py`、`bundle_fla.py`、`filter_cache.py`、`verify_cache.py` |
-| P2 | `ascend_runtime_inventory.py` | 将 NPU PID、cgroup、容器、镜像和挂载关联起来，识别实际使用者 | `host_inventory.py` |
-| P2 | `aisbench_evidence_report.py` | 汇总官方分数、真实请求参数、回答有效性和有限大小的输出样例 | `observed_api.py`、`collect_eval.py` |
+| P1 | `native_import_probe.py` | 原生扩展导入和输出结束后，进程仍可能在析构阶段崩溃；必须检查退出状态 | [原生探针](../runtime-tools.md)，已实现 |
+| P1 | `artifact_manifest.py` | 核对 wheel、安装来源、源码、原生库和编译缓存，证明环境实际一致 | [产物核对](../runtime-tools.md)，仅已实现的清单/比较范围 |
+| P2 | `ascend_runtime_inventory.py` | 将 NPU PID、cgroup、容器、镜像和挂载关联起来，识别实际使用者 | 原候选保留，是否实施以开发记录为准 |
+| P2 | `aisbench_evidence_report.py` | 汇总官方分数、真实请求参数、回答有效性和有限大小的输出样例 | [证据报告](../aisbench-evidence.md)，已实现 |
 
-上述环境脚本来源为本机历史任务 `kimi-k3-pd8-environment-handoff-20261008`，评测脚本来源为 `kimi-k3-gpqa-dspark-graph-20261008`。这些业务记录未随公共工具发布，保留任务标识供本机追溯，不作为克隆后的依赖入口。
+这些候选来自历史工程调查；原运行材料和个人任务索引留各自本机。本文只保留问题、接口与适用边界，历史摘要不能由当前公共测试独立复验，也不能证明当前目标环境可用。
 
 ## 1. 原生扩展探针
 

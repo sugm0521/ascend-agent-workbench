@@ -91,9 +91,8 @@ def main(argv=None):
             raise ValueError('marked is unavailable or incompatible; run npm ci --ignore-scripts in the workbench root. Existing installations may use --node-modules or NODE_PATH. No package was installed.')
         if args.skill_validator and not args.skill_validator.is_file():
             raise ValueError('--skill-validator must point to an existing quick_validate.py')
-        # Root discovery includes renderer behavior; HCCL retains its historical path.
-        checks = [run([sys.executable, '-X', 'utf8', '-m', 'unittest', 'discover', '-s', 'tests', '-v'], env),
-                  run([sys.executable, '-X', 'utf8', 'tasks/2026-10-08-hccl-light-skill/scripts/test_hccl_traffic.py', '-v'], env)]
+        # Root discovery includes renderer behavior and the synthetic HCCL suite.
+        checks = [run([sys.executable, '-X', 'utf8', '-m', 'unittest', 'discover', '-s', 'tests', '-v'], env)]
         if args.skill_validator:
             checks += [run([sys.executable, '-X', 'utf8', args.skill_validator.resolve(), skill.parent], env)
                        for skill in sorted((ROOT / '.agents/skills').glob('*/SKILL.md'))]

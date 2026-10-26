@@ -40,6 +40,7 @@ cd ascend-agent-workbench
 | 任务推进 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 子任务、依赖、写入归属与资源边界 |
 | 任务推进 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
 | 任务推进 | [review](.agents/skills/ascend-task-review/SKILL.md) | 复核结论与覆盖，组织交付、交接与回顾 |
+| 模型与环境 | [inference-optimization](.agents/skills/ascend-inference-optimization/SKILL.md) | 串联性能基线、profiling、优化候选及性能与精度回归 |
 | 模型与环境 | [performance-benchmark](.agents/skills/ascend-performance-benchmark/SKILL.md) | 用 AISBench 核验现有服务吞吐、时延、并发与公共前缀负载 |
 | 模型与环境 | [model-accuracy](.agents/skills/ascend-model-accuracy/SKILL.md) | 模型乱码、复读、异常空输出和精度下降的诊断、修复与回归 |
 | 模型与环境 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/SKILL.md) | 只读采集指定环境的 CANN、代码、PR、依赖与启动条件 |
@@ -110,10 +111,9 @@ python scripts/validate_workbench.py
 - [开发计划](docs/开发计划.md)：工作台自身待办和完成状态。
 - [开发记录](docs/开发记录.md)：实际变化、验证和决定。
 - [归档与知识维护](docs/daily-sync.md)：个人任务归档和调度配置留本机，仅按授权发布skill与知识维护内容；实际推送后逐项反馈变化、验证和保留项。
-- [任务材料与台账规范](docs/task-records.md)：目录、编号、日志、完整启动文件，以及两张本机总表的维护边界。
 - [任务与台账规范](docs/task-records.md)：任务材料、算子进度与完整日志、服务器快照、容器及性能/精度/SWE 三类正式测试表。
 - [领域映射](upstream/skill-mapping.md)：锁定版本中的真实入口和能力边界。
 - [配置示例](config/workbench.example.yaml)：本机配置的参考结构，`null` 不是默认授权。
-- [流程演练](tasks/2026-10-05-流程演练/任务说明.md)：明确标记的模拟场景，真实工程验收另行完成。
+- [流程演练](docs/项目框架.md#15-第一轮流程演练)：明确标记的模拟场景，真实工程验收另行完成。
 
-新任务按[统一材料规范](docs/task-records.md)组织：每日事项独立分目录，长期命名任务及模型分析使用相应独立入口。每个事项从任务说明查找脚本、配置、日志和结果；两张总表固定生成在本机 `records/`，通过任务材料串起环境与测试。tasks、records、`.workbench-local/` 和本机配置均不提交；历史任务保持原位。`repos/` 下业务仓库各自维护 Git 历史，父项目只记录定位和证据。
+新任务按[统一材料规范](docs/task-records.md)组织：每日事项独立分目录，长期命名任务及模型分析使用相应独立入口。每个事项从任务说明查找脚本、配置、日志和结果；服务器、容器和分类测试台账按统一规范生成在本机 `records/`，通过任务材料串起环境与测试。tasks、records、`.workbench-local/` 和本机配置均不提交；历史任务保持原位。`repos/` 下业务仓库各自维护 Git 历史，父项目只记录定位和证据。
