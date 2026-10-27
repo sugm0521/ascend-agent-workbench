@@ -7,6 +7,18 @@ paths:
   init_report: .workbench-local/init-report.md
   knowledge_root: null  # 可选：用户确认的工作台外私有知识目录；初始化 skill 接入
 
+# 可选知识接入选择；全部留本机，null/空列表不是创建或同步授权。
+knowledge:
+  remote:
+    mode: null  # none / reuse / create；新建完成后改记 reuse
+    url: null   # 远端 Git URL；与 paths.knowledge_root 的本机目录分开
+    branch: null
+  sync:
+    mode: null  # manual / automatic；automatic 还需具体同步授权
+  maintenance:
+    enabled: null  # true / false；不从示例替用户决定
+    jobs: []       # 每项的 mode/id/时区/时间/范围见 init 配置约定
+
 dependencies:
   compound_engineering:
     path: deps/compound-engineering

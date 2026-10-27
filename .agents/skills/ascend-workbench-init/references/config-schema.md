@@ -70,3 +70,41 @@ provider_refs 的已知键为 `remote_dev`、`coordinator`，值为底层已有�
 `paths.knowledge_root` 是工程知识正文、主题索引和历史的唯一根目录。使用本机绝对路径，或相对工作台根解析的外部路径；解析真实路径后必须在工作台之外。路径只保存在忽略的本机配置和报告；提交示例保持 null，不写开发者用户名、笔记软件布局或实际仓库 URL。该字段不表示 Git 仓根、托管可见性、写权限或推送授权。
 
 首次初始化集中确认是否接入；选中才收集目录。已有配置复用，明确不接入保留 null 并在报告记 not_enabled；没有决定仍为 pending_decision，不能由默认值替用户选择。普通任务缺少配置时报告知识覆盖缺口并继续不依赖它的工作，不运行完整初始化。`capabilities.knowledge_tests` 仍只控制 conformance 测试依赖，与工程知识目录无关。
+
+## 私有知识库的远端与维护选择
+
+这些可选字段仅记录初始化已确认的本机选择，由 agent 按约定读取，不增加 YAML 解析器或调度服务。本机目录只有 `paths.knowledge_root` 一个绑定；是否接入的明确决定另在初始化报告保留。知识未启用不要求下表信息；示例中的 null/空列表不代表不使用、不启用或操作授权。
+
+| 字段 | 类型/值 | 含义 |
+|---|---|---|
+| `knowledge.remote.mode` | `none` / `reuse` / `create` / null | 不使用远端、复用私有仓或本轮新建私有仓；null 未决定，创建完成核实后改记 reuse |
+| `knowledge.remote.url` | Git URL 或 null | 已确认远端地址，不含凭据；实际 Git 配置另行核对，不能代替本机目录 |
+| `knowledge.remote.branch` | 分支或 null | 已确认知识同步目标；不预设分支，不授权切换已有开发分支 |
+| `knowledge.sync.mode` | `manual` / `automatic` / null | 有远端时手动或按具体授权自动同步；缺字段/null 不自动推送 |
+| `knowledge.maintenance.enabled` | boolean 或 null | 是否启用知识相关定时维护；已有明确选择沿用，未决定保持 pending_decision |
+| `knowledge.maintenance.jobs` | list，默认空 | 已确认任务；每项单独复用或创建，支持日/周等不同用途，空列表不推断已有任务已停用 |
+| `knowledge.maintenance.jobs[].mode` | `reuse` / `create` | 此项复用已有任务或本轮创建；成功创建并回读后改记 reuse |
+| `knowledge.maintenance.jobs[].automation_id` | string 或 null | 原调度入口返回的真实任务 ID；reuse 先读取匹配，create 成功后保存，不编造 ID |
+| `knowledge.maintenance.jobs[].purpose` | string | 实际维护用途，如归档与知识维护、周报；用于识别范围而非仅按名称去重 |
+| `knowledge.maintenance.jobs[].timezone` | 时区 | 用户确认的时区，不继承开发者个人时区 |
+| `knowledge.maintenance.jobs[].schedule` | string | 人可读的频率/时间；由实际调度入口转换并回读核对，不假设所有客户端使用相同调度语法 |
+| `knowledge.maintenance.jobs[].scope` | list of string | 本项实际取材/维护范围；自动推送与候选收录仍需各自具体授权 |
+
+jobs 条目结构示意（所有取值需由本机实际选择补齐，不复制 ID 或时间）：
+
+```yaml
+knowledge:
+  maintenance:
+    enabled: null
+    jobs:
+      - mode: null
+        automation_id: null
+        purpose: null
+        timezone: null
+        schedule: null
+        scope: []
+```
+
+`remote.mode: none` 时不要求 URL/分支、Git 登录或同步策略，不操作现有 remote；仍可启用本地定时维护。`manual` 时定时任务只整理和列待同步项，用户本次单独授权的同步按其范围执行。`automatic` 仅表达选择，实际自动提交推送须有可核对的目标/子树/操作授权，并在维护提示和报告中明确，不能用一个配置值批准候选、整库同步或扩大发布范围。新建远端的账号/名称、首次同步及实际调度操作的完整方案和授权引用留初始化报告。
+
+旧本机配置只有有效 `paths.knowledge_root` 时继续复用知识读写；不因缺少本节字段而中断既有本地能力、清空配置、停用任务或自动开同步。可核实的已有远端/调度及用户决定复用，仅对本轮确需实施的未知项集中确认。记录的 URL/ID 不取代实际 Git 与调度系统状态；字段冲突或结果不明先只读核对。实际路径、私有地址、ID、调度配置与回执不上公开仓。

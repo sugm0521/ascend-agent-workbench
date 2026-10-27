@@ -4,14 +4,14 @@
 
 ## 目录绑定与检索
 
-初始化由 [ascend-workbench-init](../.agents/skills/ascend-workbench-init/SKILL.md) 将“是否接入知识库、使用哪个目录”纳入集中确认；已有明确选择复用。确认后仅在被 Git 忽略的 `config/workbench.local.yaml` 保存 `paths.knowledge_root`。提交的 [配置示例](../config/workbench.example.yaml) 保持 null；不预设用户名、盘符、笔记软件或私有仓库 URL。
+初始化由 [ascend-workbench-init](../.agents/skills/ascend-workbench-init/SKILL.md) 将“是否接入知识库、本机目录、远端不使用/复用/新建、定时维护及同步策略”纳入集中确认；已有明确选择复用。确认后仅在被 Git 忽略的 `config/workbench.local.yaml` 保存 `paths.knowledge_root`。提交的 [配置示例](../config/workbench.example.yaml) 保持 null；不预设用户名、盘符、笔记软件或私有仓库 URL。
 
 - 缺字段、null 或空值：未配置，不以 shell 当前目录或公开 `knowledge/` 代替。
 - 非空值：绝对路径直接解析，相对路径相对实际工作台根解析；解析符号链接后的真实目录必须在工作台之外。仅使用本机目录，不将远程路径当本地路径。
 - 目录不存在、不可读或位于工作台内：说明具体缺口，暂停依赖它的知识写入；其他独立工作继续。接入/修复绑定走初始化的定向步骤，普通任务不运行完整初始化。
 - 私有根内 `README.md` 维护有效主题入口，`topics/` 保存主题，`history/` 保存完整旧文与原因。先查入口，再按组件、症状、版本、参数名及别名检索；默认排除历史，只按需追溯。写前重读目标、核对指纹与 owner，活动写入或基线变化时保留并报告。
 
-该目录可为任意私有知识库的项目子目录，不要求 Git。若使用 Git，另行核对实际仓根、私有可见性、作者/DCO、认证与发布授权；路径可读不表示已完成这些检查，也不触发建仓或同步。工程知识不能随公开工作台发布；在工作台内被忽略的副本也不能成为默认正文位置。
+该目录可为任意私有知识库的项目子目录，不要求 Git。本机存储、远端同步与定时维护独立选择，完整分支见[初始化接入约定](../.agents/skills/ascend-workbench-init/references/operations.md#私有知识目录接入)；仅本地也可定时整理，远端存在也可手动维护/同步。若使用 Git，另行核对实际仓根、私有可见性、作者/DCO、认证与发布授权；路径可读不表示已完成这些检查，也不触发建仓或同步。工程知识不能随公开工作台发布；在工作台内被忽略的副本也不能成为默认正文位置。
 
 agent 先读取本机 YAML，再可调用已有验证器做只读检查（参数值由调用方解析，脚本不解析配置）：
 
