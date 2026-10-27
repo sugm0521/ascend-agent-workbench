@@ -29,6 +29,9 @@ def check_links(root, ref=None):
         known = {p for p in known if (root / p).exists() or (root / p).is_symlink()}
     result = {'errors': [], 'dependency_links_unchecked': 0, 'checked': 0}
     for source in sorted(known):
+        if source.startswith('knowledge/') and source != 'knowledge/README.md':
+            result['errors'].append({'source': source, 'kind': 'private_knowledge_content'})
+    for source in sorted(known):
         if not source.endswith('.md') or source.startswith('deps/'):
             continue
         text = (git(root, 'show', ref + ':' + source) if ref else
@@ -57,6 +60,42 @@ def check_links(root, ref=None):
     return result
 
 
+def check_knowledge_location(root, knowledge_root=None, entry=None):
+    """Read-only check of a caller-resolved local binding; does not parse YAML or sync Git."""
+    if knowledge_root is None or not str(knowledge_root).strip():
+        return {'status': 'not_configured', 'errors': []}
+    public_root = Path(root).resolve()
+    base = Path(knowledge_root).expanduser()
+    if not base.is_absolute():
+        base = public_root / base
+    base = base.resolve()
+    result = {'status': 'unavailable', 'root': str(base), 'errors': []}
+    if base.is_relative_to(public_root):
+        result['errors'].append('knowledge_root must be outside the public workbench')
+        return result
+    if not base.is_dir():
+        result['errors'].append('configured knowledge directory is missing or not a directory')
+        return result
+    try:
+        with os.scandir(base):
+            pass
+    except OSError as exc:
+        result['errors'].append(str(exc))
+        return result
+    if entry is not None:
+        relative = Path(entry)
+        if relative.is_absolute():
+            result['errors'].append('knowledge entry must be relative to knowledge_root')
+            return result
+        target = (base / relative).resolve()
+        if not target.is_relative_to(base):
+            result['errors'].append('knowledge entry escapes the configured project directory')
+            return result
+        result.update(target=str(target), target_exists=target.exists())
+    result['status'] = 'ready'
+    return result
+
+
 def run(command, env):
     print('+ ' + ' '.join(map(str, command)), flush=True)
     return subprocess.run(list(map(str, command)), cwd=ROOT, env=env).returncode
@@ -69,8 +108,18 @@ def main(argv=None):
     parser.add_argument('--skill-validator', type=Path, help='existing skill-creator quick_validate.py (optional)')
     parser.add_argument('--links-only', action='store_true', help='only check document references')
     parser.add_argument('--links-ref', help='committed Git ref for document checks; tests still use current files')
+    parser.add_argument('--knowledge-root', help='external directory from paths.knowledge_root in local config')
+    parser.add_argument('--knowledge-path', help='relative entry to check; may be a new file, never written')
+    parser.add_argument('--knowledge-only', action='store_true', help='only check the explicit private binding; no Git writes')
     args = parser.parse_args(argv)
     try:
+        if args.knowledge_only or args.knowledge_root is not None or args.knowledge_path is not None:
+            knowledge = check_knowledge_location(ROOT, args.knowledge_root, args.knowledge_path)
+            print(json.dumps({'private_knowledge': knowledge}, ensure_ascii=False), flush=True)
+            if knowledge['status'] != 'ready':
+                return 2
+            if args.knowledge_only:
+                return 0
         links = check_links(ROOT, args.links_ref)
         print(json.dumps({'document_links': links}, ensure_ascii=False), flush=True)
         if links['errors']:

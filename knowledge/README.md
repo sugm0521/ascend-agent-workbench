@@ -1,21 +1,34 @@
-# 工作台知识库
+# 私有工程知识库接入与维护协议
 
-这里维护从工程任务中核实、可供后续检索复用的知识。原始任务状态仍由各任务说明维护；本库不替代运行环境、日志或资源状态。
+公开工作台只保存通用接入方法、skill 和证据规范。工程知识正文、主题索引与历史保存在开发者自行选择的外部私有目录，不再放入本仓库。
 
-## 目录与检索
+## 目录绑定与检索
 
-- 个人日报和任务进度只保存在本机忽略目录，按[归档约定](../docs/daily-sync.md)维护，不属于公开知识条目；旧的`daily/`仅作既有记录兼容，不再新增或发布处理进度。
-- `topics/<稳定主题>.md`：跨任务可复用的判断与方法。同一问题优先更新已有条目，不按日期复制。
-- [history/](history/README.md)：按条目id保存可独立阅读的历史版本及修订原因；普通检索默认不把这里当作有效指导。
-- 本文件维护主题入口和知识规范；检索先看入口，再按模型/组件/特性或 flag/命令用途/报错/版本及别名查相关条目与来源。未命中或覆盖不足时定向检索相关文档、skill/reference、任务小摘要和实际源码，区分未收录与入口遗漏；不把整个库或旧会话加载进上下文。
+初始化由 [ascend-workbench-init](../.agents/skills/ascend-workbench-init/SKILL.md) 将“是否接入知识库、使用哪个目录”纳入集中确认；已有明确选择复用。确认后仅在被 Git 忽略的 `config/workbench.local.yaml` 保存 `paths.knowledge_root`。提交的 [配置示例](../config/workbench.example.yaml) 保持 null；不预设用户名、盘符、笔记软件或私有仓库 URL。
 
-自动任务遵循[每日同步说明](../docs/daily-sync.md)，知识检索和写入使用独立的[ascend-knowledge-curation](../.agents/skills/ascend-knowledge-curation/SKILL.md)。没有新知识时只更新必要日报，不为每天凑条目；workflow不维护归纳正文。
+- 缺字段、null 或空值：未配置，不以 shell 当前目录或公开 `knowledge/` 代替。
+- 非空值：绝对路径直接解析，相对路径相对实际工作台根解析；解析符号链接后的真实目录必须在工作台之外。仅使用本机目录，不将远程路径当本地路径。
+- 目录不存在、不可读或位于工作台内：说明具体缺口，暂停依赖它的知识写入；其他独立工作继续。接入/修复绑定走初始化的定向步骤，普通任务不运行完整初始化。
+- 私有根内 `README.md` 维护有效主题入口，`topics/` 保存主题，`history/` 保存完整旧文与原因。先查入口，再按组件、症状、版本、参数名及别名检索；默认排除历史，只按需追溯。写前重读目标、核对指纹与 owner，活动写入或基线变化时保留并报告。
+
+该目录可为任意私有知识库的项目子目录，不要求 Git。若使用 Git，另行核对实际仓根、私有可见性、作者/DCO、认证与发布授权；路径可读不表示已完成这些检查，也不触发建仓或同步。工程知识不能随公开工作台发布；在工作台内被忽略的副本也不能成为默认正文位置。
+
+agent 先读取本机 YAML，再可调用已有验证器做只读检查（参数值由调用方解析，脚本不解析配置）：
+
+```sh
+python scripts/validate_workbench.py --knowledge-root <已确认目录> --knowledge-only
+python scripts/validate_workbench.py --knowledge-root <已确认目录> --knowledge-path topics/<稳定主题>.md --knowledge-only
+```
+
+检查不创建目录或文件；ready 仅证明目录可读，`target_exists` 表示指定条目是否存在。所有知识读写都在解析后的私有根；缺配置时正常公开仓验证仍可运行，业务候选可留本机任务等待接入。
+
+自动归档遵循 [每日同步说明](../docs/daily-sync.md)，检索和维护使用 [ascend-knowledge-curation](../.agents/skills/ascend-knowledge-curation/SKILL.md)。个人日报、任务状态与原始日志留本机任务/忽略目录，不包装成知识；知识库不替代任务当前状态。没有新知识不凑条目。
 
 ## 收录与更新
 
 可提出的候选包括配置用法、启动/操作命令、有效方法、失败经验、源码/资料结论和有证据的待验证线索；能帮助后续同类任务判断或操作即可，不要求昂贵排障、反复发生或整个任务完成。vLLM 特性配置和容器启动指令都在范围内，需保留前提、版本/参数含义和验证方法。已有权威文档可建议补检索入口或整理最小用法，不重复复制手册；普通进度、暂态机器信息及未提炼原始日志留任务。
 
-先逐条向用户提出拟收录内容、用途、证据/缺口及新增或更新位置，由用户逐条决定；未答复保持待确认。用户明确要求收录指定内容时直接执行，不重复询问。宽口径提案不降低证据标准；已核实结论与 candidate 分开。具体机器的完整命令留任务/台账，公共示例参数化实际主机、路径和凭据。
+先逐条向用户提出拟收录内容、用途、证据/缺口及新增或更新位置，由用户逐条决定；未答复保持待确认。用户明确要求收录指定内容时直接执行，不重复询问。宽口径提案不降低证据标准；已核实结论与 candidate 分开。具体机器的完整命令留任务/台账，可复用示例参数化实际主机、路径和凭据。
 
 当次归纳范围内所有可能保留的独立内容都向用户列出，不按重要性、复用次数、文档已有或证据暂不完整静默过滤。agent 提供建议和证据状态，用户决定保留/舍弃；重复项说明已有覆盖或建议更新/合并。只读本次指定材料及必要关联，不因此自动追溯整理旧任务。
 
@@ -29,8 +42,8 @@
 
 1. **检索与去重**：先查有效主题及直接相关任务，覆盖不足时查直接相关文档/skill/源码，确定需要保留的判断或用法。相同问题建议更新原条目，已有权威文档可补索引或最小用法；先取得该候选的收录决定再写入。
 2. **限定适用条件**：明确软件版本/提交、实际采用的补丁或产物、模型/执行路径等会影响结论的条件；通用方法可写明不依赖具体版本。原始基线或包版本不能代表叠加后全部代码；无可访问的补丁来源时，明确实现差异与待复核范围，不能把该基线说成完整复现条件。
-3. **关联证据**：结论对应来源条目，只引用仓内维护文件或可访问的公开固定提交，给源码文件及符号、行号范围。未发布的历史运行材料只保留必要结论、原证据时间及验证限制，不建立私有来源索引。来源入口、任务摘要、源码与实际运行分别标注；只阅读摘要不能声称独立核验了原始运行。
-4. **区分时间**：`sources[].observed_at` 是公开来源的原证据产生/采集时间；无公开来源的历史摘要用条目级 `observed_at` 保留原证据日期，并用 `evidence_scope` 说明缺口。`verified_at` 是实际完成证据核对的时间，`updated_at` 是知识文档更新时间；均用带时区时间，只有日期时保留日期精度并说明。未知写 `unknown` 和缺口，不用当前时间补造。仅清理发布内容不刷新原核实或实验时间。
+3. **关联证据**：结论对应来源条目，引用目标读者可访问的固定来源，给源码文件及符号、行号范围。本机历史运行材料保留必要结论、原证据时间及验证限制；实际可读性与独立复验条件分别说明。来源入口、任务摘要、源码与实际运行分别标注；只阅读摘要不能声称独立核验了原始运行。
+4. **区分时间**：`sources[].observed_at` 是来源的原证据产生/采集时间；无可复核原始来源的历史摘要用条目级 `observed_at` 保留原证据日期，并用 `evidence_scope` 说明缺口。`verified_at` 是实际完成证据核对的时间，`updated_at` 是知识文档更新时间；均用带时区时间，只有日期时保留日期精度并说明。未知写 `unknown` 和缺口，不用当前时间补造。仅清理发布内容不刷新原核实或实验时间。
 5. **限定结论强度**：将已知事实、推断、规避与修复分开，说明什么尚未证明。混合来源的条目分别标出各结论的验证层级，不因一项 runtime 证据把其他源码推断升级为端到端验收。
 6. **写入与复查**：先保留需修正/合并/替代的旧条目和原因，再更新有效入口；补充新字段本身不表示旧结论已过期。写明何种版本、实现或运行条件变化会触发复查，到足以支持本条结论时停止采集。
 
@@ -50,62 +63,28 @@ tags: [组件, 任务类型]
 applies_to: 明确的软件版本、模型、执行条件或证据范围
 sources:
   - id: evidence-1
-    path: 固定公开源码URL或仓内维护文件
-    revision: 实际公开Git提交
+    path: 固定源码URL或目标读者可访问的证据引用
+    revision: 实际Git提交
     locator: 文件内符号与行号范围，或日志事件/报告章节
     observed_at: 2026-10-14T16:00:00+08:00
     evidence: source  # source / static / runtime / end-to-end
-    access: published  # 仅仓内维护文件或可访问的公开主来源
+    access: published  # published / private / local；按真实可访问性填写
 ```
 
 正文包含：结论、触发/适用条件、关键证据与复核方式、不能推出的结论、失效/复查条件。`verified`只表示该条目限定层级的结论得到核实，source/static不能冒充真实模型验收。找不到原始证据时标明缺口；不生成指向未发布本机文件的失效链接。
 
-`sources[].id`供正文对应相关结论；单一来源可用明确章节代替复杂映射。`revision`使用实际公开提交，`locator`不能只有仓库首页或浮动分支。公开知识不包含未发布材料的路径、文件名、字节数、文件哈希或其他私有索引，也不保留私有来源元数据块。历史调查摘要没有公开来源时使用 `sources: []`，保留原证据日期及验证层级，明确无法由仓库独立复验，并将待确认适用性的条目标为 candidate；不能伪造公开引用或把历史摘要升级为当前运行验收。
+`sources[].id`供正文对应相关结论；单一来源可用明确章节代替复杂映射。`revision`使用实际提交，`locator`不能只有仓库首页或浮动分支。私有知识库不收录凭据、内部连接清单或原始日志全集；必要本机证据引用明确访问范围，不能假定其他开发者可访问。历史调查摘要没有可核实来源时使用 `sources: []`，保留原证据日期及验证层级，明确无法由仓库独立复验，并将待确认适用性的条目标为 candidate；不能伪造引用或把历史摘要升级为当前运行验收。
 
-每次写入前后检查：语义无重复、结论与证据对应、版本/定位/三类时间不混淆、公开引用可访问且不依赖本机材料、历史及入口可追溯。发布前按[每日发布约定](../docs/daily-sync.md#检查遗漏并推送)复核本轮差异；不把本机日志或源码全集随知识条目上传。
+每次写入前后检查：语义无重复、结论与证据对应、版本/定位/三类时间不混淆、来源可访问性与复验限制明确、历史及入口可追溯。发布前按[每日发布约定](../docs/daily-sync.md#检查遗漏并推送)复核本轮差异；不把本机日志或源码全集随知识条目上传。
 
 版本或实现变化会影响结论时复查。用户明确要求：过期内容不直接删除，必须放入历史并说明为什么过期。
 
 ## 过期与历史保留
 
-实质纠正、合并、替代或确认过期之前，先在本机忽略目录备份完整旧文件，具体备份路径与指纹只保留在本机。公开 `history/` 保存去除私有来源索引后的历史版本，以日期和修订顺序命名；不得为保留原始字节而将本机路径、原始材料文件名或哈希重新发布。
+实质纠正、合并、替代或确认过期之前，先在本机忽略目录备份完整旧文件，具体备份路径与指纹只保留在本机。配置指向的私有 `history/` 保存完整旧文与历史版本，以日期和修订顺序命名；完整旧文只留私有库，不随公开工作台提交。
 
-在该条目历史目录的 `README.md` 记录历史版本链接、原适用范围、具体修订/过期原因，以及可访问的公开依据与替代条目（如有）。补充证据或字段时说明旧结论是否仍有效；确认过期时说明哪个条件不再成立、哪个结论被何种证据纠正。因发布边界清理历史内容时明确说明清理范围，保留原始证据时间与工程结论，不声称清理后的版本仍与原文件逐字节相同。后续工程解释追加到说明。
+在该条目历史目录的 `README.md` 记录历史版本链接、原适用范围、具体修订/过期原因，以及可访问的依据与替代条目（如有）。补充证据或字段时说明旧结论是否仍有效；确认过期时说明哪个条件不再成立、哪个结论被何种证据纠正。迁移或调整访问边界时说明范围，保留完整原文与证据时间，不把迁移时间作为新实验时间。后续工程解释追加到说明。
 
 当前`topics/`路径继续保留可检索入口：有新版则更新同一条目并链接历史；无替代结论则标记`outdated`并说明限制；已合并/替代则标记`superseded`并链接新的有效条目。维护主题入口状态，避免旧链接断开或过期内容继续作为默认指导。需要历史追溯时再检索history。
 
 无法取得证据仅表示待复查，不代表已过期。扩大适用范围、将候选升级为普遍规则均需对应证据，不能仅因时间过去或检索未命中就处理。
-
-## 主题入口
-
-- [A5三级池化配置教程](topics/a5-memcache-tiered-pooling-tutorial.md)：HBM/DRAM/SSD与UBSIO预算、专用盘、配置、P/D增量及真实回读验收（candidate）。
-- [池化初始化与慢查询诊断](topics/a5-memcache-pooling-diagnostics.md)：大页整理、SDK退出、同号错误码、回收停滞和调用链证据边界（candidate）。
-- [容器环境与网络入口](topics/container-environment-network-lifecycle.md)：SSH生命周期、CANN继承、DNS分层及transient转发的残留端口（candidate）。
-- [HCCL与MPI分层](topics/hccl-topology-mpi-evidence.md)：UB-only、rootinfo/Entity、非幂等脚本、GLIBC/Hydra及正确性表（candidate）。
-- [Kimi K3逻辑shape](topics/kimik3-shape-parallel-layout.md)：固定双仓下SP、DCP、latent MoE、AttnRes、PP和融合分支（candidate）。
-- [原生评测与请求证据](topics/evaluation-native-results-and-request-evidence.md)：正式/预热/stable、MMMU评分、SWE分母、usage与采样偏差（candidate）。
-- [监控兼容边界](topics/monitoring-hook-and-output-compatibility.md)：缺失profile_memory与npu-smi输出变化，unknown不当空闲（candidate）。
-- [模型与源码材料完整性](topics/model-artifact-and-source-update-integrity.md)：权重分片、共享数据身份、Windows换行及恢复失败（candidate）。
-- [长期验证交接](topics/continuous-validation-handoff.md)：模板冻结、独立检查、实例停止条件和固定截止（candidate）。
-
-- [流式HTTP收包损坏与挂起](topics/http-receive-corruption-and-payload-hang.md)：接收校验、重传、payload异常与有限预算分层验证；历史1280条完整性回归，底层损坏根因未闭环（candidate）。
-- [EPLB全层映射的Host锁页申请](topics/eplb-full-map-pinned-host-allocation.md)：644MiB整表与1GiB分配的推导/实测区别，Host与HBM、扩展段候选及故障时资源缺口（candidate）。
-- [DSpark预算与PD状态布局](topics/dspark-pd-spec-state-layout.md)：固定两个分支下KDA卷积状态长度、V1/V2搬运与选块差异；56组合成元数据验证，真实PD适用性仍需核验（candidate）。
-- [PD性能对照与归因](topics/pd-performance-comparison.md)：固定dataset/prefix身份，区分P阶段、D排队与KV传输长尾；通信预热、占用采样和跨机请求关联的证据边界（candidate）。
-- [A5 MemCache池化配置与前置操作](topics/a5-memcache-pooling-setup.md)：三份配置、Python动态库路径及P/D增量；rootinfo、engine_id、layerwise图模式及元数据/真实后端预检边界（candidate）。
-- [MemFabric的HAL与Notify兼容边界](topics/memfabric-hal-notify-compatibility.md)：全局符号加载、真实接口输出及device_urma/device_rdma调用路径分别判定；历史单卡失败与替代接口缺口（candidate）。
-- [KDA预编译调用参数边界](topics/kda-compiled-launcher-arguments.md)：JIT绑定、首次请求参数错误及两套安装构建九/十二参数反例；固定源码与历史运行分级，其他构建适用性待确认（candidate）。
-- [A5独立能力检测与host launcher](topics/a5-triton-capability-detection.md)：目标架构正确仍可能选择错误启动分支；容器检测输入、编译metadata和207000的历史证据边界（candidate）。
-- [Profiler停止与窗口边界](topics/profiler-stop-window-boundaries.md)：控制请求、原生时长、严格裁剪、硬件counter及性能对照口径（candidate）。
-- [融合通信算子的空泡与分块性能判读](topics/profiling-fused-communication-bubbles.md)：事件区间并集、融合核内部等待、同工作量匹配及流水线填充反例；与可恢复显存分配失败分层关联（candidate）。
-- [Mooncake同步batch与底层建链的分层超时](topics/mooncake-nested-timeout.md)：固定版本下的独立计时层、冷peer排队、证据边界与复查条件。
-- [HIXL的URMA/EID枚举失败](topics/hixl-no-urma-devices.md)：区分空列表、peer端口缺EID与跨rank连带退出；重拉仅属临时恢复，底层查询失败未闭环（candidate）。
-- [AICPU公共库部署不完整与缓存复用](topics/aicpu-partial-deploy-cache.md)：从507018回溯loader首错，核对设备NUMA小页、部署错误返回及成功标记；模型退出不自动修复设备文件，恢复未验收（candidate）。
-- [EPLB运行阶段与日志指标判读](topics/eplb-runtime-evidence.md)：历史实现的初始化/真实提交、预测均衡度、迁移计数、局部耗时与开关边界；当前适用性待复核。
-- [MRV2下EPLB启用参考](topics/eplb-enable-reference.md)：历史D侧参数、模型/量化支持前置、角色差异与验收边界；当前适用性待复核，不是全局默认。
-- [Kimi K3的P/D配置参考](topics/kimik3-pd-configuration-reference.md)：角色并行、PP分层、主/草稿长度、调度和图模式的版本化组合，含历史验证范围与复现缺口（candidate）。
-- [长序列的KV与workspace预算](topics/ascend-long-context-memory-budget.md)：长度配置、混合cache groups、workspace最终分配和运行时临时内存分别验收；保留1M请求的成功及失败边界（candidate）。
-- [目标与草稿CPU长度同步门控](topics/spec-decode-cpu-length-sync-gates.md)：固定PR19038的FlashMLA/PP/PCP/DCP条件，目标False日志及草稿分支的独立判断（candidate）。
-- [AISBench证据报告](../docs/aisbench-evidence.md)：官方分数、有效输出和结束状态的现有权威说明；不在知识库复制同一规则。
-
-知识条目只在本库维护一份；项目规则与领域skill已有的通用要求直接引用，不重复抄写。

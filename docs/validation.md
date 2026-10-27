@@ -46,3 +46,9 @@ python scripts/validate_workbench.py --links-only --links-ref HEAD
 本机原始资料及其路径、文件名、大小和哈希索引不进入仓库。缺失文件链接、作者本机绝对文件链接一律报错；`local-only` 标签和历史任务目录没有放行例外。原始实验可在个人环境保留，仓库正文须给出自包含的方法与结论边界，必要代码、合成回归材料必须随仓库发布。
 
 领域依赖允许按用途未初始化，因此本检查单独列出依赖仓链接未验项；其固定来源与准备方法由 README、source lock 及 init/dependencies 管理。检查不验证外部网站、文内锚点或所有 Markdown 语法，也不把合成回归当作真实 HCCL/NPU/模型验收。
+
+## 私有知识边界检查
+
+默认引用检查拒绝公开树中 `knowledge/README.md` 以外的知识文件；`--links-ref <ref>` 同样检查指定提交树，不因工作区已删除或加入 ignore 而放行已跟踪正文。公开仓验证无需本机配置或私有知识库。新增主题与历史只能写初始化绑定的外部私有目录。
+
+如需验收已选目录，由 agent 读取忽略的 YAML 取出 `paths.knowledge_root`，在工作台根调用知识入口的 `--knowledge-root` / `--knowledge-path` / `--knowledge-only` 只读检查。脚本不解析 YAML、不创建目录、不写知识、不同步 Git；ready 只说明真实外部目录当前可读。根测试覆盖未配置、不同开发者目录、目录缺失、路径越界和公开提交树拦截；符号链接权限不足时如实跳过对应案例。

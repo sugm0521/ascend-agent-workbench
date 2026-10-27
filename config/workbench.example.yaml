@@ -5,6 +5,7 @@ schema_version: 1
 paths:
   sources_lock: upstream/sources.lock.yaml
   init_report: .workbench-local/init-report.md
+  knowledge_root: null  # 可选：用户确认的工作台外私有知识目录；初始化 skill 接入
 
 dependencies:
   compound_engineering:

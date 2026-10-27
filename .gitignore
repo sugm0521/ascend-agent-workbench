@@ -14,3 +14,7 @@ __pycache__/
 .env
 .env.*
 *.log
+
+# Engineering knowledge is maintained only in the configured external private root.
+/knowledge/topics/
+/knowledge/history/

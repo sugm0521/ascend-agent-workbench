@@ -110,7 +110,7 @@ python scripts/validate_workbench.py
 - [项目框架](docs/项目框架.md)：架构、职责、init 去重与建设标准。
 - [开发计划](docs/开发计划.md)：工作台自身待办和完成状态。
 - [开发记录](docs/开发记录.md)：实际变化、验证和决定。
-- [归档与知识维护](docs/daily-sync.md)：个人任务归档和调度配置留本机，仅按授权发布skill与知识维护内容；实际推送后逐项反馈变化、验证和保留项。
+- [归档与知识维护](docs/daily-sync.md)：个人任务归档和调度配置留本机，工程知识写入初始化绑定的外部私有目录，公开仓库仅按授权发布skill及通用方法；实际推送后逐项反馈变化、验证和保留项。
 - [任务与台账规范](docs/task-records.md)：任务材料、算子进度与完整日志、服务器快照、容器及性能/精度/SWE 三类正式测试表。
 - [领域映射](upstream/skill-mapping.md)：锁定版本中的真实入口和能力边界。
 - [配置示例](config/workbench.example.yaml)：本机配置的参考结构，`null` 不是默认授权。

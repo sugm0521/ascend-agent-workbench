@@ -16,6 +16,7 @@
 | `schema_version` | `1` | 当前约定版本 |
 | `paths.sources_lock` | 路径 | 顶层依赖来源与固定提交记录 |
 | `paths.init_report` | 路径 | 唯一本机初始化计划、结果与快照 |
+| `paths.knowledge_root` | 路径或 null | 可选的外部私有知识目录，由初始化确认并绑定；缺失/null/空值均不启用，不回退公开正文 |
 | `dependencies.<id>.path` | 路径 | 实际领域维护源位置 |
 | `dependencies.<id>.enabled` | boolean | 本项目选用该直接依赖；不表示可运行 |
 | `business.repositories.<id>` | mapping | 每个业务仓库唯一绑定及已定选择 |
@@ -63,3 +64,9 @@ provider_refs 的已知键为 `remote_dev`、`coordinator`，值为底层已有�
 不保存 token、密码、私钥、带凭据的 URL；不复制底层服务器、模型、镜像、租约或资源状态。作者、账号与认证选择通过原安全工具核对；本机报告只保存必要的非机密身份结果与授权引用。
 
 `remote_required: true` 而 remote_execution 未启用时先澄清或核对相关任务授权，不能偷偷启用。知识测试未启用时记录为 not_enabled；不下载 conformance kit 来使所有条目变绿。
+
+## 私有知识目录
+
+`paths.knowledge_root` 是工程知识正文、主题索引和历史的唯一根目录。使用本机绝对路径，或相对工作台根解析的外部路径；解析真实路径后必须在工作台之外。路径只保存在忽略的本机配置和报告；提交示例保持 null，不写开发者用户名、笔记软件布局或实际仓库 URL。该字段不表示 Git 仓根、托管可见性、写权限或推送授权。
+
+首次初始化集中确认是否接入；选中才收集目录。已有配置复用，明确不接入保留 null 并在报告记 not_enabled；没有决定仍为 pending_decision，不能由默认值替用户选择。普通任务缺少配置时报告知识覆盖缺口并继续不依赖它的工作，不运行完整初始化。`capabilities.knowledge_tests` 仍只控制 conformance 测试依赖，与工程知识目录无关。
