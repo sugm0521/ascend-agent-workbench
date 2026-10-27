@@ -76,5 +76,14 @@ sources:
       - skills/ce-compound-refresh/SKILL.md
 
 
+  ascend_agent_skills:
+    path: deps/ascend-agent-skills
+    url: https://github.com/Ascend/agent-skills.git
+    commit: 155ac37bd169ddb89479af528297cfb2237400aa
+    purpose: 昇腾领域能力发现与只读方法参考；按任务评估，不自动安装或执行
+    declared_dependencies:
+      - README.md
+      - LICENSE
+
 # 仅固定顶层来源。下层版本要求从父提交的原声明读取，
 # 不在这里复制另一套 pin；业务版本与本机能力另行初始化。

@@ -19,3 +19,6 @@
 [submodule "deps/compound-engineering"]
 	path = deps/compound-engineering
 	url = https://github.com/EveryInc/compound-engineering-plugin.git
+[submodule "deps/ascend-agent-skills"]
+	path = deps/ascend-agent-skills
+	url = https://github.com/Ascend/agent-skills.git

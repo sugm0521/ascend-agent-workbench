@@ -159,6 +159,7 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 | `deps/model-analysis` | 模型架构报告、版本比较或参数/KVCache 估算，按[调用说明](.agents/skills/ascend-agent-workflow/references/model-analysis.md)使用；原仓许可尚未明确、内部 gitlink 声明缺口保留，仅作资料引用，再分发前需核实许可 |
 | `deps/aisbench-auto-tools-prefix` | 服务性能压测工具源码；AISBench、tokenizer 等依赖在请求发起端按需准备，不要求全部服务节点安装 |
 | `deps/awesome-agent-skills` | 模型精度诊断只读手册，不安装同仓其他 skill 或执行其服务器管理、快照、迁移脚本 |
+| `deps/ascend-agent-skills` | 昇腾领域能力索引与只读参考，按[统一发现入口](upstream/skill-mapping.md#依赖能力发现入口)检索；暂不安装上游 skill 或运行其工具 |
 | `deps/compound-engineering` | 知识归纳与复查的只读方法，不安装整套插件；项目适配由 knowledge-curation 维护 |
 
 不要对整个依赖树无条件递归初始化，以免连带克隆 workspace 内的业务代码。取得来源不代表工具可调用、客户端已接入或远程运行就绪。

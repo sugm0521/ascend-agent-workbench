@@ -4,6 +4,35 @@
 
 领域来源保持只读。先明确业务路径与启用能力，再读取相关 SKILL；目录存在不等于已安装插件或获得远程执行能力。直接引用的 skill 使用其本身相对资源，不能从工作台根目录猜脚本工作目录。
 
+## 依赖能力发现入口
+
+映射只列常用、已核对的调用入口，不是依赖能力白名单。先检索工程知识与已有领域入口；映射未命中、覆盖不足，或新报错、反复失败、调查转向暴露能力缺口时，按下表查相关来源。相关来源无命中再扩大到其他已登记来源，找到适用方案即停止；已有检索在相同版本与问题范围内仍适用时复用。
+
+实际路径先按本机 `dependencies.<id>.path` 定位，缺省按 lock；显式禁用、未准备或不可读的来源报告缺口，不自动安装、启用或升级。未决定启用的现有资料可只读识别，遵循配置约定。
+
+| lock id | 优先检索的原仓目录或清单 | 主要检索范围 |
+|---|---|---|
+| workspace | [README](../deps/vllm-ascend-workspace/README.md)、`.agents/skills/` | vLLM-Ascend 服务、图、分布式、精度、profiling 与执行协议 |
+| cannbot | [功能清单](../deps/cannbot-skills/docs/feature-list.md)，再按原清单定位 `ops/`、`model/`、`runtime/`、`communication/` 等目录 | AscendC、优化、精度、同步及领域知识 |
+| matt | [README](../deps/matt-pocock-skills/README.md)、`skills/` | 澄清、拆分、实现、交接等工程方法 |
+| model_analysis | [README](../deps/model-analysis/README.md)、`skills/` | 模型架构、参数与缓存估算；许可边界仍适用 |
+| aisbench_auto_tools_prefix | [README](../deps/aisbench-auto-tools-prefix/README.md)，再查原脚本帮助与接口 | 性能压测与公共前缀工具；无 SKILL 的来源也按接口检索 |
+| awesome_agent_skills | [README](../deps/awesome-agent-skills/README.md)、各主题 `SKILL.md` | 精度诊断及其他候选能力；当前仅精度手册已适配，其余只读评估 |
+| compound_engineering | [README](../deps/compound-engineering/README.md)、`skills/` | 知识归纳、复查及其他工程方法；已有知识调用边界不变 |
+| ascend_agent_skills | [README 能力索引](../deps/ascend-agent-skills/README.md)、`skills/` | AscendC、Catlass、Triton、迁移、profiling、环境、推理、测试与 ATB；当前仅作能力发现，尚未做执行适配 |
+
+先用 `rg --files --hidden -g '!**/.git/**'` 确认候选目录与 `SKILL.md`，再按组件、报错、症状及中英文近义词检索名称/description，命中后才读正文及必要 references；若标题摘要不足，再定向查相关 references、文档或脚本接口。不要全量加载所有正文，也不默认联网搜索未登记生态仓。
+
+发现未映射能力后，核对固定提交、芯片、框架、输入和工具前提，简记检索来源、关键词、选用理由及缺口。只读方法引用不等于工具已兼容；安装、执行、运行体系适配和依赖版本升级分别按实际任务授权处理。确有重复使用价值时再评估新增映射或项目 skill，不自动复制或安装上游 skill，不引入第二套任务与资源状态。
+
+### 未适配能力的接入提醒
+
+实际任务发现有价值的未适配能力时，在任务反馈或交付中主动说明来源及具体 skill/工具、能解决的当前问题、目前可只读参考还是已有适用执行入口。需要适配才能执行时，同时给出具体缺口、最小接入范围和验证方案，请用户决定是否实施；这不阻止继续完成已授权且不依赖该适配的工作，不因名称命中就提出接入。
+
+同一能力多次实际使用时，在任务回顾中评估是否值得加入常用映射或封装项目 skill，并说明重复使用的依据及维护成本。只读参考本身不自动要求新增 skill 或升级版本。
+
+提醒与用户决定记在当前任务记录，确有长期跟踪价值的公共候选沿用 `docs/reviews/`。提出建议前按来源和能力查阅已有相关记录及决定；同一缺口、证据和用户决定未变化时不重复提醒，已拒绝或暂缓的候选仅在出现实质新证据或条件变化时重新提出，并说明变化。未找到跨任务记录时说明已查范围，不声称已全局去重。不新增定时提醒、候选数据库或自动安装流程。
+
 ## 本项目补充能力
 
 | 需求 | 入口 | 接入条件与边界 |
