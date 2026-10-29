@@ -39,9 +39,9 @@
 |---|---|---|
 | skill 改进候选筛选与去重 | [ascend-skill-candidate-review](../.agents/skills/ascend-skill-candidate-review/SKILL.md) | 明确评估/优化请求才启用；优先最小增量，新增检查须有触发条件，不自动建设工具 |
 | 代码仓同步与升级分流 | [ascend-repository-update](../.agents/skills/ascend-repository-update/SKILL.md) | 核对实际仓库、目标和 dirty，默认安全快进；业务版本配对、工作台与固定依赖分别处理，日常状态查询不自动 fetch |
-| 已保存及已登记服务器的可达性快照 | [init 保存目标发现](../.agents/skills/ascend-workbench-init/references/operations.md#保存目标与-npu-接入)、[服务器总表](../docs/task-records.md#服务器可达性总表) | 有界只读查询；旧/新管理来源分别读取，不创建另一套注册/租约，不从 SSH 成功推断设备可用 |
-| 正式性能、精度及 SWE 数据集评测登记 | [三类测试表](../docs/task-records.md#三类正式测试总表)、[手动测试接手](../docs/task-records.md#接手手动测试) | 三类字段独立，实际工具/runner决定原生指标；正式手动测试缺项先补登记，调参排障留任务，不声明 AISBench 覆盖 SWE 执行 |
-| 算子开发进度和完整运行日志 | [共用记录规范](../docs/task-records.md#算子开发进度与运行日志) | 原领域方法/工具执行，上层关联进度与逐轮完整日志；不自动建第二状态源或委派 |
+| 已保存及已登记服务器的可达性快照 | [init 保存目标发现](../.agents/skills/ascend-workbench-init/references/operations.md#保存目标与-npu-接入)、[服务器总表](../docs/guides/task-records.md#服务器可达性总表) | 有界只读查询；旧/新管理来源分别读取，不创建另一套注册/租约，不从 SSH 成功推断设备可用 |
+| 正式性能、精度及 SWE 数据集评测登记 | [三类测试表](../docs/guides/task-records.md#三类正式测试总表)、[手动测试接手](../docs/guides/task-records.md#接手手动测试) | 三类字段独立，实际工具/runner决定原生指标；正式手动测试缺项先补登记，调参排障留任务，不声明 AISBench 覆盖 SWE 执行 |
+| 算子开发进度和完整运行日志 | [共用记录规范](../docs/guides/task-records.md#算子开发进度与运行日志) | 原领域方法/工具执行，上层关联进度与逐轮完整日志；不自动建第二状态源或委派 |
 | 个人工作、项目与知识库改进两份周报 | [ascend-weekly-report](../.agents/skills/ascend-weekly-report/SKILL.md) | 从当前项目及手工/自动变更取证，Markdown与HTML展示；只读汇报与候选评估，不维护知识、实施skill或发布，不承载个人调度时间 |
 | HCCL alltoallvc 单机/多机打流 | [ascend-hccl-traffic-test](../.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用原运行工具与 MPI/CANN；支持本地 fork、有限诊断及已明确授权的宿主直接路径，不携带大二进制；日志摘要不代替规模/rank 覆盖 |
 | 服务部署准备与验收 | [部署说明](../.agents/skills/ascend-agent-workflow/references/service-deployment.md) | 通用流程与A5条件命令；区分运行方式、同会话容器延续与显式复用；命令结构模拟不代表远端运行 |
@@ -50,7 +50,7 @@
 | 服务性能压测、吞吐/延迟和公共前缀测试 | [ascend-performance-benchmark](../.agents/skills/ascend-performance-benchmark/SKILL.md)、[aisbench_auto_tools_prefix](../deps/aisbench-auto-tools-prefix/README.md) | 默认优先使用；只在请求端运行，独立可写副本与AISBench环境；精度、算子打流和纯profiling走原入口 |
 | vLLM-Ascend 推理性能调优与 PD 每卡吞吐目标 | [ascend-inference-optimization](../.agents/skills/ascend-inference-optimization/SKILL.md) | 串联现有 AISBench、NPU 分析和回归；确认指标与真实资源分母，配置搜索/代码 A/B 分开，真实调优结果按目标环境验收 |
 | 模型精度下降、乱码、复读与参考结果不一致 | [ascend-model-accuracy](../.agents/skills/ascend-model-accuracy/SKILL.md) | 独立维护症状诊断、消融与修复回归；复用 correctness/graph/distributed/operator，不把定位扩为修复 |
-| 生成式AISBench评测结果与输出质量证据 | [证据报告工具](../docs/aisbench-evidence.md) | 离线消费显式run/解析器，每组与总汇分开；基础检查和按需审计，不改官方评分、不发请求 |
+| 生成式AISBench评测结果与输出质量证据 | [证据报告工具](../docs/tools/aisbench-evidence.md) | 离线消费显式run/解析器，每组与总汇分开；基础检查和按需审计，不改官方评分、不发请求 |
 
 ## workspace：流程与执行
 
@@ -135,4 +135,4 @@
 | 检索、核实、去重、写入或复查任务知识 | [ascend-knowledge-curation](../.agents/skills/ascend-knowledge-curation/SKILL.md) | 知识维护在knowledge/；过期内容保存完整历史与原因；仅检索请求不自动写入，Git发布由每日流程或具体授权统一处理 |
 | 已验证问题的长期经验与旧知识复查方法 | [ce-compound](../deps/compound-engineering/skills/ce-compound/SKILL.md)、[ce-compound-refresh](../deps/compound-engineering/skills/ce-compound-refresh/SKILL.md) | EveryInc来源按lock固定；原skill只读参考，项目适配不运行其自动提交、删除、CONCEPTS或整套多agent流程 |
 
-日常Ascend/CANN算子资料查询仍可按现有cannbot knowledge-query/ingest/lint消费领域知识；其OKF、图谱和算子卡片规范不整套迁入任务知识库。每日任务按[同步说明](../docs/daily-sync.md)调用独立入口，不扩写workflow正文。
+日常Ascend/CANN算子资料查询仍可按现有cannbot knowledge-query/ingest/lint消费领域知识；其OKF、图谱和算子卡片规范不整套迁入任务知识库。每日任务按[同步说明](../docs/guides/daily-sync.md)调用独立入口，不扩写workflow正文。

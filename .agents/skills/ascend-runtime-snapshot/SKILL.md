@@ -15,7 +15,7 @@ description: 维护指定容器的最小复现记录及本机总表，记录原�
 
 ## 采集与输出
 
-常规记录按[最小环境记录与容器总表](../../../docs/task-records.md#容器总表与最小环境记录)维护三类复现材料；来源不清或独立环境诊断时，再按[字段取值与诊断来源](references/snapshot-fields.md)补与问题有关的字段。复用有效证据和原运行工具，不默认扫全部包、全部历史 PR 或所有环境。
+常规记录按[最小环境记录与容器总表](../../../docs/guides/task-records.md#容器总表与最小环境记录)维护三类复现材料；来源不清或独立环境诊断时，再按[字段取值与诊断来源](references/snapshot-fields.md)补与问题有关的字段。复用有效证据和原运行工具，不默认扫全部包、全部历史 PR 或所有环境。
 
 - 使用服务实际解释器的包metadata、实际Git根/完整SHA/dirty、镜像/构建来源和任务PR记录；模块安装路径与进程加载来源分别记录。
 - 只读已有进程信息/库映射，不为快照初始化NPU、导入可能有副作用的原生模块或发送推理请求。仅输出快照的请求不自动运行native probe；安装字节核对按需要引用已有artifact manifest。
@@ -29,4 +29,4 @@ description: 维护指定容器的最小复现记录及本机总表，记录原�
 
 目标、阶段、字段来源、修改项、未知项与证据入口齐全，足以判断已记录条件和缺口。清单完整度、环境兼容、实际功能与性能分别判定。没有当前真实请求证据，不称服务成功；关键版本或patch不可恢复时，不称可精确复现。
 
-与其他入口分工：部署使用[部署说明](../ascend-agent-workflow/references/service-deployment.md)，升级由[dependencies](../ascend-workbench-dependencies/SKILL.md)负责，实际兼容/产物工具见[运行工具说明](../../../docs/runtime-tools.md)。正常快照不启动这些变更或实验流程。
+与其他入口分工：部署使用[部署说明](../ascend-agent-workflow/references/service-deployment.md)，升级由[dependencies](../ascend-workbench-dependencies/SKILL.md)负责，实际兼容/产物工具见[运行工具说明](../../../docs/tools/runtime-tools.md)。正常快照不启动这些变更或实验流程。

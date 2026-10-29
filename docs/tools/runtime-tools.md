@@ -15,7 +15,7 @@
 
 ## 原生导入探针
 
-[脚本](../scripts/native_import_probe.py) 对每个用例开启独立子进程，默认使用调用它的 Python；跨环境时显式指定 `--python`。正常退出 0 且捕获到工具的完成元数据才为 `passed`；主体完成但非零退出仍失败；直接 `os._exit(0)` 等绕过完成记录为 `inconclusive`。
+[脚本](../../scripts/native_import_probe.py) 对每个用例开启独立子进程，默认使用调用它的 Python；跨环境时显式指定 `--python`。正常退出 0 且捕获到工具的完成元数据才为 `passed`；主体完成但非零退出仍失败；直接 `os._exit(0)` 等绕过完成记录为 `inconclusive`。
 
 ### 配置与调用
 
@@ -46,7 +46,7 @@ python scripts/native_import_probe.py --config /path/probes.json --output-dir /p
 
 ## 产物清单
 
-[脚本](../scripts/artifact_manifest.py) 提供三种只读动作：
+[脚本](../../scripts/artifact_manifest.py) 提供三种只读动作：
 
 ```bash
 python scripts/artifact_manifest.py snapshot --root source=/path/source --root cache=/path/cache --wheel extension=/path/extension.whl --distribution package-name --exclude '**/__pycache__/*' --output /path/reports/baseline.json
@@ -76,7 +76,7 @@ python scripts/artifact_manifest.py verify-wheel --wheel /path/package.whl --sit
 
 排除后没有可核对成员时（例如只有 `RECORD` 或其签名），报告 `checked_files=0`、明确错误及 `inconclusive`，退出 1。该工具不验证完整 wheel 打包规范；`matched` 仅说明至少一个非排除成员在所选安装路径的字节匹配，不证明 wheel 结构完整或安装成功。
 
-清单状态 complete/incomplete；比较和 wheel 核对状态 matched/different/inconclusive。退出码：0 完整采集或一致；1 采集不完整、存在差异或无定论；2 配置、schema、读取或输出错误。大型清单留在服务器侧，单次上传另检查文件字节数，不自动上传。
+清单状态 complete/incomplete；比较和 wheel 核对状态 matched/different/inconclusive。退出码：0 完整采集或一致；1 采集不完整、存在差异或无定论；2 配置、schema、读取或输出错误。大型清单留在服务器侧，不自动上传；确需发送时，按[共用传输约定](../guides/task-records.md#日志诊断)遵守当前环境已确认的限制，包括适用的单次、累计或完整请求口径，不能只凭单个文件字节数认定全部合规。
 
 ## 验证与来源
 

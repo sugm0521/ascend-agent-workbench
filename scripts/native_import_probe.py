@@ -2,7 +2,7 @@
 """Run trusted Python import/probe cases in children; require normal final exit.
 
 Standard library only, Python >=3.10. No remote access or environment repair.
-See docs/runtime-tools.md for the JSON contract and evidence limits.
+See docs/tools/runtime-tools.md for the JSON contract and evidence limits.
 """
 
 from __future__ import annotations

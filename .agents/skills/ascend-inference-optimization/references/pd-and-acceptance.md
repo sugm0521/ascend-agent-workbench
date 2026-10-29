@@ -29,6 +29,6 @@ output_tokens_per_second_per_D_card = native_output_token_throughput / allocated
 
 最新镜像的 tag 查询只能给出下载候选。固定平台 digest 并核对创建时间、版本与源容器差异；如果源容器基于更早镜像且已有热补丁，先判断哪条复刻路线能恢复同一执行条件。
 
-通过[复现清单](../../ascend-runtime-snapshot/SKILL.md)和[产物工具](../../../../docs/runtime-tools.md)分别验证版本/文件覆盖；在任务副本中执行必要的原生导入、功能与真实 PD 路径验证。每台目标独立验收。文件相同、能 import、服务可用和性能一致是不同层级，未知差异不能写成“完全复刻”。
+通过[复现清单](../../ascend-runtime-snapshot/SKILL.md)和[产物工具](../../../../docs/tools/runtime-tools.md)分别验证版本/文件覆盖；在任务副本中执行必要的原生导入、功能与真实 PD 路径验证。每台目标独立验收。文件相同、能 import、服务可用和性能一致是不同层级，未知差异不能写成“完全复刻”。
 
 大型镜像/模型/wheel 留在远端，通过符合用户传输限制的既有远端路径获得；本机发送脚本、文本和命令也要检查载荷大小。不能用大仓自动快照绕过上限。必要凭据只交给既有安全输入/认证能力，不写入 skill、任务文档或日志。

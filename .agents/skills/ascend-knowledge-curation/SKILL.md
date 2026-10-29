@@ -5,7 +5,7 @@ description: 检索任务与知识，逐条提出配置用法、操作方法和�
 
 # 工程知识检索与维护
 
-遵循[根规则](../../../AGENTS.md)和[知识库约定](../../../knowledge/README.md)。本skill负责知识判断与条目维护；日报调度、遗漏发布与反馈由[每日同步说明](../../../docs/daily-sync.md)负责。使用上游方法时读[来源与项目适配](references/source-and-adaptation.md)，不运行其整套插件流程。
+遵循[根规则](../../../AGENTS.md)和[知识库约定](../../../knowledge/README.md)。本skill负责知识判断与条目维护；日报调度、遗漏发布与反馈由[每日同步说明](../../../docs/guides/daily-sync.md)负责。使用上游方法时读[来源与项目适配](references/source-and-adaptation.md)，不运行其整套插件流程。
 
 ## 解析知识位置
 

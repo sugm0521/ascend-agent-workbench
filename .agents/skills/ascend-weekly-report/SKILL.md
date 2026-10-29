@@ -34,7 +34,7 @@ description: 从当前项目任务、实际产物与变更证据生成个人工�
 - `project-knowledge-weekly.md`：项目与知识库改进周报。
 - `index.html`：由这两份Markdown生成的阅读/打印版，内容不另行手工维护。
 
-首次准备按[仓库验证说明](../../../docs/validation.md)安装锁定的项目渲染依赖，再用已有Node.js运行渲染器；不依赖作者客户端的私有模块目录：
+首次准备按[仓库验证说明](../../../docs/maintenance/validation.md)安装锁定的项目渲染依赖，再用已有Node.js运行渲染器；不依赖作者客户端的私有模块目录：
 
 ```sh
 node <本skill>/scripts/render_reports.cjs --work <work-weekly.md> --improvements <project-knowledge-weekly.md> --output <index.html> --period "实际覆盖区间" --label "正式周报或有限试写"

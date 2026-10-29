@@ -1,4 +1,4 @@
-# 干净克隆验证
+# 工作台验证与发布检查
 
 所需运行时为 Python 3.10+、Git 和 Node.js 22.12+。周报渲染的 `marked` 版本由仓库的 `package.json` / `package-lock.json` 固定；不需要当前作者的客户端缓存、私有模块目录或历史实验文件。
 
@@ -19,7 +19,7 @@ python scripts/validate_workbench.py
 
 根目录 `tests/` 已包含 HCCL helper 的合成套件，统一入口和直接执行 `python -m unittest discover -s tests -v` 都会发现它。直接运行根测试时缺 Node/marked 可能跳过渲染；统一入口会提前报告依赖缺口，不以漏测代替完整通过。
 
-历史任务中的个人进度、原始回执和运行资料留本机；公共文档引用维护中的说明、源码和测试。可复用的流程走查输入见[框架演练场景](项目框架.md#15-第一轮流程演练)，GPQA 客户端辅助代码见[调用说明](gpqa-batch.md)。干净副本的本地回归不需要 `tasks/`、作者初始化报告或历史运行目录。
+历史任务中的个人进度、原始回执和运行资料留本机；公共文档引用维护中的说明、源码和测试。可复用的流程走查输入见[框架演练场景](项目框架.md#15-第一轮流程演练)，GPQA 客户端辅助代码见[调用说明](../tools/gpqa-batch.md)。干净副本的本地回归不需要 `tasks/`、作者初始化报告或历史运行目录。
 
 ## 开发与发布的跨机器复用规则
 
@@ -35,7 +35,7 @@ python scripts/validate_workbench.py
 
 ## Git 推送大小配置
 
-Git 发布流程由 agent 从忽略提交的 `config/workbench.local.yaml` 读取 `git.push.max_upload_bytes`，字段示例见 [配置示例](../config/workbench.example.yaml)。本策略适用于经工作台执行的 Git 推送，包括工作台、业务仓及私有知识仓；不覆盖其他传输渠道的独立限制。
+Git 发布流程由 agent 从忽略提交的 `config/workbench.local.yaml` 读取 `git.push.max_upload_bytes`，字段示例见 [配置示例](../../config/workbench.example.yaml)。本策略适用于经工作台执行的 Git 推送，包括工作台、业务仓及私有知识仓；不覆盖其他传输渠道的独立限制。
 
 ```yaml
 git:

@@ -2,7 +2,7 @@
 """Check declared host prerequisites and Docker mounts/env; never deploy or repair.
 
 Python 3.10+, standard library only. Run on the target host through its existing
-execution tool. See docs/deployment-preflight.md for the plan and evidence scope.
+execution tool. See docs/tools/deployment-preflight.md for the plan and evidence scope.
 """
 from __future__ import annotations
 

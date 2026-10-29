@@ -1,5 +1,5 @@
 schema_version: 1
-baseline: docs/项目框架.md
+baseline: docs/maintenance/项目框架.md
 sources:
   workspace:
     path: deps/vllm-ascend-workspace

@@ -3,7 +3,7 @@
 
 Standard library only, Python >=3.10. Hashes raw bytes; never imports target
 packages, extracts archives, installs packages or restores build caches.
-See docs/runtime-tools.md for scope, CLI and interpretation.
+See docs/tools/runtime-tools.md for scope, CLI and interpretation.
 """
 
 from __future__ import annotations

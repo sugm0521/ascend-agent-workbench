@@ -1,6 +1,6 @@
 # AISBench结果证据报告
 
-[aisbench_evidence_report.py](../scripts/aisbench_evidence_report.py)是Python标准库的离线工具，只消费明确指定的已有评测结果；不安装AISBench、不发请求、不修改评分、不控制服务。官方指标、独立格式检查、API结束状态和输出审计分别呈现。没有阈值或对照时给出测量，不自动宣称精度通过。
+[aisbench_evidence_report.py](../../scripts/aisbench_evidence_report.py)是Python标准库的离线工具，只消费明确指定的已有评测结果；不安装AISBench、不发请求、不修改评分、不控制服务。官方指标、独立格式检查、API结束状态和输出审计分别呈现。没有阈值或对照时给出测量，不自动宣称精度通过。
 
 ## 输入与调用
 
@@ -59,12 +59,12 @@ request证据只核对显式expected_request中的生成字段（model/max_token
 - U+FFFD、异常控制字符、隐藏字符分别记录。`known_special_tokens`可显式填写已核对模型的token字面量清单；未分类的`<|...|>`或类似串仅作候选，因此数学式`<|v_i - v_j|>`不能直接算特殊token错误。重复题干、蛋白序列等仅标重复候选，不称死循环；逻辑错误需要独立推理或计算证据。
 - 原始响应不可用时，不能用答案索引声称完成全文乱码检查。审计层级、缺失字段与不完整结果在报告中可见。
 
-退出码：0完整生成报告（不代表模型精度通过）；1已生成但输入证据不完整；2配置、输入或写入错误。读取结果前核对status及原生证据，不能把控制命令exit0当业务完成。
+退出码：0完整生成报告（不代表模型精度通过）；1已生成但输入证据不完整；2配置、输入或写入错误。stdout摘要的 `status` 为 `generated` 或 `incomplete`；`report.json` 的 `all_reports_complete` 表示全部组的报告完整性，逐组查看 `groups[].report_integrity`（`complete` / `incomplete`）及问题详情。配置、输入或写入错误时核对stderr和退出码，报告可能尚未完整生成。读取结果前结合这些字段、退出码及原生证据判断，不能把控制命令exit0当业务完成。
 
 ## 已有通道的输出与多组客户端
 
-[ssh_output_capture.py](../scripts/ssh_output_capture.py)只读取调用方已建立的 SSH channel，不创建连接、身份或资源状态。持续排空 stdout/stderr，保留有界尾部并记录 observed_bytes、retained_bytes、truncated 和 UTF-8 解码问题。`command_exit_code` 与 `business_completion=not_checked` 分开；解析 JSON 前要求 `output_complete=true`。输出不完整时沿原通道按文件取得结果，不能直接解析尾部。超时关闭控制 channel，远端进程状态仍由原执行工具核对。
+[ssh_output_capture.py](../../scripts/ssh_output_capture.py)只读取调用方已建立的 SSH channel，不创建连接、身份或资源状态。持续排空 stdout/stderr，保留有界尾部并记录 observed_bytes、retained_bytes、truncated 和 UTF-8 解码问题。`command_exit_code` 与 `business_completion=not_checked` 分开；解析 JSON 前要求 `output_complete=true`。输出不完整时沿原通道按文件取得结果，不能直接解析尾部。超时关闭控制 channel，远端进程状态仍由原执行工具核对。
 
 调用方按当前环境检查完整 payload 的单次与累计限制；helper 自带的单条命令大小检查不能证明整项任务或客户端完整请求合规。
 
-已有 GPQA 精度客户端的多组准备、监督、结果收集和恢复见[调用说明](gpqa-batch.md)。服务、SSH 与 profiling 生命周期继续使用[领域映射](../upstream/skill-mapping.md#运行体系与执行入口)中适用的原工具。
+已有 GPQA 精度客户端的多组准备、监督、结果收集和恢复见[调用说明](gpqa-batch.md)。服务、SSH 与 profiling 生命周期继续使用[领域映射](../../upstream/skill-mapping.md#运行体系与执行入口)中适用的原工具。
