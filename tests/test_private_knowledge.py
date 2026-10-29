@@ -80,6 +80,16 @@ class PublicKnowledgeTreeTests(unittest.TestCase):
     def test_public_protocol_works_without_private_config(self):
         self.assertEqual(VALIDATOR.check_links(self.repo)['errors'], [])
 
+    def test_explicit_initial_template_is_allowed_but_other_template_content_is_not(self):
+        folder = self.repo / 'knowledge/templates'
+        folder.mkdir()
+        (folder / 'AGENTS.example.md').write_text('# Initial rules\n', encoding='utf-8')
+        self.assertEqual(VALIDATOR.check_links(self.repo)['errors'], [])
+        (folder / 'experiment.md').write_text('# Private evidence\n', encoding='utf-8')
+        errors = VALIDATOR.check_links(self.repo)['errors']
+        self.assertTrue(any(x.get('source') == 'knowledge/templates/experiment.md'
+                            and x.get('kind') == 'private_knowledge_content' for x in errors))
+
     def test_new_engineering_content_is_rejected(self):
         p = self.repo / 'knowledge/topics/experiment.md'
         p.parent.mkdir()

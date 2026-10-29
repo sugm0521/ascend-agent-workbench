@@ -65,6 +65,6 @@ python scripts/validate_workbench.py --links-only --links-ref HEAD
 
 ## 私有知识边界检查
 
-默认引用检查拒绝公开树中 `knowledge/README.md` 以外的知识文件；`--links-ref <ref>` 同样检查指定提交树，不因工作区已删除或加入 ignore 而放行已跟踪正文。公开仓验证无需本机配置或私有知识库。新增主题与历史只能写初始化绑定的外部私有目录。
+默认引用检查在 knowledge/ 下仅允许 `README.md` 通用协议与 `templates/AGENTS.example.md` 初始规范模板，拒绝其他文件（包括模板目录中夹带的知识正文）；`--links-ref <ref>` 同样检查指定提交树，不因工作区已删除或加入 ignore 而放行已跟踪正文。公开仓验证无需本机配置或私有知识库。新增主题与历史只能写初始化绑定的外部私有目录。
 
 如需验收已选目录，由 agent 读取忽略的 YAML 取出 `paths.knowledge_root`，在工作台根调用知识入口的 `--knowledge-root` / `--knowledge-path` / `--knowledge-only` 只读检查。脚本不解析 YAML、不创建目录、不写知识、不同步 Git；ready 只说明真实外部目录当前可读。根测试覆盖未配置、不同开发者目录、目录缺失、路径越界和公开提交树拦截；符号链接权限不足时如实跳过对应案例。

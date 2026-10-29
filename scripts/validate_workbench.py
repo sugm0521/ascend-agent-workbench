@@ -29,7 +29,8 @@ def check_links(root, ref=None):
         known = {p for p in known if (root / p).exists() or (root / p).is_symlink()}
     result = {'errors': [], 'dependency_links_unchecked': 0, 'checked': 0}
     for source in sorted(known):
-        if source.startswith('knowledge/') and source != 'knowledge/README.md':
+        if source.startswith('knowledge/') and source not in {
+                'knowledge/README.md', 'knowledge/templates/AGENTS.example.md'}:
             result['errors'].append({'source': source, 'kind': 'private_knowledge_content'})
     for source in sorted(known):
         if not source.endswith('.md') or source.startswith('deps/'):

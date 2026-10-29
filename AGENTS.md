@@ -29,7 +29,7 @@
 | `records/` | 本机容器、服务器快照及性能/精度/SWE 三类正式测试表；忽略提交，字段与维护规则见材料规范 |
 | `.agents/skills/` | 本项目自有 skill 的维护源 |
 | `scripts/`、`tests/` | 已确认建设的公共工具和相应测试 |
-| `knowledge/` | 外部私有知识库的通用接入与证据规范；正文由本机 `paths.knowledge_root` 指向的目录维护；遵循 [每日同步](docs/guides/daily-sync.md) 和 [知识库约定](knowledge/README.md) |
+| `knowledge/` | 外部私有知识库的通用接入协议与初始操作规范模板；正文由本机 `paths.knowledge_root` 指向的目录维护；遵循 [每日同步](docs/guides/daily-sync.md) 和 [知识库约定](knowledge/README.md) |
 | `config/` | 依赖定位与接入示例；本机配置忽略提交 |
 | `.codex/` | 本机 Codex 客户端接入配置；生成的配置、provider 与 hooks 按既有忽略约定留本机，不复制底层运行身份、设备或资源状态 |
 | `upstream/` | 实际来源/版本锁定与领域能力映射 |
@@ -39,7 +39,7 @@
 
 同一事项只在权威位置维护，其他文档引用。全局开发计划不承载全部业务待办，开发记录不复制业务实验；业务状态以任务说明为准，不以聊天记忆替代。
 
-所有 agent 检索、提炼或维护工程知识时，先从忽略提交的 `config/workbench.local.yaml` 解析 `paths.knowledge_root`；未配置或不可读时说明缺口，不回退到公开仓库写正文。维护外部知识库时，统一使用 [知识维护 skill](.agents/skills/ascend-knowledge-curation/SKILL.md) 和 [知识库证据流程](knowledge/README.md#统一证据流程)。字段、复查及历史规范只在知识库维护；不把文档更新时间当作新的证据时间，也不为遵循规范重新运行业务实验。
+所有 agent 检索、提炼或维护工程知识时，先从忽略提交的 `config/workbench.local.yaml` 解析 `paths.knowledge_root`；未配置或不可读时说明缺口，不回退到公开仓库写正文。维护外部知识库时，统一使用 [知识维护 skill](.agents/skills/ascend-knowledge-curation/SKILL.md) 和 [知识库证据流程](knowledge/README.md#统一证据流程)。进入私有根后先读其 AGENTS.md、导航与相关分类规则；字段、目录、复查及历史规范以目标库为准，缺规范时可只读检索，写入前明确维护约定；不把文档更新时间当作新的证据时间，也不为遵循规范重新运行业务实验。
 
 ## 3. 会话开始与中断恢复
 
