@@ -58,7 +58,7 @@ description: 初始化或补齐 Ascend agent 工作台、所选下层仓库的�
 6. 已选择知识库接入时，按[私有知识目录接入](references/operations.md#私有知识目录接入)只补齐已确认的目录、私有远端与维护任务；本机绑定仍用唯一 `paths.knowledge_root`，远端与调度选择留本机配置。未选择的分支不实施。
 7. 执行后重新核对实际路径、配置与版本。失败保留原结果；重试仅补缺失/失败项，未知中断先查证。成功项不重复 clone/login，缺失只阻塞依赖它的能力。
 
-使用已有 SSH 发现远程环境时按 [保存目标与 NPU 接入](references/operations.md#保存目标与-npu-接入) 探测。仅加入连接、硬件与目标环境验收通过的 NPU 目标；无 NPU、不确定和不可连接分别记录。探测授权不自动授权新建容器、安装环境或启动任务池。
+准备 NPU 运行环境时按 [保存目标与 NPU 接入](references/operations.md#保存目标与-npu-接入) 探测。仅加入连接、硬件与目标环境验收通过的 NPU 目标；无 NPU、不确定和不可连接分别记录。探测授权不自动授权新建容器、安装环境或启动任务池。
 
 初始化不自动升级已用依赖；版本变化交给 `$ascend-workbench-dependencies`，两者共用现状与 lock，不能互相调用完整流程。底层身份、provider、pin、task/session/run/execution 与设备/端口状态仍由原工具管理，上层只记录引用。
 
