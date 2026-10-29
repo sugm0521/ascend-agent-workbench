@@ -113,25 +113,27 @@ tasks/2026-10-27/启动报错定位/
 
 例如“定位这个问题单的根因”“优化现有服务的吞吐”“核查模型输出复读”或“实现算子替换”。不确定入口时使用 workflow，明确的小任务可直接使用领域 skill，无需完整采访或多个 agent。
 
+下表链接到各skill的使用说明（README）：可查看功能、适用场景、调用示例、输入输出和操作边界；详细执行规范仍由对应 `SKILL.md` 维护。功能或边界变化时同步核对两者，说明中不保存本机运行状态或实验回执。
+
 | 类别 | 入口 | 用途 |
 |---|---|---|
-| 接入与维护 | [init](.agents/skills/ascend-workbench-init/SKILL.md) | 首次接入、补齐缺失配置及初始化报告 |
-| 接入与维护 | [dependencies](.agents/skills/ascend-workbench-dependencies/SKILL.md) | 版本核对、相关传递依赖、升级与组合验证 |
-| 接入与维护 | [repository-update](.agents/skills/ascend-repository-update/SKILL.md) | 安全同步业务代码，分流工作台与固定依赖升级，保留现有工作 |
-| 任务推进 | [workflow](.agents/skills/ascend-agent-workflow/SKILL.md) | 查证目标与事实、必要澄清、领域路由与整体推进 |
-| 任务推进 | [planning](.agents/skills/ascend-task-planning/SKILL.md) | 子任务、依赖、写入归属与资源边界 |
-| 任务推进 | [execution](.agents/skills/ascend-task-execution/SKILL.md) | 在授权范围内调查、实验、实现与验证 |
-| 任务推进 | [review](.agents/skills/ascend-task-review/SKILL.md) | 复核结论与覆盖，组织交付、交接与回顾 |
-| 模型与环境 | [inference-optimization](.agents/skills/ascend-inference-optimization/SKILL.md) | 串联性能基线、profiling、优化候选及性能与精度回归 |
-| 模型与环境 | [performance-benchmark](.agents/skills/ascend-performance-benchmark/SKILL.md) | 用 AISBench 核验现有服务吞吐、时延、并发与公共前缀负载 |
-| 模型与环境 | [model-accuracy](.agents/skills/ascend-model-accuracy/SKILL.md) | 模型乱码、复读、异常空输出和精度下降的诊断、修复与回归 |
-| 模型与环境 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/SKILL.md) | 只读采集指定环境的 CANN、代码、PR、依赖与启动条件 |
-| 模型与环境 | [container-ssh](.agents/skills/ascend-container-ssh/SKILL.md) | 给手工部署的已有容器建立或恢复独立 SSH，并验证登录 |
-| 模型与环境 | [HCCL 打流](.agents/skills/ascend-hccl-traffic-test/SKILL.md) | 复用 MPI/CANN 验证单机或多机 alltoallvc 双模式通信 |
-| 知识与总结 | [knowledge-curation](.agents/skills/ascend-knowledge-curation/SKILL.md) | 检索、核实、归纳和复查知识，保留历史与适用边界 |
-| 知识与总结 | [weekly-report](.agents/skills/ascend-weekly-report/SKILL.md) | 生成个人工作及项目/知识改进两份周报，交付 Markdown 和 HTML |
-| Skill 建设 | [skill-candidate-review](.agents/skills/ascend-skill-candidate-review/SKILL.md) | 评估价值、已有覆盖与维护成本，给出最小修改或不改的结论 |
-| Skill 建设 | [skill-development](.agents/skills/ascend-skill-development/SKILL.md) | 创建或优化已确认范围的项目自有 skill，验证入口与代表行为 |
+| 接入与维护 | [init](.agents/skills/ascend-workbench-init/README.md) | 首次接入、补齐缺失配置及初始化报告 |
+| 接入与维护 | [dependencies](.agents/skills/ascend-workbench-dependencies/README.md) | 版本核对、相关传递依赖、升级与组合验证 |
+| 接入与维护 | [repository-update](.agents/skills/ascend-repository-update/README.md) | 安全同步业务代码，分流工作台与固定依赖升级，保留现有工作 |
+| 任务推进 | [workflow](.agents/skills/ascend-agent-workflow/README.md) | 查证目标与事实、必要澄清、领域路由与整体推进 |
+| 任务推进 | [planning](.agents/skills/ascend-task-planning/README.md) | 子任务、依赖、写入归属与资源边界 |
+| 任务推进 | [execution](.agents/skills/ascend-task-execution/README.md) | 在授权范围内调查、实验、实现与验证 |
+| 任务推进 | [review](.agents/skills/ascend-task-review/README.md) | 复核结论与覆盖，组织交付、交接与回顾 |
+| 模型与环境 | [inference-optimization](.agents/skills/ascend-inference-optimization/README.md) | 串联性能基线、profiling、优化候选及性能与精度回归 |
+| 模型与环境 | [performance-benchmark](.agents/skills/ascend-performance-benchmark/README.md) | 用 AISBench 核验现有服务吞吐、时延、并发与公共前缀负载 |
+| 模型与环境 | [model-accuracy](.agents/skills/ascend-model-accuracy/README.md) | 模型乱码、复读、异常空输出和精度下降的诊断、修复与回归 |
+| 模型与环境 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/README.md) | 只读采集指定环境的 CANN、代码、PR、依赖与启动条件 |
+| 模型与环境 | [container-ssh](.agents/skills/ascend-container-ssh/README.md) | 给手工部署的已有容器建立或恢复独立 SSH，并验证登录 |
+| 模型与环境 | [HCCL 打流](.agents/skills/ascend-hccl-traffic-test/README.md) | 复用 MPI/CANN 验证单机或多机 alltoallvc 双模式通信 |
+| 知识与总结 | [knowledge-curation](.agents/skills/ascend-knowledge-curation/README.md) | 检索、核实、归纳和复查知识，保留历史与适用边界 |
+| 知识与总结 | [weekly-report](.agents/skills/ascend-weekly-report/README.md) | 生成个人工作及项目/知识改进两份周报，交付 Markdown 和 HTML |
+| Skill 建设 | [skill-candidate-review](.agents/skills/ascend-skill-candidate-review/README.md) | 评估价值、已有覆盖与维护成本，给出最小修改或不改的结论 |
+| Skill 建设 | [skill-development](.agents/skills/ascend-skill-development/README.md) | 创建或优化已确认范围的项目自有 skill，验证入口与代表行为 |
 
 算子、模型适配、部署、profiling、CI/PR 和源码学习由 workflow 按[领域映射](upstream/skill-mapping.md)选用已有流程，不要求每个领域都另建一个项目 skill。
 
