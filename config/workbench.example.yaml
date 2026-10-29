@@ -1,6 +1,11 @@
 # 首版由 agent 读取；复制到忽略提交的 workbench.local.yaml 后按现状填写。
-# 所有相对路径相对工作台根目录，null 表示未确认，不是执行授权。
+# 所有相对路径相对工作台根目录；null 一般表示未确认，字段另有说明时从其说明；不是执行授权。
 schema_version: 1
+
+# Git 推送策略由 agent 读取；不是自动安装的 Git hook。
+git:
+  push:
+    max_upload_bytes: null  # 缺省/null：不限；正整数：单次推送载荷必须严格小于该字节数
 
 paths:
   sources_lock: upstream/sources.lock.yaml

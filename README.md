@@ -164,6 +164,10 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 
 不要对整个依赖树无条件递归初始化，以免连带克隆 workspace 内的业务代码。取得来源不代表工具可调用、客户端已接入或远程运行就绪。
 
+## Git 推送大小配置
+
+在本机 `config/workbench.local.yaml` 中设置 `git.push.max_upload_bytes`：缺省或 `null` 不限制 Git 推送大小；正整数要求单次上传载荷严格小于该字节数。工作台、业务仓和私有知识仓沿用同一策略，其他传输限制独立。该字段由 agent 发布流程读取，不会自动安装 Git hook。详见[配置语义与检查边界](docs/validation.md#git-推送大小配置)。
+
 ## 环境要求与验收边界
 
 | 使用或验证内容 | 前提与能证明的范围 |
