@@ -1,4 +1,4 @@
-# 首版由 agent 读取；复制到忽略提交的 workbench.local.yaml 后按现状填写。
+# 供 agent 和使用者确认字段参考，无需首次手工填写整份配置；初始化按已确认选择维护忽略提交的 workbench.local.yaml。
 # 所有相对路径相对工作台根目录；null 一般表示未确认，字段另有说明时从其说明；不是执行授权。
 schema_version: 1
 

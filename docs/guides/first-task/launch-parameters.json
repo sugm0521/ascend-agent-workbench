@@ -1,0 +1,8 @@
+{
+  "material_kind": "synthetic_teaching_input_not_runnable_config",
+  "framework": "vLLM-Ascend",
+  "revision": "unknown",
+  "model": "example-model-not-a-real-model-id",
+  "max_model_len": 16384,
+  "gpu_memory_utilization": 0.8
+}

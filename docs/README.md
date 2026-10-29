@@ -13,6 +13,7 @@
 
 | 文档 | 用途 |
 |---|---|
+| [无服务器入门案例](guides/first-task/README.md) | 分析 vLLM-Ascend 合成启动参数与 KV Cache 容量冲突，无需运行环境 |
 | [业务仓 CI 预检](guides/business-ci-preflight.md) | 推送前的静态检查、相关 CPU 用例、PR 标题只读检查、环境隔离及失败处理 |
 | [任务材料与台账](guides/task-records.md) | 任务目录、编号、启动材料、日志和本机台账的共用约定 |
 | [本机归档、知识维护与授权发布](guides/daily-sync.md) | 归档与两类发布的范围、授权和回执边界 |

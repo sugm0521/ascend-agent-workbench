@@ -1,0 +1,5 @@
+[SYNTHETIC] Teaching material; simplified fields, not native vLLM-Ascend output.
+[SYNTHETIC] effective_max_model_len=16384 gpu_memory_utilization=0.80
+[SYNTHETIC] given_kv_capacity_tokens_per_request=8192 under_the_example_settings
+[SYNTHETIC] length_validation=failed requested_tokens=16384 available_tokens=8192
+[SYNTHETIC] startup_result=failed; no model service was started in this teaching case.
