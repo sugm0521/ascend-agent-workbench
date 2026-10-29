@@ -42,6 +42,8 @@ cd ascend-agent-workbench
 
 初始化会汇总上下层必需信息后集中确认，只补已选择的缺失项。业务代码优先复用已有 checkout，也可选择在 `repos/` 下独立克隆；新版本组合按目标 vLLM-Ascend 的 CI 声明配对。远程 NPU、知识库和调度分别选用，不要求每个人全部接入。首次使用无需先手填整份 YAML，[配置示例](config/workbench.example.yaml)供确认字段时参考。
 
+已接入的使用者更新工作台后，可说：“使用 $ascend-workbench-init，检查已启用能力的新接入要求，先给差异，不修改。”确认后只补差异，不重复首次初始化；详见[增量检查与补齐](.agents/skills/ascend-workbench-init/references/operations.md#增量检查与补齐)。
+
 如果客户端没有自动发现 skill，显式让它读取 [.agents/skills/ascend-workbench-init/SKILL.md](.agents/skills/ascend-workbench-init/SKILL.md) 再执行；维护源仍是本项目 `.agents/skills/`。
 
 ### 3. 查看接入结果
@@ -122,7 +124,7 @@ tasks/2026-10-27/启动报错定位/
 
 | 类别 | 入口 | 用途 |
 |---|---|---|
-| 接入与维护 | [init](.agents/skills/ascend-workbench-init/README.md) | 首次接入、补齐缺失配置及初始化报告 |
+| 接入与维护 | [init](.agents/skills/ascend-workbench-init/README.md) | 首次接入、增量接入检查、定向补齐及初始化报告 |
 | 接入与维护 | [dependencies](.agents/skills/ascend-workbench-dependencies/README.md) | 版本核对、相关传递依赖、升级与组合验证 |
 | 接入与维护 | [repository-update](.agents/skills/ascend-repository-update/README.md) | 安全同步业务代码，分流工作台与固定依赖升级，保留现有工作 |
 | 任务推进 | [workflow](.agents/skills/ascend-agent-workflow/README.md) | 查证目标与事实、必要澄清、领域路由与整体推进 |
