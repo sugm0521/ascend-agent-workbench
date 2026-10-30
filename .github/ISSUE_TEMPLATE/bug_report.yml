@@ -1,0 +1,82 @@
+name: 问题反馈
+description: 反馈初始化、skill 行为、工具或文档与预期不一致的问题。
+title: "[问题] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先查看已有 Issues；发现相同问题时可补充现有讨论。
+        只需先提供足以理解问题的最小材料，不必完成初始化审计或收集完整日志。
+        请勿提交 token、密钥、私有配置、服务器地址清单、私有代码或完整会话/运行日志；示例请求和错误摘要也请脱敏。
+        无法公开材料时可先描述现象及缺少的条件，不要求通过其他渠道发送原件。
+        提交反馈不包含连接服务器、修改代码或执行实验的授权。
+  - type: textarea
+    id: goal
+    attributes:
+      label: 想完成什么任务？
+      description: 用自己的话说明目标，不清楚具体 skill 名称也可以。
+      placeholder: 例如：希望初始化后只做源码分析，但被要求准备远程环境。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 如何遇到这个问题？
+      description: 提供最小操作步骤或调用请求；敏感内容请替换为占位符。
+      placeholder: |
+        1. 使用了什么入口或请求：
+        2. 随后做了什么：
+        3. 在哪一步出现问题：
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: 预期和实际有什么不同？
+      description: 描述具体行为；有错误时可先给简短摘要。
+      placeholder: |
+        预期：
+        实际：
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 可能涉及哪部分？（选填）
+      options:
+        - 初始化或更新接入
+        - skill 流程或行为
+        - 公共工具
+        - 文档或示例
+        - 不确定或其他
+    validations:
+      required: false
+  - type: input
+    id: skill
+    attributes:
+      label: 使用的 skill（选填）
+      placeholder: 例如 ascend-workbench-init；不清楚可留空。
+    validations:
+      required: false
+  - type: input
+    id: revision
+    attributes:
+      label: 工作台提交号（选填）
+      description: 可在工作台 Git 根运行 git rev-parse --short HEAD 获取；不知道可填“未知”。
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: 相关环境（选填）
+      description: 客户端、操作系统；仅在影响问题时补充相关依赖版本，不需要服务器地址或完整环境清单。
+    validations:
+      required: false
+  - type: textarea
+    id: error_excerpt
+    attributes:
+      label: 脱敏错误片段或补充材料（选填）
+      description: 仅给必要片段及可公开定位，不要求上传初始化报告、全部日志或会话。
+      render: text
+    validations:
+      required: false

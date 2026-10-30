@@ -1,0 +1,40 @@
+name: 改进建议
+description: 说明实际使用中的困难和期望结果，无需先设计实现方案。
+title: "[建议] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先查看已有 Issues；相同建议可在原讨论中补充。
+        欢迎只提出问题和目标，具体实现可以一起讨论。
+        请勿提交凭据、私有配置、服务器地址清单、私有代码或完整会话/日志。
+        建议会先评估已有覆盖与适用范围，不直接构成开发承诺或执行授权。
+  - type: textarea
+    id: scenario
+    attributes:
+      label: 在什么场景下使用？
+      description: 说明实际任务和目标，不要求出现多次才可以提出。
+      placeholder: 例如：更新工作台后，希望知道已经启用的知识能力还缺哪些接入项。
+    validations:
+      required: true
+  - type: textarea
+    id: difficulty
+    attributes:
+      label: 当前哪里不好用？
+      description: 若使用过现有入口，请说明具体困难；不清楚入口也可以直接描述。
+    validations:
+      required: true
+  - type: textarea
+    id: desired_outcome
+    attributes:
+      label: 希望达到什么结果？
+      description: 描述什么行为会让任务更容易完成，可附简单的判断方式。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 实现想法或相关讨论（选填）
+      description: 可以留空，不要求先设计新 skill、脚本或完整方案。
+    validations:
+      required: false

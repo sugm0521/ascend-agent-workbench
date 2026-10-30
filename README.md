@@ -220,6 +220,12 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 
 新任务按[统一材料规范](docs/guides/task-records.md)组织：每日事项独立分目录，长期命名任务及模型分析使用相应独立入口。每个事项从任务说明查找脚本、配置、日志和结果；服务器、容器和分类测试台账按统一规范生成在本机 `records/`，通过任务材料串起环境与测试。tasks、records、`.workbench-local/` 和本机配置均不提交；历史任务保持原位。`repos/` 下业务仓库各自维护 Git 历史，父项目只记录定位和证据。
 
+## 反馈与贡献
+
+使用中遇到问题，或希望改进某个流程？欢迎提交[问题反馈](https://github.com/sugm0521/ascend-agent-workbench/issues/new?template=bug_report.yml)或[改进建议](https://github.com/sugm0521/ascend-agent-workbench/issues/new?template=feature_request.yml)，也可从 Issues → New issue 选择表单。请勿上传凭据、私有配置及完整会话或运行日志。
+
+想参与修改，请先看[贡献说明](CONTRIBUTING.md)，了解反馈处理、按修改类型验证和 PR/DCO 要求。
+
 ## 许可
 
 除另有声明外，本项目自有代码、skill、模板和文档采用 [Apache License 2.0](LICENSE)。
