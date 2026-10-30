@@ -25,9 +25,12 @@ knowledge:
     jobs: []       # 每项的 mode/id/时区/时间/范围见 init 配置约定
 
 dependencies:
+  msagent:
+    path: deps/msagent
+    enabled: false  # 可选来源；按任务核对原Skill/工具前提，不自动安装
   ascend_agent_skills:
     path: deps/ascend-agent-skills
-    enabled: false  # 可选：仅能力发现与只读方法参考，使用时再评估适配
+    enabled: false  # 可选来源；可按需使用原Skill/工具，前提按任务核对
   compound_engineering:
     path: deps/compound-engineering
     enabled: false  # 可选：工程知识归纳方法，仅资料引用

@@ -31,7 +31,7 @@ description: 在 ascend-agent-workbench 中把工程目标转为可推进的任�
 | 模型适配或功能实现 | 实际接口、注册/执行路径、当前测试与运行工具 | 功能、兼容范围及所需集成证据 |
 | 服务性能压测、吞吐/延迟、prefix cache 测试 | [ascend-performance-benchmark](../ascend-performance-benchmark/SKILL.md) | 实际请求结果、工作负载、指标与日志；保留既有服务 |
 | 推理性能调优、吞吐/时延目标与 PD 每卡吞吐 | [ascend-inference-optimization](../ascend-inference-optimization/SKILL.md)串联基线、NPU 瓶颈证据、候选及可比回归 | 原生指标、实际资源分母、精度与端到端收益证据 |
-| 单份性能分析、profiling 或独立性能回归 | profiling、memory 与 regression 工具；需要服务负载时使用上述压测入口 | 可比工作负载下端到端指标和资源变化 |
+| 单份 profiling、显存分析或独立性能回归 | 按[场景与输入](../../../upstream/skill-mapping.md#按任务选用与重叠处理)选择整体报告、DB专题或显存方法；回归另核对测量可比性 | 分析绑定capture/rank/step与证据范围；回归另报端到端指标，不为单份分析自动压测 |
 | 模型精度、乱码或复读 | [ascend-model-accuracy](../ascend-model-accuracy/SKILL.md) | 可复现偏差、根因/规避边界与目标场景回归 |
 | 正式模型精度或 SWE 数据集评测 | 实际数据集/评测器或 agent runner，按[三类表](../../../docs/guides/task-records.md#三类正式测试总表)选择对应字段 | 原生评分与分母、版本和完整运行证据；不假定 AISBench 覆盖 SWE |
 | 手工已有容器独立SSH登录入口 | [ascend-container-ssh](../ascend-container-ssh/SKILL.md) | 实际端口、认证和容器归属及用户访问端的登录结果；托管目标按原契约交接 |

@@ -67,9 +67,13 @@ python aisbench_test.py \
 
 ## 固定版本的已知边界
 
+以下为lock所选版本的事实与适配依据，不是对上游工具的永久限制。升级时直接比较原生成配置、执行/统计脚本及本地patch，按[依赖维护](../../ascend-workbench-dependencies/references/dependency-check.md#能力发现入口维护)用原问题对应的输入复验。生成语义检查可先核对实际配置/请求，实际服务负载仍沿用本轮授权；需要真实结果的检查不能以模板存在代替。
+
 - [default_api.py](../../../../deps/aisbench-auto-tools-prefix/default_api.py)写死`temperature=0, ignore_eos=True`；CLI尝试替换的`generation_kwargs_for_replace`标记实际不存在。不能声称`--enable_think`或`--test_accuracy`已生效，也不能用它替代GPQA采样精度流程。需要其他采样语义时先核对实际生成的API配置与请求，在执行副本做明确适配并留证。
 - 自定义tokenizer遇到加载限制时只针对可信模型处理`trust_remote_code`等必要兼容项，记录实际patch；不要把某次Kimi、PyArrow版本或路径变成所有客户端的安装默认值。
 - 工具内部有`ais_bench ... | tee ...`管道，生成数据失败的路径也可能退出0。因此外层exit0不足以验收；必须检查AISBench原生结果、正式阶段成功/失败数、期望条数及实际输入/输出。工具汇总解析失败时可能残留`9999/99999`默认值，不得当实测；失败轮保留，不纳入完整成功测量。
+
+上游若修复了生成参数替换、退出码或占位结果处理，分别验证采样/停止参数实际生效、失败可被识别、原生统计完整及分母一致。验证覆盖的本地patch可删除，不再重放同一修复；同步修改上述对应限制，未修复部分继续保留。只读依赖源码不直接改写，可写执行副本应记录新来源与剩余差异；性能/精度任务分流和原生结果验收继续适用。
 
 ## 交付
 

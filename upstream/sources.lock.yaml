@@ -53,7 +53,7 @@ sources:
     path: deps/awesome-agent-skills
     url: https://github.com/zhaochuang001/awesome-agent-skills.git
     commit: 836e239f80cb76c45a5dd667839e40f336789472
-    purpose: 模型精度诊断只读手册；由独立 ascend-model-accuracy 消费，不安装其生态工具
+    purpose: 模型精度原Skill、手册与工具；由项目精度入口按适用条件消费，不自动引入生态运行状态
     declared_dependencies:
       - LICENSE
       - vllm-ascend-accuracy/SKILL.md
@@ -80,10 +80,22 @@ sources:
     path: deps/ascend-agent-skills
     url: https://github.com/Ascend/agent-skills.git
     commit: 155ac37bd169ddb89479af528297cfb2237400aa
-    purpose: 昇腾领域能力发现与只读方法参考；按任务评估，不自动安装或执行
+    purpose: 昇腾领域原Skill与专题工具；按任务核对输入、环境和调用前提
     declared_dependencies:
       - README.md
       - LICENSE
+
+  msagent:
+    path: deps/msagent
+    url: https://gitcode.com/Ascend/msagent.git
+    commit: d60a55f1d5df6ed49fd81902a13fe42be9f95144
+    purpose: 昇腾性能、精度、量化与算子调优的原Skill、脚本和工具；按任务核对使用前提
+    declared_dependencies:
+      - README.md
+      - LICENSE
+      - skills/README.md
+      - pyproject.toml
+      - docs/zh/user_guide/integration-guide.md
 
 # 仅固定顶层来源。下层版本要求从父提交的原声明读取，
 # 不在这里复制另一套 pin；业务版本与本机能力另行初始化。

@@ -10,6 +10,8 @@
 
 需要TTFT、TPOT、吞吐等性能数据时使用；精度异常用精度入口，持续瓶颈优化用调优入口。
 
+“AISBench评测”需要先区分吞吐/时延和数据集分数；后者及Agent/SWE评测按[场景映射](../../../upstream/skill-mapping.md#按任务选用与重叠处理)选择实际评测方法，不能用性能负载代替评分。
+
 相邻入口：[ascend-inference-optimization](../ascend-inference-optimization/README.md)、[ascend-model-accuracy](../ascend-model-accuracy/README.md)。
 
 ## 怎么调用

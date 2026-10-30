@@ -6,6 +6,8 @@
 
 > 本项目正在持续开发与优化，功能、工作流程和使用文档会不断完善。欢迎 **Star 收藏本项目**，方便后续查阅并关注更新。
 
+版本基线：[v0.1.0](https://github.com/sugm0521/ascend-agent-workbench/releases/tag/v0.1.0) 固定当前工作台与依赖选用规则，作为后续架构重构的对照。版本说明列出已验证范围、运行缺口和后续规划；不代表所有上游工具与远程环境已经验收。
+
 首次使用从[快速开始](#快速开始)进入；接入后按[任务入口](#按任务选择入口)工作。修改业务代码前请了解[CI 预检](#代码修改与-ci-预检)。知识库与定时维护见[可选知识接入](#可选知识库与定时维护)，维护者验证见[验证说明](docs/maintenance/validation.md)。
 
 ## 快速开始
@@ -195,8 +197,9 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 | `deps/matt-pocock-skills` | 使用澄清、拆分、实现与交接的方法来源 |
 | `deps/model-analysis` | 模型架构报告、版本比较或参数/KVCache 估算，按[调用说明](.agents/skills/ascend-agent-workflow/references/model-analysis.md)使用；原仓许可尚未明确、内部 gitlink 声明缺口保留，仅作资料引用，再分发前需核实许可 |
 | `deps/aisbench-auto-tools-prefix` | 服务性能压测工具源码；AISBench、tokenizer 等依赖在请求发起端按需准备，不要求全部服务节点安装 |
-| `deps/awesome-agent-skills` | 模型精度诊断只读手册，不安装同仓其他 skill 或执行其服务器管理、快照、迁移脚本 |
-| `deps/ascend-agent-skills` | 昇腾领域能力索引与只读参考，按[统一发现入口](upstream/skill-mapping.md#依赖能力发现入口)检索；暂不安装上游 skill 或运行其工具 |
+| `deps/awesome-agent-skills` | 模型精度原Skill、手册与工具，按项目适配及版本前提使用；不自动引入其机器清单、迁移或其他运行系统 |
+| `deps/msagent` | msAgent 原Skill、脚本与工具来源，按[统一发现入口](upstream/skill-mapping.md#依赖能力发现入口)定位；满足输入、环境与授权后使用，CLI/MCP等前提按任务核对 |
+| `deps/ascend-agent-skills` | 昇腾领域原Skill与专题工具，按[统一发现入口](upstream/skill-mapping.md#依赖能力发现入口)定位并核对适用条件；不自动全量安装 |
 | `deps/compound-engineering` | 知识归纳与复查的只读方法，不安装整套插件；项目适配由 knowledge-curation 维护 |
 
 不要对整个依赖树无条件递归初始化，以免连带克隆 workspace 内的业务代码。取得来源不代表工具可调用、客户端已接入或远程运行就绪。

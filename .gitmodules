@@ -22,3 +22,6 @@
 [submodule "deps/ascend-agent-skills"]
 	path = deps/ascend-agent-skills
 	url = https://github.com/Ascend/agent-skills.git
+[submodule "deps/msagent"]
+	path = deps/msagent
+	url = https://gitcode.com/Ascend/msagent.git
