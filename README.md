@@ -31,7 +31,7 @@ cd ascend-agent-workbench
 请使用 $ascend-workbench-init 帮我完成首次接入。
 请先确认我的使用目标，再确定本轮需要准备的代码、工具和运行环境。
 先检查已有配置、业务代码与工具，优先复用现有环境。
-请集中确认我的使用范围、必需信息，以及是否接入私有知识库、远程同步和定时维护，确认后再实施。
+请集中确认我的使用范围、必需信息，以及是否接入私有知识库、远程同步和定时维护，并提供是否参加项目改进的可选选择，确认后再实施。
 ```
 
 按你的目标选择准备范围；不确定时先让 agent 说明差异：
@@ -43,6 +43,8 @@ cd ascend-agent-workbench
 | 远程实验或 NPU 验证 | 在已选范围上补齐实际工具、服务器/容器、环境与可用设备，按任务验收 |
 
 初始化会汇总上下层必需信息后集中确认，只补已选择的缺失项。业务代码优先复用已有 checkout，也可选择在 `repos/` 下独立克隆；新版本组合按目标 vLLM-Ascend 的 CI 声明配对。远程 NPU、知识库和调度分别选用，不要求每个人全部接入。首次使用无需先手填整份 YAML，[配置示例](config/workbench.example.yaml)供确认字段时参考。
+
+初始化也会询问是否参加可选的项目改进。参加后只在有实质反馈价值时邀请一次；不参加或未选择时不主动询问，不影响正常使用，未答该可选项也不阻塞其他必需选择已齐备的初始化。每次公开反馈仍须你审核当次资料与最终内容。以后可让init只调整[参与偏好](.agents/skills/ascend-workbench-init/references/operations.md#项目改进参与选择)。
 
 已接入的使用者更新工作台后，可说：“使用 $ascend-workbench-init，检查已启用能力的新接入要求，先给差异，不修改。”确认后只补差异，不重复首次初始化；详见[增量检查与补齐](.agents/skills/ascend-workbench-init/references/operations.md#增量检查与补齐)。
 
@@ -148,7 +150,7 @@ tasks/2026-10-27/启动报错定位/
 | 模型分析与适配 | [ascend-model-engineering](.agents/skills/ascend-model-engineering/README.md) | 架构/参数/KV估算、性能仿真、量化与模型实现适配 |
 | 通用工程开发与审查 | [ascend-engineering](.agents/skills/ascend-engineering/README.md) | 业务代码调查/修复、源码学习、CI/PR/文档审查、Agent/SWE评测 |
 | 知识与报告 | [ascend-knowledge-and-report](.agents/skills/ascend-knowledge-and-report/README.md) | 知识检索/收录/复查、周报与周期报告 |
-| 工作台维护 | [ascend-workbench-maintenance](.agents/skills/ascend-workbench-maintenance/README.md) | 初始化、安全同步、依赖检查/吸收/升级、skill建设、工作台发布准备 |
+| 工作台维护 | [ascend-workbench-maintenance](.agents/skills/ascend-workbench-maintenance/README.md) | 初始化、安全同步、依赖检查/吸收/升级、skill建设、使用反馈与发布准备 |
 
 ### 领域内能力与共用模块
 
@@ -235,6 +237,8 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 ## 反馈与贡献
 
 使用中遇到问题，或希望改进某个流程？欢迎提交[问题反馈](https://github.com/sugm0521/ascend-agent-workbench/issues/new?template=bug_report.yml)或[改进建议](https://github.com/sugm0521/ascend-agent-workbench/issues/new?template=feature_request.yml)，也可从 Issues → New issue 选择表单。请勿上传凭据、私有配置及完整会话或运行日志。
+
+也可让[维护域](.agents/skills/ascend-workbench-maintenance/README.md)代为准备反馈草稿；是否主动邀请由本机参与偏好控制，公开前必须审核当次完整资料，详见[agent协助反馈](CONTRIBUTING.md#由agent协助反馈)。
 
 想参与修改，请先看[贡献说明](CONTRIBUTING.md)，了解反馈处理、按修改类型验证和 PR/DCO 要求。
 

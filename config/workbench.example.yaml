@@ -12,6 +12,10 @@ paths:
   init_report: .workbench-local/init-report.md
   knowledge_root: null  # 可选：用户确认的工作台外私有知识目录；初始化 skill 接入
 
+# 可选项目改进参与偏好，仅控制主动邀请；不是收集或公开发布授权。
+feedback:
+  participation: null  # true：有实质反馈价值时邀请；false：不主动邀请；缺省/null：未选择，也不邀请
+
 # 可选知识接入选择；全部留本机，null/空列表不是创建或同步授权。
 knowledge:
   remote:

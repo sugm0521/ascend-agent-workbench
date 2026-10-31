@@ -16,6 +16,20 @@
       "recheck_on": [
         "使用资源/接口或当前任务前提变化"
       ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-maintenance/references/skill-feedback.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "本轮存在skill使用反馈候选或需核查反馈投稿材料",
+      "purpose": "核对参与、材料和当次最终审核规则并交接；不递归执行完整维护发布流程",
+      "upstream_basis_revision": null,
+      "local_adaptation": "沿共用触发约定合并同一事件，只在适用时进入反馈规则",
+      "recheck_on": [
+        "参与偏好、材料范围或公开审核规则变化"
+      ]
     }
   ]
 }

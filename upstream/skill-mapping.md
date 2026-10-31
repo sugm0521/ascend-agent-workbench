@@ -27,7 +27,7 @@
 |---|---|---|
 | A01 目标澄清 | [ascend-agent-workflow](../.agents/skills/ascend-agent-workflow/SKILL.md) | [域内选用](../.agents/skills/ascend-agent-workflow/references/scenario-selection.md) |
 | A02 计划、依赖与交接 | [ascend-agent-workflow](../.agents/skills/ascend-agent-workflow/SKILL.md) | [域内选用](../.agents/skills/ascend-agent-workflow/references/scenario-selection.md) |
-| A03 Skill评估与开发 | [ascend-workbench-maintenance](../.agents/skills/ascend-workbench-maintenance/SKILL.md) | [域内选用](../.agents/skills/ascend-workbench-maintenance/references/scenario-selection.md) |
+| A03 Skill使用反馈、评估与开发 | [ascend-workbench-maintenance](../.agents/skills/ascend-workbench-maintenance/SKILL.md) | [域内选用](../.agents/skills/ascend-workbench-maintenance/references/scenario-selection.md) |
 | A04 首次接入、安全同步、固定依赖变化 | [ascend-workbench-maintenance](../.agents/skills/ascend-workbench-maintenance/SKILL.md) | [域内选用](../.agents/skills/ascend-workbench-maintenance/references/scenario-selection.md) |
 | B01 运行环境与容器复现记录 | [ascend-deployment](../.agents/skills/ascend-deployment/SKILL.md) | [域内选用](../.agents/skills/ascend-deployment/references/scenario-selection.md) |
 | B02 机器、会话、代码一致性 | [ascend-deployment](../.agents/skills/ascend-deployment/SKILL.md) | [域内选用](../.agents/skills/ascend-deployment/references/scenario-selection.md) |

@@ -1,6 +1,6 @@
 ---
 name: ascend-workbench-maintenance
-description: 统筹工作台初始化、仓库安全同步、依赖检查与吸收升级、自有skill建设和发布准备。用于维护工作台及来源消费关系；业务模型、算子、部署或性能工作交对应领域。
+description: 统筹工作台初始化、仓库安全同步、依赖检查与吸收升级、自有skill建设、使用反馈和发布准备。用于维护工作台及来源消费关系；业务模型、算子、部署或性能工作交对应领域。
 metadata:
   workbench_role: domain_entry
   workbench_domain: maintenance
@@ -19,6 +19,7 @@ metadata:
 | 版本核对、上游变化、候选兼容/吸收/采用/回退 | [dependencies](../ascend-workbench-dependencies/SKILL.md)，按[消费与升级约定](../../../docs/maintenance/upstream-consumption.md)组织事实与验证 |
 | 评估是否值得融合、自建、合并或清理 | [candidate-review](../ascend-skill-candidate-review/SKILL.md)：不自动将每个候选变成建设任务 |
 | 已授权skill创建/优化 | [skill-development](../ascend-skill-development/SKILL.md)：复用评估，更新受影响调用方/README/索引 |
+| 整理skill使用反馈、准备本仓Issue或PR | 按需读[反馈流程](references/skill-feedback.md)：先核对参与/主动请求、材料范围和归属；每次发布前审核当次最终资料 |
 | 提交/发布准备 | [task-review](../ascend-task-review/SKILL.md)及原Git工具：范围、DCO、验证与实际授权分别核对 |
 
 专题见[域内选用](references/scenario-selection.md)。九个来源是可检查/准备对象，不是本入口或每个维护能力的九项运行依赖；只按本次范围读原声明，不能自动安装、升级或启用整个生态。
