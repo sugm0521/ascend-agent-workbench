@@ -15,16 +15,19 @@
 
 查询已有经验、评估收录候选或明确维护指定主题时使用；生成周期周报使用周报入口。
 
+也接受 PR 链接、提交范围或已有变更解读，按 [PR 专项流程](references/pr-knowledge-analysis.md)核对分析深度并提出知识候选；不要求使用者订阅特定日报，来源采集和定时安排由调用方提供。
+
 相邻入口：[ascend-weekly-report](../ascend-weekly-report/README.md)、[ascend-skill-candidate-review](../ascend-skill-candidate-review/README.md)。
 
 ## 怎么调用
 
 - 使用 $ascend-knowledge-curation，检索知识库里与这条报错相关的经验，说明版本条件和证据缺口，不修改条目。
 - 使用 $ascend-knowledge-curation，评估这次任务有哪些值得收录的结论，逐条给建议，先不要写入。
+- 使用 $ascend-knowledge-curation，归纳这组 PR/提交范围中的用法、机制和限制，先定点核对，需要时再机制深读，并比较已有知识。
 
 ## 需要提供什么
 
-查询问题、任务或待维护主题；写入需明确具体条目及收录决定。
+查询问题、任务、PR/提交材料或待维护主题；写入需明确具体条目及收录决定。
 
 agent 会先查：本机配置中的私有知识目录、库内 AGENTS.md、导航、已有主题和关联证据；未配置或缺规范时说明缺口，查询可只读继续，写入前明确维护约定。
 

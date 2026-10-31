@@ -161,7 +161,7 @@ tasks/2026-10-27/启动报错定位/
 | 性能 | [ascend-performance-benchmark](.agents/skills/ascend-performance-benchmark/README.md) |
 | 性能 | [ascend-inference-optimization](.agents/skills/ascend-inference-optimization/README.md) |
 | 性能 | [ascend-hccl-traffic-test](.agents/skills/ascend-hccl-traffic-test/README.md) |
-| 知识与报告 | [ascend-knowledge-curation](.agents/skills/ascend-knowledge-curation/README.md) |
+| 知识与报告 | [ascend-knowledge-curation](.agents/skills/ascend-knowledge-curation/README.md)：知识检索/维护，含 PR 与提交材料归纳 |
 | 知识与报告 | [ascend-weekly-report](.agents/skills/ascend-weekly-report/README.md) |
 | 工作台维护 | [ascend-workbench-init](.agents/skills/ascend-workbench-init/README.md) |
 | 工作台维护 | [ascend-repository-update](.agents/skills/ascend-repository-update/README.md) |
@@ -215,14 +215,14 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 
 ## 文档与记录
 
-完整说明按用途分为使用规范、工具说明、项目维护和记录模板，见[文档总导航](docs/README.md)。评估过程留本机任务，工程经验按知识流程维护。
+完整说明按用途分为使用规范、工具说明、项目维护和记录模板，见[文档总导航](docs/README.md)。其中[按目标阅读](docs/README.md#按目标阅读)串联任务选用、工具调用、上游更新吸收和自有skill建设，以及配置、知识与来源协议。评估过程留本机任务，工程经验按知识流程维护。
 
 性能压测的服务地址、模型路径和负载参数放在任务可写副本，固定工具源码保持只读；发起压测不自动重启既有服务。精度评测、算子打流和纯 profiling 按各自入口执行。
 
 - [AGENTS.md](AGENTS.md)：所有会话共享的行为规则与导航；文件归位和目录分工见[项目目录职责](AGENTS.md#2-目录职责与事实源)。
-- [维护者验证说明](docs/maintenance/validation.md)：工作台自身的运行时与依赖要求、自测命令及检查范围；业务代码检查见[CI 预检](#代码修改与-ci-预检)。
-- [项目框架](docs/maintenance/项目框架.md)：架构、职责、init 去重与建设标准。
-- [开发计划](docs/maintenance/开发计划.md)：工作台自身待办和完成状态。
+- [维护者验证说明](docs/maintenance/validation.md)：基础自测及包含来源检查工具的自测、依赖要求和检查范围；业务代码检查见[CI 预检](#代码修改与-ci-预检)。
+- [项目框架](docs/maintenance/项目框架.md)：架构、职责边界、建设标准与相应操作规范入口。
+- [当前开发事项](docs/maintenance/开发计划.md#当前待办与待验收)：工作台自身待办和完成状态，关联历史按需追溯。
 - [开发记录](docs/maintenance/开发记录.md)：实际变化、验证和决定。
 - [归档与知识维护](docs/guides/daily-sync.md)：个人任务归档和调度配置留本机，工程知识写入初始化绑定的外部私有目录，公开仓库仅按授权发布skill及通用方法；实际推送后逐项反馈变化、验证和保留项。
 - [任务与台账规范](docs/guides/task-records.md)：任务材料、算子进度与完整日志、服务器快照、容器及性能/精度/SWE 三类正式测试表。

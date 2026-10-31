@@ -2,6 +2,8 @@
 
 所需运行时为 Python 3.10+、Git 和 Node.js 22.12+。周报渲染的 `marked` 版本由仓库的 `package.json` / `package-lock.json` 固定；不需要当前作者的客户端缓存、私有模块目录或历史实验文件。
 
+## 基础自测
+
 在新克隆的工作台根运行：
 
 ```sh
@@ -10,6 +12,23 @@ python scripts/validate_workbench.py
 ```
 
 依赖安装采用所选网络环境的正常 registry/proxy/CA 配置，不关闭 TLS 验证。安装目录 `node_modules/` 不提交。统一检查覆盖根测试、真实 Node 渲染和 HCCL helper 的合成测试；不连接服务器、不占用 NPU、不安装领域子模块或启动模型。平台权限或 POSIX 语义导致的用例跳过会在摘要中列出，不能当作该分支已实测。
+
+## 包含来源检查工具的自测
+
+[来源检查工具](upstream-consumption.md#只读检查辅助工具)还需要 PyYAML，版本由[可选依赖声明](../../scripts/requirements-upstream.txt)固定。需要使用或验证该工具时，在选定的 Python 环境准备依赖，并使用同一解释器运行检查：
+
+```sh
+python -m pip install -r scripts/requirements-upstream.txt
+python scripts/validate_workbench.py
+```
+
+仅复核来源检查工具时，可将统一检查命令替换为定向测试，无需重复执行两套入口：
+
+```sh
+python -m unittest discover -s tests -p test_upstream_inspection.py -v
+```
+
+缺少 PyYAML 时，来源检查测试会整体跳过；`OK (skipped=...)` 只说明已执行用例未失败，不代表来源检查功能已覆盖。涉及该工具、消费声明或检查契约的改动，须确认相关用例实际执行，并单独说明剩余跳过项及原因。基础自测不自动安装解析器，普通业务只准备所用能力的依赖。
 
 ## 可选客户端集成
 
