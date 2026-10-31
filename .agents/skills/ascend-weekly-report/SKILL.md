@@ -1,9 +1,17 @@
 ---
 name: ascend-weekly-report
 description: 从当前项目任务、实际产物与变更证据生成个人工作、项目与知识库改进两份周报，并提供清晰的Markdown和HTML展示。用于明确周报或周期回顾请求；不替代知识维护、业务验收或skill实施，不自行安排调度或发布。
+metadata:
+  workbench_role: capability
+  workbench_domain: knowledge_report
 ---
 
 # 两份工程周报
+
+## 领域与直接启动
+
+所属[知识与报告领域](../ascend-knowledge-and-report/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[根规则](../../../AGENTS.md)。维护报告方法；具体运行时间、项目路径和个人调度配置留本机。先读[报告设计](references/report-design.md)，需要解释方法出处时读[来源与取舍](references/sources.md)。
 

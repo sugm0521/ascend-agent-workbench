@@ -1,5 +1,10 @@
 # 推理性能调优
 
+## 启动与领域归属
+
+本能力由[性能领域](../ascend-performance/SKILL.md)维护；可直接指定，也可由主/领域调用，按[共用约定](../../../docs/guides/skill-routing.md)复用任务和知识查询。具体输入输出、脚本与原验收边界见[SKILL](SKILL.md)。
+
+
 `ascend-inference-optimization` 的使用说明，面向提出任务的使用者；详细执行规则以 [SKILL.md](SKILL.md) 为准。
 
 ## 能做什么
@@ -27,7 +32,7 @@ agent 会先查：实际源码/运行环境、已有性能和profiling证据；�
 
 可比基线、瓶颈证据、候选及逐轮实验结论，说明收益、退化、精度与剩余缺口。
 
-已有trace、Profiler DB或msMemScope数据时，先按材料和证据窗口选分析方法，保留工具/采集缺口；不会为了调优默认重采或同时展开多套分析。方法选择见[分析输入说明](references/sources.md#分析输入与方法)。
+已有trace、Profiler DB或msMemScope数据时，先按材料和证据窗口选分析方法，保留工具/采集缺口；不会为了调优默认重采或同时展开多套分析。方法选择见[分析输入说明](../ascend-performance/references/analysis-selection.md#分析输入与方法)。
 
 ## 操作边界
 

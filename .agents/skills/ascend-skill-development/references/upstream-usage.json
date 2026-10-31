@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-skill-development",
+  "uses": [
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-maintenance/SKILL.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "直接启动或需要核对领域适用/补位规则",
+      "purpose": "复用所属领域规则，不完整回跑领域流程",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-skill-candidate-review/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-workbench-maintenance",
+  "uses": [
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-init/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-repository-update/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-dependencies/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-skill-candidate-review/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-skill-development/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-task-review/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    }
+  ]
+}

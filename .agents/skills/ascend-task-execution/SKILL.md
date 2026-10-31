@@ -1,9 +1,17 @@
 ---
 name: ascend-task-execution
 description: 在已确认范围内推进工程调查、实现、实验和 CI 修复，调用适用领域工具并记录代码、环境与验证证据。用于已有计划或明确小任务的执行与中断恢复；定位授权不包含业务修复，提交/推送沿用具体授权边界。
+metadata:
+  workbench_role: shared
+  workbench_domain: common
 ---
 
 # 授权任务执行
+
+## 共用上下文
+
+作为共用模块按需使用，复用同一任务、领域和有效知识查询。新增目标/错误/条件变化才按[共用约定](../../../docs/guides/skill-routing.md)补查，不重复问卷或建立第二份状态；专业方法由领域/具体能力提供。方法来源见[消费声明](references/upstream-usage.json)。
+
 
 先读 [根规则](../../../AGENTS.md)、当前任务说明或 assignment，再按需加载 [能力映射](../../../upstream/skill-mapping.md) 中适用领域 skill。执行复杂实验/CI 时定点读 [框架第 9–12 节](../../../docs/maintenance/项目框架.md)，不重新运行上层完整规划流程。
 

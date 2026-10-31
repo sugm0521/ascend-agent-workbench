@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-task-review",
+  "uses": [
+    {
+      "source_id": "matt",
+      "resources": [
+        "skills/productivity/handoff/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "简洁交接与恢复信息",
+      "purpose": "简洁交接与恢复信息",
+      "upstream_basis_revision": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "只拟融合交接摘要；代码审查方法属于工程/算子域，不把CE/Matt代码审查塞进每次总验收",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    }
+  ]
+}

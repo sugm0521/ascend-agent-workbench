@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-runtime-snapshot",
+  "uses": [
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-deployment/SKILL.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "直接启动或需要核对领域适用/补位规则",
+      "purpose": "复用所属领域规则，不完整回跑领域流程",
+      "upstream_basis_revision": null
+    }
+  ]
+}

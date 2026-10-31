@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-task-execution",
+  "uses": [
+    {
+      "source_id": "matt",
+      "resources": [
+        "skills/engineering/implement-spec/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "按既定范围实现与验证的方法",
+      "purpose": "按既定范围实现与验证的方法",
+      "upstream_basis_revision": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "仅拟借实现推进方法；远程工具通过选定provider使用，不能把workspace列为所有执行的固定运行依赖；不强制上游TDD/团队配置",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    }
+  ]
+}

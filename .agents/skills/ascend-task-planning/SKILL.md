@@ -1,9 +1,17 @@
 ---
 name: ascend-task-planning
 description: 为已明确目标的工程任务建立可验证子任务、依赖、责任和资源边界，按就绪工作动态委派。用于多路径调查、实现/独立验证或交接规划；清楚的小任务不强制拆分，也不据此自动执行业务变更。
+metadata:
+  workbench_role: shared
+  workbench_domain: common
 ---
 
 # 任务计划与动态分工
+
+## 共用上下文
+
+作为共用模块按需使用，复用同一任务、领域和有效知识查询。新增目标/错误/条件变化才按[共用约定](../../../docs/guides/skill-routing.md)补查，不重复问卷或建立第二份状态；专业方法由领域/具体能力提供。方法来源见[消费声明](references/upstream-usage.json)。
+
 
 遵循 [根规则](../../../AGENTS.md)；复杂分工或恢复定点读 [框架第 8–9 节](../../../docs/maintenance/项目框架.md)。输入是当前目标、用户授权、验收条件与可查证的代码/环境基线，输出是任务说明中的计划以及必要 assignment。
 

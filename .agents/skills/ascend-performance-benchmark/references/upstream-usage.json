@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-performance-benchmark",
+  "uses": [
+    {
+      "source_id": "aisbench_auto_tools_prefix",
+      "resources": [
+        "aisbench_test.py"
+      ],
+      "relationship": "tool_call",
+      "when": "性能压测CLI",
+      "purpose": "性能压测CLI",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AB仅对性能负载分支直接调用；W-regress仅引用结果格式/交接契约，不接管独立回归判定。普通压测不依赖msagent、cannbot或其他评测仓",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "aisbench_auto_tools_prefix",
+      "resources": [
+        "config.py"
+      ],
+      "relationship": "method_reference",
+      "when": "性能负载配置",
+      "purpose": "性能负载配置",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AB仅对性能负载分支直接调用；W-regress仅引用结果格式/交接契约，不接管独立回归判定。普通压测不依赖msagent、cannbot或其他评测仓",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "aisbench_auto_tools_prefix",
+      "resources": [
+        "generate_dataset.py"
+      ],
+      "relationship": "method_reference",
+      "when": "prefix/负载生成及重放适配依据",
+      "purpose": "prefix/负载生成及重放适配依据",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AB仅对性能负载分支直接调用；W-regress仅引用结果格式/交接契约，不接管独立回归判定。普通压测不依赖msagent、cannbot或其他评测仓",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "aisbench_auto_tools_prefix",
+      "resources": [
+        "default_api.py"
+      ],
+      "relationship": "method_reference",
+      "when": "实际请求采样语义核对",
+      "purpose": "实际请求采样语义核对",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AB仅对性能负载分支直接调用；W-regress仅引用结果格式/交接契约，不接管独立回归判定。普通压测不依赖msagent、cannbot或其他评测仓",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/vllm-ascend-performance-regression/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "可比基线/候选性能回归",
+      "purpose": "可比基线/候选性能回归",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AB仅对性能负载分支直接调用；W-regress仅引用结果格式/交接契约，不接管独立回归判定。普通压测不依赖msagent、cannbot或其他评测仓",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-performance/SKILL.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "直接启动或需要核对领域适用/补位规则",
+      "purpose": "复用所属领域规则，不完整回跑领域流程",
+      "upstream_basis_revision": null
+    }
+  ]
+}

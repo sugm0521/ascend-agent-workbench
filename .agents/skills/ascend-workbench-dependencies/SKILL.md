@@ -1,9 +1,17 @@
 ---
 name: ascend-workbench-dependencies
 description: 核对 Ascend agent 工作台的领域依赖与相关传递依赖，评估目标父提交约束、上游能力改进、兼容验证与本地适配清理。用于版本核对、依赖漂移或明确升级请求；首次代码/身份接入交给初始化，日常任务不全量联网更新。
+metadata:
+  workbench_role: capability
+  workbench_domain: maintenance
 ---
 
 # 工作台依赖维护
+
+## 领域与直接启动
+
+所属[工作台维护领域](../ascend-workbench-maintenance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 读取根 `AGENTS.md`、本次使用的能力、`upstream/sources.lock.yaml` 和存在的 `config/workbench.local.yaml`。配置与 lock 对应关系见 [共享配置约定](../ascend-workbench-init/references/config-schema.md)；升级图与具体核验见 [依赖检查约定](references/dependency-check.md)。
 
@@ -43,3 +51,7 @@ description: 核对 Ascend agent 工作台的领域依赖与相关传递依赖�
 输出实际/目标版本、上游改进、受影响消费方、采用/暂缓理由、本地适配保留/清理结果、验证层级与回退信息；更新开发记录及相关映射/引用。具体业务状态仍在任务说明，源码判断、静态检查、模拟与真实环境验收分开报告。
 
 必要准备可复用 init 的定向操作约定与现状，不能调用完整 `$ascend-workbench-init`；初始化也不为补配置运行完整升级。失败恢复先查现状与原失败，只补本次受影响步骤，保留正在运行的实验与底层原记录引用。
+
+## 消费与吸收复核
+
+按[消费与升级约定](../../../docs/maintenance/upstream-consumption.md)同时检查采用版本到候选、各自有能力历史依据到当前/候选的差量。覆盖主/领域/具体能力/共用模块的真实消费方，JSON事实与Markdown理由分开；未知依据不补造pin。检查已用资源及相关脚本/声明，候选与检查对象不形成全生态回归。只读helper直接读权威配置，前置/状态见该约定，不自动安装或切换。

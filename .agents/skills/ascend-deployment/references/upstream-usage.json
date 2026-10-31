@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-deployment",
+  "uses": [
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/vllm-ascend-serving/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "支持相应后端契约的服务部署方法",
+      "purpose": "支持相应后端契约的服务部署方法",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "从旧workflow reference迁入；只有原后端/session契约适用才调用原流程，当前MindIE/手工Docker沿用各自真实工具；不默认采用其他仓部署器",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/vllm-ascend-pd-serving/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "P/D角色与服务部署方法",
+      "purpose": "P/D角色与服务部署方法",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "从旧workflow reference迁入；只有原后端/session契约适用才调用原流程，当前MindIE/手工Docker沿用各自真实工具；不默认采用其他仓部署器",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-container-ssh/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-runtime-snapshot/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    }
+  ]
+}

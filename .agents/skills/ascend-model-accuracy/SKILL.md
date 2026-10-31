@@ -1,11 +1,14 @@
 ---
 name: ascend-model-accuracy
-description: 复现、定位和按授权修复 vLLM Ascend 模型的乱码、复读、异常空输出、参考结果不一致或评测精度下降，并组织目标场景回归。用于模型精度与输出质量问题；普通启动报错、纯性能压测和已隔离的算子误差走原领域入口。
+description: 统筹Ascend模型输出质量、数值差异、数据集精度评测与目标回归，按症状/首差和实际评测器选择自有或上游方法；算子独立误差、纯性能及启动环境分别交对应领域。
+metadata:
+  workbench_role: domain_entry
+  workbench_domain: accuracy
 ---
 
 # 模型精度诊断与验证
 
-遵循[项目规则](../../../AGENTS.md)。本 skill 独立维护模型精度流程；workflow 只负责路由，也可直接调用本 skill。定位请求交付证据与建议，修复请求在已明确范围内修改和验证；测试容器本身不代表允许安装、改源码或重启。
+遵循[项目规则](../../../AGENTS.md)。本项目精度领域入口，可直接启动并复用同一任务。按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用症状、模型/量化、首差、图/并行和评分器相关知识查询；领域负责选用，具体工具仍按输入与后端核验。定位请求交付证据与建议，修复请求在已明确范围内修改和验证；测试容器本身不代表允许安装、改源码或重启。
 
 ## 从问题到证据
 
@@ -16,14 +19,20 @@ description: 复现、定位和按授权修复 vLLM Ascend 模型的乱码、复
 5. 获授权修复时保存变更前状态和回滚点，实施最小改动。候选有效后用 A/B/A、版本回切或等价证据建立因果关系，再验证原 bad case 与必需目标场景。
 6. 精度与性能分别验收。回归覆盖用户要求和变更影响的上下文、并发、PD/TP/DP/EP 与特性；性能测量按用户要求或受影响优化选择工作负载，不默认展开全组合测试。
 
-## 复用已有能力
+## 细分目标与复用能力
+
+正式数据集评分先核对实际评测器、数据集/分母和采样语义；msagent AISBench评分等仅按[域内选用](references/scenario-selection.md)评估，不使用性能工具固定生成语义替代评分。未覆盖目标按共用发现协议检索已登记来源，不能因目录未列出而报告不存在。
+
+诊断/修复/取证/交付按阶段读取awesome手册；正确性、图和分布式按下表。来源事实见[消费声明](references/upstream-usage.json)，候选可读不代表已适配运行。
+
+## 诊断子流程
 
 | 当前判断 | 入口与职责 |
 |---|---|
 | baseline/candidate、eager/graph、离线/在线或任务分数比较 | [correctness-validation](../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-correctness-validation/SKILL.md)：可比性、运行证据、阈值和结果分类 |
 | eager 正常，graph 异常或 replay 首个分叉 | [graph-debug](../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-graph-debug/SKILL.md)：阶段、metadata 与图内安全取证 |
 | 故障依赖 rank、DP/EP、跨机或通信 | [distributed-debug](../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-distributed-debug/SKILL.md)：拓扑与各 rank 证据 |
-| 已缩到具体算子边界 | [operator-debug](../../../deps/vllm-ascend-workspace/.agents/skills/ascend-operator-debug/SKILL.md)：独立 reference 和输入矩阵；AscendC 实现再用 [precision-debug](../../../deps/cannbot-skills/ops/ascendc-precision-debug/SKILL.md) |
+| 已缩到具体算子边界 | 交[算子领域](../ascend-operator/SKILL.md)核对独立reference和语言/芯片专题，保留同一模型任务的上下文与回归要求 |
 | 已有 AISBench 结果需要逐组指标、答案与输出审计 | [证据报告](../../../docs/tools/aisbench-evidence.md)：离线整理；任务分数和通过判定仍由原 correctness 流程负责 |
 | 修复影响吞吐/时延或用户要求性能回归 | [performance-benchmark](../ascend-performance-benchmark/SKILL.md)：目标负载测量；可比回归按原 performance-regression 入口组织 |
 

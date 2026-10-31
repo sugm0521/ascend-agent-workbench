@@ -1,5 +1,10 @@
 # 工程知识检索与维护
 
+## 启动与领域归属
+
+本能力由[知识与报告领域](../ascend-knowledge-and-report/SKILL.md)维护；可直接指定，也可由主/领域调用，按[共用约定](../../../docs/guides/skill-routing.md)复用任务和知识查询。具体输入输出、脚本与原验收边界见[SKILL](SKILL.md)。
+
+
 `ascend-knowledge-curation` 的使用说明，面向提出任务的使用者；详细执行规则以 [SKILL.md](SKILL.md) 为准。
 
 ## 能做什么

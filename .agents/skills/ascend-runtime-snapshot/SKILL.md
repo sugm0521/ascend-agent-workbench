@@ -1,9 +1,17 @@
 ---
 name: ascend-runtime-snapshot
 description: 维护指定容器的最小复现记录及本机总表，记录原始镜像、逐个叠加的PR和替换依赖；独立环境诊断按需补证。部署前可调用，普通单项版本问答不全量采集，不执行部署或升级。
+metadata:
+  workbench_role: shared
+  workbench_domain: deployment
 ---
 
 # 运行环境复现清单
+
+## 领域与直接启动
+
+所属[部署与运行环境领域](../ascend-deployment/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[项目规则](../../../AGENTS.md)。本入口只读采集并整理复现条件，不执行部署、升级或推理，也不保证目标环境已具备可复现证据。
 
@@ -29,4 +37,4 @@ description: 维护指定容器的最小复现记录及本机总表，记录原�
 
 目标、阶段、字段来源、修改项、未知项与证据入口齐全，足以判断已记录条件和缺口。清单完整度、环境兼容、实际功能与性能分别判定。没有当前真实请求证据，不称服务成功；关键版本或patch不可恢复时，不称可精确复现。
 
-与其他入口分工：部署使用[部署说明](../ascend-agent-workflow/references/service-deployment.md)，升级由[dependencies](../ascend-workbench-dependencies/SKILL.md)负责，实际兼容/产物工具见[运行工具说明](../../../docs/tools/runtime-tools.md)。正常快照不启动这些变更或实验流程。
+与其他入口分工：部署使用[部署说明](../ascend-deployment/references/service-deployment.md)，升级由[dependencies](../ascend-workbench-dependencies/SKILL.md)负责，实际兼容/产物工具见[运行工具说明](../../../docs/tools/runtime-tools.md)。正常快照不启动这些变更或实验流程。

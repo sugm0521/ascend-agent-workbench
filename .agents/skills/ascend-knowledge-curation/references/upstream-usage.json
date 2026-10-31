@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-knowledge-curation",
+  "uses": [
+    {
+      "source_id": "compound_engineering",
+      "resources": [
+        "skills/ce-compound/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "工程经验归纳方法",
+      "purpose": "工程经验归纳方法",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "只融合归纳/复查方法，不启用CE提交、删除或完整多agent流程；不把workspace知识库设为第二份正文",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "compound_engineering",
+      "resources": [
+        "skills/ce-compound-refresh/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "旧知识复查与替代关系",
+      "purpose": "旧知识复查与替代关系",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "只融合归纳/复查方法，不启用CE提交、删除或完整多agent流程；不把workspace知识库设为第二份正文",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-knowledge-and-report/SKILL.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "直接启动或需要核对领域适用/补位规则",
+      "purpose": "复用所属领域规则，不完整回跑领域流程",
+      "upstream_basis_revision": null
+    }
+  ]
+}

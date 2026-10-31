@@ -1,9 +1,17 @@
 ---
 name: ascend-hccl-traffic-test
 description: 准备并验证昇腾单机或多机多卡 HCCL alltoallvc 打流，复用已有 MPI/CANN，检查连接和卡占用，顺序运行 ccu_ms、aicpu_ts 并归类失败。用于明确的通信测试或故障诊断；不替代模型性能基准或一般分布式日志分析。
+metadata:
+  workbench_role: capability
+  workbench_domain: performance
 ---
 
 # HCCL 轻量通信测试
+
+## 领域与直接启动
+
+所属[性能领域](../ascend-performance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[项目规则](../../../AGENTS.md)，任务推进与记录沿用[execution](../ascend-task-execution/SKILL.md)。仅操作本任务确认的服务器、容器和路径。用户要求诊断时先区分管理查询故障与计算/通信故障；明确要求打流且范围已知时准备限时验证，不把管理查询超时直接判为硬件损坏或无限期停止测试。单机结果不能证明多机正常。
 

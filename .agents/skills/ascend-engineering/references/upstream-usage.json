@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-engineering",
+  "uses": [
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-task-execution/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-task-review/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    }
+  ]
+}

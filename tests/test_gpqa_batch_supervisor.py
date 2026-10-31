@@ -34,12 +34,13 @@ class BatchSupervisorTests(unittest.TestCase):
         # Pause a real process inside the critical section so its competitor
         # encounters the exact pre-ownership window, without timing guesses.
         worker = self.root / 'worker.py'
-        worker.write_text('''import importlib.util, sys, time
+        worker.write_text('''import importlib.util, os, sys, time
 from pathlib import Path
 spec = importlib.util.spec_from_file_location('driver', sys.argv[1])
 driver = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(driver)
 root = Path(sys.argv[2])
+(root / 'worker.pid').write_text(str(os.getpid()))
 hook = sys.argv[4]
 if hook:
     original = getattr(driver, 'atomic_json' if hook == 'client_recorded' else hook)
@@ -100,6 +101,8 @@ driver.supervise(root / 'plan.json', root / 'state.json', sys.argv[3] == '1')
         before = self.state.read_bytes()
         owner = self.start_supervisor(resume=True, pause_at='same_live')
         self.wait_for_gate(owner)
+        # Windows venv launchers may have a different PID from their worker.
+        owner_pid = int((self.root / 'worker.pid').read_text())
         self.assert_contender_rejected(self.start_supervisor(resume=True))
         self.assertEqual(self.state.read_bytes(), before)
         (self.root / 'release').touch()
@@ -107,7 +110,7 @@ driver.supervise(root / 'plan.json', root / 'state.json', sys.argv[3] == '1')
         self.assertEqual(owner.returncode, 0, output + error)
         state = json.loads(self.state.read_text())
         self.assertEqual(state['status'], 'completed')
-        self.assertEqual(state['owner']['pid'], owner.pid)
+        self.assertEqual(state['owner']['pid'], owner_pid)
         self.assertEqual((Path(groups[0]['root']) / 'sent.txt').read_text(), 'x')
 
     def test_process_crash_releases_lock_without_removing_sidecar(self):

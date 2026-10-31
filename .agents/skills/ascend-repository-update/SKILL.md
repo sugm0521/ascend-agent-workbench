@@ -1,9 +1,17 @@
 ---
 name: ascend-repository-update
 description: 安全同步代码仓并分流版本升级，核对实际仓库、分支、远端、未提交修改及目标版本，保留现有工作。用于更新代码仓、拉取远端变更、同步业务分支或更新工作台；固定依赖升级交给 dependencies，首次接入交给 init。
+metadata:
+  workbench_role: capability
+  workbench_domain: maintenance
 ---
 
 # 代码仓更新
+
+## 领域与直接启动
+
+所属[工作台维护领域](../ascend-workbench-maintenance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[项目规则](../../../AGENTS.md)。本入口负责确定更新对象、目标和保留工作的方法；不会因“更新仓库”自动更新所有仓、切回 main 或升级运行环境。
 

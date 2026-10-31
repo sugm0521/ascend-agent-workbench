@@ -1,5 +1,10 @@
 # 现有服务性能压测
 
+## 启动与领域归属
+
+本能力由[性能领域](../ascend-performance/SKILL.md)维护；可直接指定，也可由主/领域调用，按[共用约定](../../../docs/guides/skill-routing.md)复用任务和知识查询。具体输入输出、脚本与原验收边界见[SKILL](SKILL.md)。
+
+
 `ascend-performance-benchmark` 的使用说明，面向提出任务的使用者；详细执行规则以 [SKILL.md](SKILL.md) 为准。
 
 ## 能做什么
@@ -10,7 +15,7 @@
 
 需要TTFT、TPOT、吞吐等性能数据时使用；精度异常用精度入口，持续瓶颈优化用调优入口。
 
-“AISBench评测”需要先区分吞吐/时延和数据集分数；后者及Agent/SWE评测按[场景映射](../../../upstream/skill-mapping.md#按任务选用与重叠处理)选择实际评测方法，不能用性能负载代替评分。
+“AISBench评测”需要先区分吞吐/时延和数据集分数；后者及Agent/SWE评测按[场景映射](../../../upstream/skill-mapping.md#细分能力目录)选择实际评测方法，不能用性能负载代替评分。
 
 相邻入口：[ascend-inference-optimization](../ascend-inference-optimization/README.md)、[ascend-model-accuracy](../ascend-model-accuracy/README.md)。
 

@@ -1,9 +1,17 @@
 ---
 name: ascend-inference-optimization
 description: 对 vLLM-Ascend 推理服务进行证据驱动的性能调优，连接 AISBench 基线、NPU profiling、瓶颈归因、配置或代码候选及性能与精度回归。适用于吞吐、TTFT、TPOT、PD 每卡吞吐目标和性能退化优化；单次压测、单份 profiling 解读或单算子优化使用对应领域入口。
+metadata:
+  workbench_role: capability
+  workbench_domain: performance
 ---
 
 # vLLM-Ascend 推理性能调优
+
+## 领域与直接启动
+
+所属[性能领域](../ascend-performance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[项目规则](../../../AGENTS.md)。本入口负责选择下一项值得验证的改动，实际服务、资源、负载和分析复用现有能力；授权沿用任务范围。新任务先确认目标，已有任务直接恢复当前证据和下一步。
 
@@ -25,7 +33,7 @@ PD、每卡归一化指标或跨机环境复刻时，读取[PD 与验收口径](
 
 ## 从证据选择候选
 
-根据当前缺口选择轻量检查；已有 profiling 足够时，按[分析输入与方法](references/sources.md#分析输入与方法)先确认产物、窗口和当前判断，再用[能力映射](../../../upstream/skill-mapping.md#按任务选用与重叠处理)定位具体专题。仅当新增采样能区分关键假设时采集。分析方法与[运行后端](../../../upstream/skill-mapping.md#运行体系与执行入口)分别核对：旧脚本的身份、目标解析必须兼容当前工具；缺后端时只复用输入满足的离线方法，不能伪造session、创建第二套资源状态或把换仓当作已适配。
+根据当前缺口选择轻量检查；已有 profiling 足够时，按[分析输入与方法](../ascend-performance/references/analysis-selection.md#分析输入与方法)先确认产物、窗口和当前判断，再用[能力映射](../../../upstream/skill-mapping.md#细分能力目录)定位具体专题。仅当新增采样能区分关键假设时采集。分析方法与[运行后端](../../../upstream/skill-mapping.md#运行体系与执行入口)分别核对：旧脚本的身份、目标解析必须兼容当前工具；缺后端时只复用输入满足的离线方法，不能伪造session、创建第二套资源状态或把换仓当作已适配。
 
 先确认瓶颈位于 prefill、decode、调度/Host、内存还是通信，结合关键路径和源码实际分支解释；按需读取[Ascend 候选选择](references/ascend-candidates.md)。算子耗时之和、占比和理论上界都不能直接作为端到端可获得收益。
 

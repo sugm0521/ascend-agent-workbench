@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-model-engineering",
+  "uses": [
+    {
+      "source_id": "model_analysis",
+      "resources": [
+        "skills/ascend-model-analysis/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "架构、参数/KV估算方法",
+      "purpose": "架构、参数/KV估算方法",
+      "upstream_basis_revision": "b4b1dc1b0f742da29f054c91086aac373134a19d",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "model_analysis只用于架构/参数/KV报告；仿真、msModelSlim、Runtime迁移分别选定，均不自动替代vLLM实现适配；许可未明确不复制打包原文/模板",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "model_analysis",
+      "resources": [
+        "skills/ascend-model-analysis/references/css-template.md"
+      ],
+      "relationship": "template_reference",
+      "when": "按需HTML/DFG模板",
+      "purpose": "按需HTML/DFG模板",
+      "upstream_basis_revision": "b4b1dc1b0f742da29f054c91086aac373134a19d",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "model_analysis只用于架构/参数/KV报告；仿真、msModelSlim、Runtime迁移分别选定，均不自动替代vLLM实现适配；许可未明确不复制打包原文/模板",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-engineering/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-operator/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-deployment/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-model-accuracy/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    }
+  ]
+}

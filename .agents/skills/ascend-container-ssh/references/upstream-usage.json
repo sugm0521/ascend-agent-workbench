@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-container-ssh",
+  "uses": [
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/machine-management/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "托管机器接入/SSH契约的条件交接",
+      "purpose": "托管机器接入/SSH契约的条件交接",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "W-machine只在托管机器完整接入/ready目标且后端契约适用时交接；手工Docker SSH不依赖该仓",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-deployment/SKILL.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "直接启动或需要核对领域适用/补位规则",
+      "purpose": "复用所属领域规则，不完整回跑领域流程",
+      "upstream_basis_revision": null
+    }
+  ]
+}

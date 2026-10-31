@@ -1,9 +1,17 @@
 ---
 name: ascend-skill-candidate-review
 description: 评估 skill 改进候选的实际价值、已有覆盖与维护成本，裁剪冗余规则和不必要检查，给出最小修改或不改的结论。用于明确的候选评估、skill 优化或任务经验提炼请求；普通业务执行与回顾不默认启用，评估本身不授权实施。
+metadata:
+  workbench_role: capability
+  workbench_domain: maintenance
 ---
 
 # Skill 候选改进评估
+
+## 领域与直接启动
+
+所属[工作台维护领域](../ascend-workbench-maintenance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[项目规则](../../../AGENTS.md)。本 skill 只负责筛选与收敛候选，已授权实施交给[skill-development](../ascend-skill-development/SKILL.md)。用户已说明的约束和授权沿用，不让用户反复强调轻量化，也不为评估启动完整工程流程。
 

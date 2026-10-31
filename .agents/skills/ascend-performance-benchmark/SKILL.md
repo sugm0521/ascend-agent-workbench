@@ -1,15 +1,23 @@
 ---
 name: ascend-performance-benchmark
 description: 使用 AISBench 工具对现有模型服务进行性能压测，或核验并补录已有正式性能结果。用于吞吐、时延、并发、prefix cache 测试及性能结果登记；不用于精度评测、算子/HCCL打流、纯profiling或独立回归判定。
+metadata:
+  workbench_role: capability
+  workbench_domain: performance
 ---
 
 # 服务性能压测
+
+## 领域与直接启动
+
+所属[性能领域](../ascend-performance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[项目规则](../../../AGENTS.md)与当前任务授权。默认优先调用固定来源的 `aisbench_auto_tools_prefix`；用户指定其他工具或负载不适用时按需求选择，记录实际工具。服务部署、资源与远端执行仍复用已有入口。
 
 ## 先区分执行与补录
 
-先按目标产物判断，而不是按“AISBench”名称选工具：TTFT/TPOT/吞吐走本入口；数据集分数、Agent/SWE评测或已有profiling分析按[场景映射](../../../upstream/skill-mapping.md#按任务选用与重叠处理)选择对应方法。混合目标分别记录负载、采样/评分与验收，不用本性能工具固定的生成语义代替精度评测，也不因结果异常自动发起另一轮压测。
+先按目标产物判断，而不是按“AISBench”名称选工具：TTFT/TPOT/吞吐走本入口；数据集分数、Agent/SWE评测或已有profiling分析按[场景映射](../../../upstream/skill-mapping.md#细分能力目录)选择对应方法。混合目标分别记录负载、采样/评分与验收，不用本性能工具固定的生成语义代替精度评测，也不因结果异常自动发起另一轮压测。
 
 - 新发起压测时走下面的输入与执行流程。
 - 仅查看、汇总或补录已有结果时，走[已有结果的采集分支](../../../docs/guides/task-records.md#已有结果汇总与补登记)，优先读取原生汇总和必要配置。运行身份、指标口径及字段已足够登记时即停止，不进入压测准备或发起流程；缺项按该分支有界补证，不默认扩展为日志排障。

@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-model-accuracy",
+  "uses": [
+    {
+      "source_id": "awesome_agent_skills",
+      "resources": [
+        "vllm-ascend-accuracy/references/diagnostic-playbook.md"
+      ],
+      "relationship": "method_reference",
+      "when": "症状路由与消融方法",
+      "purpose": "症状路由与消融方法",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "awesome_agent_skills",
+      "resources": [
+        "vllm-ascend-accuracy/references/remediation-playbook.md"
+      ],
+      "relationship": "method_reference",
+      "when": "已收敛且获授权的修复方法",
+      "purpose": "已收敛且获授权的修复方法",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "awesome_agent_skills",
+      "resources": [
+        "vllm-ascend-accuracy/references/remote-container-workflow.md"
+      ],
+      "relationship": "method_reference",
+      "when": "仅按需参考远程证据字段",
+      "purpose": "仅按需参考远程证据字段",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "awesome_agent_skills",
+      "resources": [
+        "vllm-ascend-accuracy/references/final-report-template.md"
+      ],
+      "relationship": "template_reference",
+      "when": "按需参考精度交付内容",
+      "purpose": "按需参考精度交付内容",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "awesome_agent_skills",
+      "resources": [
+        "vllm-ascend-accuracy/references/issue-report.md"
+      ],
+      "relationship": "template_reference",
+      "when": "明确要求公开缺陷单时的审核稿模板",
+      "purpose": "明确要求公开缺陷单时的审核稿模板",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/vllm-ascend-correctness-validation/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "模型正确性比较与判定",
+      "purpose": "模型正确性比较与判定",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/vllm-ascend-graph-debug/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "eager/graph与replay首个差异",
+      "purpose": "eager/graph与replay首个差异",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/vllm-ascend-distributed-debug/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "rank/并行/跨机错误取证",
+      "purpose": "rank/并行/跨机错误取证",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-runtime-snapshot/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-operator/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-performance/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    }
+  ]
+}

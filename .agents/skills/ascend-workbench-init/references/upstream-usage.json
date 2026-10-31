@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-workbench-init",
+  "uses": [
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/repo-init/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "所选布局适用时的定向初始化方法",
+      "purpose": "所选布局适用时的定向初始化方法",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "所选workspace布局适用时才用W-init；其他来源是按用户选择准备的对象，只读取选中能力声明，不全装九仓工具",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-maintenance/SKILL.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "直接启动或需要核对领域适用/补位规则",
+      "purpose": "复用所属领域规则，不完整回跑领域流程",
+      "upstream_basis_revision": null
+    }
+  ]
+}

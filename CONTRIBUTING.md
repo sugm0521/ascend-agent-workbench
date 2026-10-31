@@ -33,3 +33,5 @@ PR 说明写清解决什么问题、行为如何变化、实际验证及尚未�
 使用贡献者本人有效的 Git 作者身份，并为每个提交添加匹配的 DCO 签署，例如 `git commit -s`；不要复制维护者姓名或邮箱。参考 [Developer Certificate of Origin](https://developercertificate.org/)。提交前审查 diff 和提交范围，避免混入无关工作。
 
 返回[项目首页](README.md)。
+
+领域/具体能力的职责与三种启动按[分层协作](docs/guides/skill-routing.md)维护；实际借用原skill/脚本/方法时更新[消费声明](docs/maintenance/upstream-consumption.md)，候选和普通导航不冒充运行依赖。迁移同时更新调用方、当前接入与索引，删除旧位置兼容；不用作者私有材料作为公开必需输入。

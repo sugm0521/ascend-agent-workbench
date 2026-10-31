@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-operator",
+  "uses": [
+    {
+      "source_id": "cannbot",
+      "resources": [
+        "ops/ascendc-tiling-design/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "AscendC tiling与实现设计",
+      "purpose": "AscendC tiling与实现设计",
+      "upstream_basis_revision": "94216ba2f0b569cfad22c7794ad99426a07ab7b6",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "cannbot",
+      "resources": [
+        "ops/torch-ascendc-op-extension/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "PTA扩展集成",
+      "purpose": "PTA扩展集成",
+      "upstream_basis_revision": "94216ba2f0b569cfad22c7794ad99426a07ab7b6",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "cannbot",
+      "resources": [
+        "ops/ascendc-precision-debug/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "AscendC数值误差定位",
+      "purpose": "AscendC数值误差定位",
+      "upstream_basis_revision": "94216ba2f0b569cfad22c7794ad99426a07ab7b6",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "cannbot",
+      "resources": [
+        "ops/ascendc-perf-optimize/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "AscendC性能分析与优化",
+      "purpose": "AscendC性能分析与优化",
+      "upstream_basis_revision": "94216ba2f0b569cfad22c7794ad99426a07ab7b6",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "cannbot",
+      "resources": [
+        "ops/ascendc-code-review/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "AscendC代码审查",
+      "purpose": "AscendC代码审查",
+      "upstream_basis_revision": "94216ba2f0b569cfad22c7794ad99426a07ab7b6",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/ascend-operator-debug/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "独立算子reference与复现",
+      "purpose": "独立算子reference与复现",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/ascend-triton-workflow/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "Triton开发、优化与验证方法",
+      "purpose": "Triton开发、优化与验证方法",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    }
+  ]
+}

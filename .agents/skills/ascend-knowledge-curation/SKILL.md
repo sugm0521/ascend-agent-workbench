@@ -1,9 +1,17 @@
 ---
 name: ascend-knowledge-curation
 description: 检索任务与知识，逐条提出配置用法、操作方法和工程经验的收录建议，经用户确认后维护本机配置指向的私有工程知识库，保留证据、边界与历史。用于知识检索、候选提案、明确维护或每日归档；业务中可提出候选，不自动写入或发布。
+metadata:
+  workbench_role: capability
+  workbench_domain: knowledge_report
 ---
 
 # 工程知识检索与维护
+
+## 领域与直接启动
+
+所属[知识与报告领域](../ascend-knowledge-and-report/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 遵循[根规则](../../../AGENTS.md)和[知识接入协议](../../../knowledge/README.md)。本 skill 负责检索、收录判断与已授权维护；调度和 Git 同步交给[每日流程](../../../docs/guides/daily-sync.md)或具体已授权任务。使用上游方法时按需读[来源与项目适配](references/source-and-adaptation.md)。
 

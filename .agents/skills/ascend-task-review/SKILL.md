@@ -1,9 +1,17 @@
 ---
 name: ascend-task-review
 description: 核查工程任务的目标、覆盖、当前代码/环境和证据，整合验收、交接与简短回顾。用于阶段或最终交付、独立验证及中断交接；审查不自动实施修复，也不自动把任务产物推广成公共工具或新 skill。
+metadata:
+  workbench_role: shared
+  workbench_domain: common
 ---
 
 # 任务验收、交接与回顾
+
+## 共用上下文
+
+作为共用模块按需使用，复用同一任务、领域和有效知识查询。新增目标/错误/条件变化才按[共用约定](../../../docs/guides/skill-routing.md)补查，不重复问卷或建立第二份状态；专业方法由领域/具体能力提供。方法来源见[消费声明](references/upstream-usage.json)。
+
 
 读 [根规则](../../../AGENTS.md)、当前任务说明、最新交接和实际证据索引；只在相关问题上定点读 [框架第 11–13 节](../../../docs/maintenance/项目框架.md)。本 skill 检查可交付结论，不因进入 review 增加原任务的必需范围。
 

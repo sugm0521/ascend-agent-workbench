@@ -1,0 +1,2 @@
+# Optional prerequisite for inspect_upstream.py; never installed automatically.
+PyYAML==6.0.3

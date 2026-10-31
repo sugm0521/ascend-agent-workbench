@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-performance",
+  "uses": [
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/ascend-profiling-collection/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "已有服务的profiling采集方法",
+      "purpose": "已有服务的profiling采集方法",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/ascend-profiling-analysis/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "trace/step/layer/跨rank整体分析",
+      "purpose": "trace/step/layer/跨rank整体分析",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        ".agents/skills/ascend-memory-profiling/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "vLLM服务HBM组件拆分",
+      "purpose": "vLLM服务HBM组件拆分",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "msagent",
+      "resources": [
+        "skills/profiler/ascend-profiler-db-explorer/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "Profiler DB schema与只读SQL",
+      "purpose": "Profiler DB schema与只读SQL",
+      "upstream_basis_revision": "d60a55f1d5df6ed49fd81902a13fe42be9f95144",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "msagent",
+      "resources": [
+        "skills/profiler/ascend-communication-analysis/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "匹配DB输入的集合通信归因",
+      "purpose": "匹配DB输入的集合通信归因",
+      "upstream_basis_revision": "d60a55f1d5df6ed49fd81902a13fe42be9f95144",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "msagent",
+      "resources": [
+        "skills/profiler/ascend-computation-analysis/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "匹配输入的计算热点分析",
+      "purpose": "匹配输入的计算热点分析",
+      "upstream_basis_revision": "d60a55f1d5df6ed49fd81902a13fe42be9f95144",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "msagent",
+      "resources": [
+        "skills/profiler/ascend-schedule-analysis/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "Host下发与调度专题",
+      "purpose": "Host下发与调度专题",
+      "upstream_basis_revision": "d60a55f1d5df6ed49fd81902a13fe42be9f95144",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "msagent",
+      "resources": [
+        "skills/profiler/memory-analysis/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "msMemScope dump分析",
+      "purpose": "msMemScope dump分析",
+      "upstream_basis_revision": "d60a55f1d5df6ed49fd81902a13fe42be9f95144",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-performance-benchmark/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-inference-optimization/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-hccl-traffic-test/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-runtime-snapshot/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "本轮目标需要该细分步骤或授权内交接",
+      "purpose": "同一任务内按需调用，非全量执行",
+      "upstream_basis_revision": null
+    }
+  ]
+}

@@ -6,7 +6,7 @@
 
 > 本项目正在持续开发与优化，功能、工作流程和使用文档会不断完善。欢迎 **Star 收藏本项目**，方便后续查阅并关注更新。
 
-版本基线：[v0.1.0](https://github.com/sugm0521/ascend-agent-workbench/releases/tag/v0.1.0) 固定当前工作台与依赖选用规则，作为后续架构重构的对照。版本说明列出已验证范围、运行缺口和后续规划；不代表所有上游工具与远程环境已经验收。
+版本基线：[v0.1.0](https://github.com/sugm0521/ascend-agent-workbench/releases/tag/v0.1.0) 保留分层重构前的工作台与依赖选用规则。当前 main 包含领域分层与上游复用的新结构，尚未发布对应版本标签；验证范围见开发记录，不代表所有上游工具与远程环境已经验收。
 
 首次使用从[快速开始](#快速开始)进入；接入后按[任务入口](#按任务选择入口)工作。修改业务代码前请了解[CI 预检](#代码修改与-ci-预检)。知识库与定时维护见[可选知识接入](#可选知识库与定时维护)，维护者验证见[验证说明](docs/maintenance/validation.md)。
 
@@ -135,39 +135,48 @@ tasks/2026-10-27/启动报错定位/
 
 ## 按任务选择入口
 
-例如“定位这个问题单的根因”“优化现有服务的吞吐”“核查模型输出复读”或“实现算子替换”。不确定入口时使用 workflow，明确的小任务可直接使用领域 skill，无需完整采访或多个 agent。
+项目自建稳定领域入口，按子场景复用已验证自有能力或适用上游。可从主workflow、领域或具体能力开始，复用同一上下文；完整规则见[分层协作与知识触发](docs/guides/skill-routing.md)。
 
-表中使用简称，实际调用名称和示例见各 skill 使用说明，例如 `init` 对应 `$ascend-workbench-init`。
+主入口[ascend-agent-workflow](.agents/skills/ascend-agent-workflow/README.md)负责目标、必要澄清和跨域组织，融合Matt grilling方法；信息充分即推进。
 
-下表链接到各skill的使用说明（README）：可查看功能、适用场景、调用示例、输入输出和操作边界；详细执行规范仍由对应 `SKILL.md` 维护。功能或边界变化时同步核对两者，说明中不保存本机运行状态或实验回执。
-
-| 类别 | 入口 | 用途 |
+| 领域 | 入口与使用说明 | 主要细分目标 |
 |---|---|---|
-| 接入与维护 | [init](.agents/skills/ascend-workbench-init/README.md) | 首次接入、增量接入检查、定向补齐及初始化报告 |
-| 接入与维护 | [dependencies](.agents/skills/ascend-workbench-dependencies/README.md) | 版本核对、相关传递依赖、升级与组合验证 |
-| 接入与维护 | [repository-update](.agents/skills/ascend-repository-update/README.md) | 安全同步业务代码，分流工作台与固定依赖升级，保留现有工作 |
-| 任务推进 | [workflow](.agents/skills/ascend-agent-workflow/README.md) | 查证目标与事实、必要澄清、领域路由与整体推进 |
-| 任务推进 | [planning](.agents/skills/ascend-task-planning/README.md) | 子任务、依赖、写入归属与资源边界 |
-| 任务推进 | [execution](.agents/skills/ascend-task-execution/README.md) | 在授权范围内调查、实验、实现与验证 |
-| 任务推进 | [review](.agents/skills/ascend-task-review/README.md) | 复核结论与覆盖，组织交付、交接与回顾 |
-| 模型与环境 | [inference-optimization](.agents/skills/ascend-inference-optimization/README.md) | 串联性能基线、profiling、优化候选及性能与精度回归 |
-| 模型与环境 | [performance-benchmark](.agents/skills/ascend-performance-benchmark/README.md) | 用 AISBench 核验现有服务吞吐、时延、并发与公共前缀负载 |
-| 模型与环境 | [model-accuracy](.agents/skills/ascend-model-accuracy/README.md) | 模型乱码、复读、异常空输出和精度下降的诊断、修复与回归 |
-| 模型与环境 | [runtime-snapshot](.agents/skills/ascend-runtime-snapshot/README.md) | 只读采集指定环境的 CANN、代码、PR、依赖与启动条件 |
-| 模型与环境 | [container-ssh](.agents/skills/ascend-container-ssh/README.md) | 给手工部署的已有容器建立或恢复独立 SSH，并验证登录 |
-| 模型与环境 | [HCCL 打流](.agents/skills/ascend-hccl-traffic-test/README.md) | 复用 MPI/CANN 验证单机或多机 alltoallvc 双模式通信 |
-| 知识与总结 | [knowledge-curation](.agents/skills/ascend-knowledge-curation/README.md) | 检索、核实、归纳和复查知识，保留历史与适用边界 |
-| 知识与总结 | [weekly-report](.agents/skills/ascend-weekly-report/README.md) | 生成个人工作及项目/知识改进两份周报，交付 Markdown 和 HTML |
-| Skill 建设 | [skill-candidate-review](.agents/skills/ascend-skill-candidate-review/README.md) | 评估价值、已有覆盖与维护成本，给出最小修改或不改的结论 |
-| Skill 建设 | [skill-development](.agents/skills/ascend-skill-development/README.md) | 创建或优化已确认范围的项目自有 skill，验证入口与代表行为 |
+| 性能 | [ascend-performance](.agents/skills/ascend-performance/README.md) | 压测、调优、profiling、显存、通信打流 |
+| 模型精度 | [ascend-model-accuracy](.agents/skills/ascend-model-accuracy/README.md) | 输出质量排障、数值定位、模型数据集评测与回归 |
+| 算子 | [ascend-operator](.agents/skills/ascend-operator/README.md) | 设计、实现、编译、精度、性能、调试与框架集成 |
+| 部署与运行环境 | [ascend-deployment](.agents/skills/ascend-deployment/README.md) | 单机/PD部署、容器SSH、环境检查与复现记录 |
+| 模型分析与适配 | [ascend-model-engineering](.agents/skills/ascend-model-engineering/README.md) | 架构/参数/KV估算、性能仿真、量化与模型实现适配 |
+| 通用工程开发与审查 | [ascend-engineering](.agents/skills/ascend-engineering/README.md) | 业务代码调查/修复、源码学习、CI/PR/文档审查、Agent/SWE评测 |
+| 知识与报告 | [ascend-knowledge-and-report](.agents/skills/ascend-knowledge-and-report/README.md) | 知识检索/收录/复查、周报与周期报告 |
+| 工作台维护 | [ascend-workbench-maintenance](.agents/skills/ascend-workbench-maintenance/README.md) | 初始化、安全同步、依赖检查/吸收/升级、skill建设、工作台发布准备 |
 
-算子、模型适配、部署、profiling、CI/PR 和源码学习由 workflow 按[领域映射](upstream/skill-mapping.md)选用已有流程，不要求每个领域都另建一个项目 skill。
+### 领域内能力与共用模块
 
-定位/分析默认交付证据与建议；明确要求修复/优化/实现才推进业务修改。提交、推送和发布按本次授权处理，未授权时提供可审核结果。数值语义、支持范围和必需验收的变化由用户决定。
+现有有效方法和脚本保留在各模块，直接指定也须复用领域适用/补位规则。新增细分skill依据实际价值，不为每个上游skill造同义包装。
 
-涉及产物搬迁/安装来源或原生扩展兼容问题时，可按需使用 [通用运行探针与产物核对](docs/tools/runtime-tools.md)。两个 Python 标准库工具独立运行，复用原远程执行能力；普通业务任务不默认增加导入、NPU 或 PD 检查。
+| 归属 | 能力 |
+|---|---|
+| 部署与运行环境 | [ascend-container-ssh](.agents/skills/ascend-container-ssh/README.md) |
+| 部署与运行环境（共享支撑） | [ascend-runtime-snapshot](.agents/skills/ascend-runtime-snapshot/README.md) |
+| 性能 | [ascend-performance-benchmark](.agents/skills/ascend-performance-benchmark/README.md) |
+| 性能 | [ascend-inference-optimization](.agents/skills/ascend-inference-optimization/README.md) |
+| 性能 | [ascend-hccl-traffic-test](.agents/skills/ascend-hccl-traffic-test/README.md) |
+| 知识与报告 | [ascend-knowledge-curation](.agents/skills/ascend-knowledge-curation/README.md) |
+| 知识与报告 | [ascend-weekly-report](.agents/skills/ascend-weekly-report/README.md) |
+| 工作台维护 | [ascend-workbench-init](.agents/skills/ascend-workbench-init/README.md) |
+| 工作台维护 | [ascend-repository-update](.agents/skills/ascend-repository-update/README.md) |
+| 工作台维护 | [ascend-workbench-dependencies](.agents/skills/ascend-workbench-dependencies/README.md) |
+| 工作台维护 | [ascend-skill-candidate-review](.agents/skills/ascend-skill-candidate-review/README.md) |
+| 工作台维护 | [ascend-skill-development](.agents/skills/ascend-skill-development/README.md) |
+| 共用模块 | [ascend-task-planning](.agents/skills/ascend-task-planning/README.md) |
+| 共用模块 | [ascend-task-execution](.agents/skills/ascend-task-execution/README.md) |
+| 共用模块 | [ascend-task-review](.agents/skills/ascend-task-review/README.md) |
 
-生成式AISBench评测的指标、有效回答与输出审计可使用[证据报告工具](docs/tools/aisbench-evidence.md)，消费已有明确run，分别给出逐组和总体报告；官方分数与格式异常不混为一个通过结论。
+首次工程目标定向查知识；新错、重复失败、转向或条件变化再补查。已覆盖结果复用，不每层全库搜索。知识/报告域不是查询必经入口；未配置知识库不伪造命中，独立工作可继续，新经验收录沿具体授权。
+
+[细分目录与能力发现](upstream/skill-mapping.md)保留45场景及原资源定位；选用决策归各领域，来源事实归消费声明。多个仓同方向不等于都要依赖：AISBench性能工具、workspace方法、cannbot算子、awesome精度、compound知识及msagent等按本轮目标/输入选用，原工具前提另验。
+
+定位/分析交付证据和建议，修复/优化在已定范围推进；提交/推送/发布沿具体授权。数值语义、支持范围和必需验收的改变由用户决定。原工具与[运行探针](docs/tools/runtime-tools.md)按需使用，不因层级新增执行或资源系统。
 
 ## 代码修改与 CI 预检
 
@@ -195,7 +204,7 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 | `deps/vllm-ascend-workspace` | 使用其领域流程或执行工具；按用途准备身份、工具与服务器，不重复克隆已绑定业务代码 |
 | `deps/cannbot-skills` | 使用 AscendC 等领域方法；资料引用不要求安装整套插件 |
 | `deps/matt-pocock-skills` | 使用澄清、拆分、实现与交接的方法来源 |
-| `deps/model-analysis` | 模型架构报告、版本比较或参数/KVCache 估算，按[调用说明](.agents/skills/ascend-agent-workflow/references/model-analysis.md)使用；原仓许可尚未明确、内部 gitlink 声明缺口保留，仅作资料引用，再分发前需核实许可 |
+| `deps/model-analysis` | 模型架构报告、版本比较或参数/KVCache 估算，按[调用说明](.agents/skills/ascend-model-engineering/references/model-analysis.md)使用；原仓许可尚未明确、内部 gitlink 声明缺口保留，仅作资料引用，再分发前需核实许可 |
 | `deps/aisbench-auto-tools-prefix` | 服务性能压测工具源码；AISBench、tokenizer 等依赖在请求发起端按需准备，不要求全部服务节点安装 |
 | `deps/awesome-agent-skills` | 模型精度原Skill、手册与工具，按项目适配及版本前提使用；不自动引入其机器清单、迁移或其他运行系统 |
 | `deps/msagent` | msAgent 原Skill、脚本与工具来源，按[统一发现入口](upstream/skill-mapping.md#依赖能力发现入口)定位；满足输入、环境与授权后使用，CLI/MCP等前提按任务核对 |

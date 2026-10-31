@@ -1,9 +1,17 @@
 ---
 name: ascend-workbench-init
 description: 初始化或补齐 Ascend agent 工作台、所选下层仓库的适用配置、可选私有知识目录、vLLM/vLLM-Ascend 代码与 GitHub/PR 条件；先汇总上下层全部必需信息统一确认，再按用途接入执行能力。用于首次接入、更新工作台后的增量接入检查、明确补齐或恢复缺失配置；日常任务和依赖版本升级不运行完整初始化。
+metadata:
+  workbench_role: capability
+  workbench_domain: maintenance
 ---
 
 # 工作台初始化
+
+## 领域与直接启动
+
+所属[工作台维护领域](../ascend-workbench-maintenance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
+
 
 作为唯一总入口，把现状、用户选择和下层定向步骤合成一份计划。首版由 agent 读取 YAML 与 Markdown，再调用已有工具；本 skill 不提供新的初始化服务、通用 CLI 或第二套执行状态。
 

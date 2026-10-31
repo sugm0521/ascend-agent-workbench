@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-task-planning",
+  "uses": [
+    {
+      "source_id": "matt",
+      "resources": [
+        "skills/engineering/to-tickets/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "可验证子任务与依赖边；不带入外部tracker",
+      "purpose": "可验证子任务与依赖边；不带入外部tracker",
+      "upstream_basis_revision": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "只拟融合产物拆分和依赖边，仍用本仓任务/assignment；映射推荐不是已完成吸收的证据",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    }
+  ]
+}
