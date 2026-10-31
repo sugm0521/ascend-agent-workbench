@@ -2,11 +2,11 @@
 
 ## 事实源与记录
 
-上层 `sources.lock.yaml` 的 `sources.<id>` 保存顶层 `{path, url, commit, purpose, declared_dependencies}`；本机配置的对应 `dependencies.<id>.path` 可以复用已有外部维护源。先查真实源和 SHA，报告差异，不仅以目录名认来源。
+按[共享配置约定](../../ascend-workbench-init/references/config-schema.md#路径与缺省值)读取实际来源锁和报告。sources.<id>保存顶层{path, url, commit, purpose, declared_dependencies}；本机dependencies.<id>.path可绑定外部维护源。先核对真实源与SHA，不仅以目录名判断。
 
 `declared_dependencies` 是下层原文件引用，必须从本次所选父提交读取；它不是一个可以独立更新的上层 pin 列表。候选父新增声明时主动识别相关入口，不能只检查旧 lock 已列文件。下层 pin 保持原文件权威，上层保存检查快照与引用即可。
 
-受影响图与验证可记在本次任务 results/，或无业务任务时记在 `docs/maintenance/开发记录.md` 并引用 `upstream/skill-mapping.md`；不要另造状态数据库。节点行至少包括：
+完整受影响图与验证保存在本次维护任务results；无业务任务时建立维护任务。实际路径、环境和本机原件引用不进入公开开发记录；公开记录仅保存通用方法、公开来源版本、采用决定与验证层级。不另造状态数据库。本机节点行至少包括：
 
 | 节点/类别 | 父节点/父 SHA | 声明文件/接口 | 用途/启用条件 | 期望约束 | 实际路径/版本 | 拟用版本 | 结果/验证引用 |
 |---|---|---|---|---|---|---|---|

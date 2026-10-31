@@ -78,6 +78,45 @@ class InspectionTests(unittest.TestCase):
     def inspect(self, **kwargs):
         return TOOL.inspect(self.root, ['engine'], **kwargs)
 
+    def test_untracked_skill_without_declaration_is_rejected(self):
+        self.write(self.root, '.agents/skills/new-consumer/SKILL.md', '# Uses the engine method\n')
+        with self.assertRaisesRegex(ValueError, 'Missing consumer declaration for skill: new-consumer'):
+            self.inspect()
+
+    def test_tracked_skill_without_prior_declaration_is_rejected(self):
+        self.write(self.root, '.agents/skills/new-consumer/SKILL.md', '# Uses the engine method\n')
+        self.git(self.root, 'add', '.agents/skills/new-consumer')
+        self.commit(self.root, add=False)
+        with self.assertRaisesRegex(ValueError, 'Missing consumer declaration for skill: new-consumer'):
+            self.inspect()
+
+    def test_missing_new_declaration_cli_returns_input_error_without_mutation(self):
+        self.write(self.root, '.agents/skills/new-consumer/SKILL.md', '# New consumer\n')
+        before = self.git(self.root, 'status', '--porcelain')
+        with redirect_stdout(io.StringIO()) as captured:
+            code = TOOL.main(['--root', str(self.root), '--source', 'engine'])
+        self.assertEqual(code, 2)
+        self.assertIn('Missing consumer declaration', captured.getvalue())
+        self.assertEqual(self.git(self.root, 'status', '--porcelain'), before)
+        self.assertFalse((self.root / '.agents/skills/new-consumer/references/upstream-usage.json').exists())
+
+    def test_empty_declaration_does_not_invent_source_dependency(self):
+        self.consumer('self-contained', [])
+        report = self.inspect(candidates={'engine': self.candidate()})
+        self.assertEqual({item['consumer'] for item in report['affected_consumers']}, {'leaf'})
+        self.assertIn('self-contained', TOOL.load_consumers(self.root, self.lock['sources']))
+
+    def test_adding_missing_declaration_includes_new_consumer_in_impact(self):
+        self.write(self.root, '.agents/skills/new-consumer/SKILL.md', '# Uses the engine method\n')
+        candidate = self.candidate()
+        with self.assertRaises(ValueError):
+            self.inspect(candidates={'engine': candidate})
+        self.consumer('new-consumer', [{'source_id': 'engine', 'resources': ['skills/feature/SKILL.md'],
+                                        'relationship': 'method_reference', 'when': 'feature input',
+                                        'upstream_basis_revision': self.base}])
+        report = self.inspect(candidates={'engine': candidate})
+        self.assertEqual({item['consumer'] for item in report['affected_consumers']}, {'leaf', 'new-consumer'})
+
     def test_no_delta_is_not_an_automatic_network_or_write_operation(self):
         before = self.git(self.root, 'status', '--porcelain')
         contents = (self.source / 'skills/feature/SKILL.md').read_bytes()

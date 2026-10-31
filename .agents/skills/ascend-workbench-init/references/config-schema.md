@@ -9,6 +9,10 @@
 - 示例能说明默认位置，不能证明 checkout、接口、认证或界面已就绪。未知 schema_version 或字段含义冲突时，暂停受影响配置步骤并说明差异。
 - 允许本机配置使用实际外部绝对路径；提交的示例保持相对路径与空选择。远程路径必须随原 provider 的主机/容器上下文引用，不只写一个裸路径。
 
+`paths.sources_lock`缺字段时默认upstream/sources.lock.yaml，`paths.init_report`缺字段时默认.workbench-local/init-report.md。先解析本机配置，再按上述位置读实际文件；显式路径非法或不可读时报告缺口，不换回另一份默认文件。首次已确认的新报告可以在目标创建；已有报告不可读时不能用新空报告替代历史。
+
+初始化使用首次完整/后续增量的同一流程，实际覆盖能力和已定选择记在原报告，不以额外模式字段推断就绪。开启新功能属于增量接入。已有未知字段与绑定保留，不用新示例覆盖旧配置。
+
 ## 顶层字段
 
 | 字段 | 类型/值 | 含义 |
@@ -22,9 +26,8 @@
 | `dependencies.<id>.path` | 路径 | 实际领域维护源位置 |
 | `dependencies.<id>.enabled` | boolean | 本项目选用该直接依赖；不表示可运行 |
 | `business.repositories.<id>` | mapping | 每个业务仓库唯一绑定及已定选择 |
-| `init.mode` | `standard` / `lightweight` | 初始化范围；用户本轮明确范围优先 |
 | `init.prefer_reuse` | boolean，默认 true | 首次选择时优先复用；不覆盖已选专用 clone |
-| `init.github_required` | boolean，默认 true | 标准 PR 准备要求；false 必须报告 PR 缺口 |
+| `init.github_required` | boolean，默认 true | 完整接入的PR准备要求；false须保留已定范围并报告PR缺口，不隐式修改配置 |
 | `init.remote_required` | boolean，默认 false | 本轮远程验收是否必需；只影响相关能力 |
 | `capabilities.remote_execution` | boolean，默认 false | 是否需要底层远程执行与协调接入 |
 | `capabilities.knowledge_tests` | boolean，默认 false | 是否准备相关 conformance 测试依赖 |

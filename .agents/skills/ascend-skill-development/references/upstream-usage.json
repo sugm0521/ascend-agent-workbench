@@ -21,6 +21,26 @@
       "when": "本轮目标需要该细分步骤或授权内交接",
       "purpose": "同一任务内按需调用，非全量执行",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        "docs/maintenance/upstream-consumption.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "新增或改变模块时核对实际消费声明",
+      "purpose": "复用当前项目方法与约定，按具体范围交接",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-init/references/operations.md"
+      ],
+      "relationship": "method_reference",
+      "when": "新增或迁移技能时核对当前客户端发现与获授权接入",
+      "purpose": "复用当前项目方法与约定，按具体范围交接",
+      "upstream_basis_revision": null
     }
   ]
 }

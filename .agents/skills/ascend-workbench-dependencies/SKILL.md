@@ -13,7 +13,7 @@ metadata:
 所属[工作台维护领域](../ascend-workbench-maintenance/SKILL.md)。直接启动时复用当前任务，按[分层协作与知识触发](../../../docs/guides/skill-routing.md)完成或复用定向检索，并核对领域适用/补位规则；已有上下文不完整回跑主入口。覆盖不足交所属领域，原方法和工具的授权/验证范围仍适用。
 
 
-读取根 `AGENTS.md`、本次使用的能力、`upstream/sources.lock.yaml` 和存在的 `config/workbench.local.yaml`。配置与 lock 对应关系见 [共享配置约定](../ascend-workbench-init/references/config-schema.md)；升级图与具体核验见 [依赖检查约定](references/dependency-check.md)。
+先读根AGENTS.md、本次能力及存在的config/workbench.local.yaml，按[共享配置约定](../ascend-workbench-init/references/config-schema.md#路径与缺省值)定位实际来源锁和相关报告；显式路径不可用时报告缺口。升级图与核验见[依赖检查约定](references/dependency-check.md)。
 
 本 skill 维护直接依赖的选择与受影响链路。下层原声明是约束权威源，上层只存引用和检查证据，不建设第二套 pin、执行服务、身份或资源状态。
 
@@ -50,7 +50,7 @@ metadata:
 
 输出实际/目标版本、上游改进、受影响消费方、采用/暂缓理由、本地适配保留/清理结果、验证层级与回退信息；更新开发记录及相关映射/引用。具体业务状态仍在任务说明，源码判断、静态检查、模拟与真实环境验收分开报告。
 
-必要准备可复用 init 的定向操作约定与现状，不能调用完整 `$ascend-workbench-init`；初始化也不为补配置运行完整升级。失败恢复先查现状与原失败，只补本次受影响步骤，保留正在运行的实验与底层原记录引用。
+必要准备复用[init增量操作](../ascend-workbench-init/references/operations.md#增量检查与补齐)及[发现接入方法](../ascend-workbench-init/references/operations.md#当前客户端的skill发现与接入)，只补已确认差异，不调用完整初始化；初始化也不运行完整升级。完整图和本机证据留维护任务results，公开记录只保存通用方法与采用决定。失败保留原记录，只恢复受影响步骤。
 
 ## 消费与吸收复核
 

@@ -26,7 +26,7 @@ metadata:
 | 对象 | 路径 |
 |---|---|
 | 业务仓同步 | 下述安全同步；vLLM/vLLM-Ascend 还需核对目标 vLLM-Ascend 的 CI 声明及真实配对 SHA，复用 [init 的配对方法](../ascend-workbench-init/references/operations.md#业务代码与-ci-配对)，不运行完整初始化 |
-| 工作台自身更新 | 同样保留本仓 dirty/staged，按目标安全同步；若来源声明/gitlink 变化，再将受影响范围交给 [dependencies](../ascend-workbench-dependencies/SKILL.md)，不直接更新全部子模块 |
+| 工作台自身更新 | 保留dirty/staged并安全同步；来源声明/gitlink变化交[dependencies](../ascend-workbench-dependencies/SKILL.md)。skill发现、客户端入口或接入要求变化时，交[init](../ascend-workbench-init/SKILL.md)只读检查受影响差异，不直接补齐配置或更新全部子模块 |
 | deps 固定来源或相关工具升级 | 交 [dependencies](../ascend-workbench-dependencies/SKILL.md)解析目标父声明、传递约束、兼容验证和回退；不在本入口维护第二套 pin，不改外部维护源 |
 | 首次 clone、身份/remotes 缺失 | 仅把真实缺失项交 [init](../ascend-workbench-init/SKILL.md)，已可用部分直接复用 |
 
@@ -36,4 +36,7 @@ metadata:
 - 默认只做可快进同步（如针对已核实目标的 `merge --ff-only`）。dirty、已有暂存或活动实验需要先确定不会覆盖/混入旧工作的方法：保留可恢复备份，或在隔离 checkout 准备候选；必要时请用户选择。不能为凑干净状态自动整仓 stash、commit、reset、clean、强推或覆盖文件，也不移动仍被实验使用的分支。
 - 分支分叉、detached 或目标无法快进时停止该仓合入，保留原分支/修改并说明差异；显式选择 merge/rebase/cherry-pick 后才按范围执行。冲突只展示解决 diff，不整篇输出文件；提交、DCO、推送及 PR 信息遵循根规则，更新请求不自动授权发布。
 - 版本组合按任务验收。同步源码不代表需要重装环境、重启服务或重新测试全项目；先核对实际受影响入口，只执行已授权且必要的检查，真实运行缺口单列。尚未满足配对或验证要求时交付候选，不能报告环境已升级完成。
+
+工作台同步后按diff检查已启用能力的接入差异，外层项目的联接不会随Git树自动新增。init给出可复用、必要缺项及相关可选项；已有具体补齐/接入授权才实施，无相关影响即停止。普通业务仓同步不触发完整init。
+
 - 最后记录各仓更新前后 branch/SHA、目标与来源、实际操作、dirty/staged 保留情况、配对约束、验证和未完成项。失败或回退需要恢复时只处理本轮拥有的变更，不能顺带撤销他人的工作。

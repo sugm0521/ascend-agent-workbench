@@ -111,6 +111,10 @@ def load_consumers(root, source_ids):
     tracked = git(root, 'ls-files', '-z', '--', '.agents/skills/*/references/upstream-usage.json').stdout
     paths = set((root / '.agents/skills').glob('*/references/upstream-usage.json'))
     paths.update(root / name for name in tracked.decode('utf-8').split('\x00') if name)
+    declared_modules = {path.parent.parent for path in paths}
+    for skill in sorted((root / '.agents/skills').glob('*/SKILL.md')):
+        if skill.parent not in declared_modules:
+            raise ValueError(f'Missing consumer declaration for skill: {skill.parent.name}')
     for path in sorted(paths):
         if not path.is_file():
             raise ValueError(f'Missing tracked consumer declaration: {path.parent.parent.name}')

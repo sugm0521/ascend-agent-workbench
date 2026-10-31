@@ -22,6 +22,8 @@ python -m pip install -r scripts/requirements-upstream.txt
 python scripts/validate_workbench.py
 ```
 
+来源检查先核对全部本仓SKILL与消费声明，包括未提交的新模块；漏声明返回输入错误，不自动补造空uses。格式和链接检查不能替代消费检查，声明语义仍需审查；该项不要求联网或准备全部来源环境。
+
 仅复核来源检查工具时，可将统一检查命令替换为定向测试，无需重复执行两套入口：
 
 ```sh

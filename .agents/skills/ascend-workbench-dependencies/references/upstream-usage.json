@@ -11,6 +11,16 @@
       "when": "直接启动或需要核对领域适用/补位规则",
       "purpose": "复用所属领域规则，不完整回跑领域流程",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-init/references/operations.md"
+      ],
+      "relationship": "method_reference",
+      "when": "候选组合需要准备或发现入口变化时，复用增量及客户端接入方法",
+      "purpose": "复用当前项目方法与约定，按具体范围交接",
+      "upstream_basis_revision": null
     }
   ]
 }

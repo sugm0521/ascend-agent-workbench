@@ -79,7 +79,6 @@ business:
       requested_ref: null
 
 init:
-  mode: standard
   prefer_reuse: true
   github_required: true
   remote_required: false

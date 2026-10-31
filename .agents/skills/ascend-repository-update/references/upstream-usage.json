@@ -21,6 +21,26 @@
       "when": "本轮目标需要该细分步骤或授权内交接",
       "purpose": "同一任务内按需调用，非全量执行",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-init/SKILL.md"
+      ],
+      "relationship": "skill_call",
+      "when": "工作台同步影响接入要求时只读增量检查，或真实缺项的定向接入",
+      "purpose": "复用当前项目方法与约定，按具体范围交接",
+      "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-init/references/operations.md"
+      ],
+      "relationship": "method_reference",
+      "when": "业务vLLM/Ascend同步时核对CI声明及实际配对",
+      "purpose": "复用当前项目方法与约定，按具体范围交接",
+      "upstream_basis_revision": null
     }
   ]
 }

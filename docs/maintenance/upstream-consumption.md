@@ -4,7 +4,7 @@
 
 ## 消费声明
 
-实际消费方在references/upstream-usage.json保存schema_version=1、consumer和uses数组。consumer等于本模块目录名；每个use包含source_id、仓内相对resources、relationship、when/purpose、upstream_basis_revision及local_adaptation/recheck_on。
+每个本仓skill模块在references/upstream-usage.json保存schema_version=1、consumer和uses数组，显式声明实际采用关系；确认无采用时可写uses=[]，不能用空数组掩盖未知。consumer等于本模块目录名；每个use包含source_id、仓内相对resources、relationship、when/purpose、upstream_basis_revision及local_adaptation/recheck_on。
 
 | relationship | 含义 |
 |---|---|
@@ -46,7 +46,7 @@ python scripts/inspect_upstream.py --source msagent --candidate msagent=<本地�
 python scripts/inspect_upstream.py --all --check-remote --output <本次任务结果目录>
 ```
 
---source或--all明确范围；默认仅本地，--check-remote才查询远端HEAD元数据，不fetch/checkout/安装/执行上游。--root明确工作台，--config可指定本轮本机配置；显式指定的文件缺失/不可读时报配置错误，只有未指定时默认本机配置缺失才按未配置处理。已跟踪消费声明在工作树缺失、或声明所属skill缺失同样报错，不能静默构造不完整消费图。报告只写指定任务目录并保留历史。
+--source或--all明确范围；默认仅本地，--check-remote才查询远端HEAD元数据，不fetch/checkout/安装/执行上游。--root明确工作台，--config可指定本轮本机配置；显式指定的文件缺失/不可读时报配置错误，只有未指定时默认本机配置缺失才按未配置处理。检查先对照全部本仓SKILL与声明：新模块漏声明、已跟踪声明缺失或声明所属skill缺失均报输入错误（退出2），不自动补空JSON或静默漏掉消费方。这不要求检查全部来源环境，也不证明关系语义已完整登记。报告只写指定任务目录并保留历史。
 
 源的changed/no_source_delta仅描述版本差量。JSON、终端和Markdown另给inspection_status：complete表示本次事实检查无未完成项，review_required表示有变化/待吸收或未知历史依据，incomplete表示有来源/网络/已知历史提交不可读等缺口。退出0只表示事实收集完整，仍可能需语义复核；退出1表示不完整，退出2表示配置/输入/前置错误。未知依据null保持待复核，不自动失败或补造历史；已知依据缺对象则为needs_fetch并使检查不完整。所有状态均不代表工具/NPU或升级采用通过。
 

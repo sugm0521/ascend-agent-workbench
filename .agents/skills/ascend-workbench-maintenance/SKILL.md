@@ -14,8 +14,8 @@ metadata:
 
 | 用户目标 | 本仓执行能力 |
 |---|---|
-| 首次接入、补齐/恢复缺失配置 | [init](../ascend-workbench-init/SKILL.md)：先集中核对本轮必要选择，按现状只补缺失 |
-| 同步工作台/业务仓 | [repository-update](../ascend-repository-update/SKILL.md)：保护dirty/staged与分支；固定来源升级交dependencies |
+| 首次完整接入、更新后增量检查、新功能开启、补齐/恢复 | [init](../ascend-workbench-init/SKILL.md)：复用现状与已定选择，检查先给差异，补齐按具体授权实施 |
+| 同步工作台/业务仓 | [repository-update](../ascend-repository-update/SKILL.md)：保护dirty/staged与分支；固定来源变化交dependencies，工作台更新影响接入时交init只读检查 |
 | 版本核对、上游变化、候选兼容/吸收/采用/回退 | [dependencies](../ascend-workbench-dependencies/SKILL.md)，按[消费与升级约定](../../../docs/maintenance/upstream-consumption.md)组织事实与验证 |
 | 评估是否值得融合、自建、合并或清理 | [candidate-review](../ascend-skill-candidate-review/SKILL.md)：不自动将每个候选变成建设任务 |
 | 已授权skill创建/优化 | [skill-development](../ascend-skill-development/SKILL.md)：复用评估，更新受影响调用方/README/索引 |
