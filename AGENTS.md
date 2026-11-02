@@ -117,6 +117,8 @@ assignment 写明任务 id/计划版本、目标、必要事实/资料、已定�
 
 ## 9. CI 与提交审核
 
+准备推送 vLLM/vLLM-Ascend 业务提交时，无论从领域、具体能力还是直接 Git 操作进入，都先按[业务仓预检](docs/guides/business-ci-preflight.md)核对当前候选的必需检查覆盖，并在推送调用前记录可推送、阻断或例外已批准的决定。允许等价调用原工具及复用有效结果；必需检查仍失败或未覆盖时不得自动放行，具体条件由共用预检说明维护。
+
 CI 记录绑定 PR、head SHA、workflow/job、run，保存实际错误、分类依据、修复、本地验证、审核和复验。先读真实 workflow 与失败 job，不泛化成代码错误或无依据称偶发。
 
 冲突解决核对 CI 对提交历史的实际要求。新提交重新关联检查；旧 SHA 成功不能代表新 SHA。queued/running/skipped 不写为 success。重跑有理由，无终态不宣布通过。

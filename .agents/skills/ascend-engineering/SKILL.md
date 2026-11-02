@@ -22,4 +22,4 @@ metadata:
 
 已明确专业对象时交[性能](../ascend-performance/SKILL.md)、[精度](../ascend-model-accuracy/SKILL.md)、[算子](../ascend-operator/SKILL.md)、[部署](../ascend-deployment/SKILL.md)或[模型分析与适配](../ascend-model-engineering/SKILL.md)。领域未知时先查事实再分流；方法不足按共用发现协议找已登记来源，目录未列出不表示能力不存在。
 
-复用planning/execution/review及原Git/执行工具。按实际变更验证正常与边界路径，清晰交付证据、改动、未验范围和恢复状态；提交/推送/PR描述沿具体授权，不自动扩大为公共工具、知识写入或新skill。
+复用planning/execution/review及原Git/执行工具。业务推送前由当前执行者落实[execution的CI与提交分支](../ascend-task-execution/SKILL.md#ci-与提交)并核对当前候选的推送决定，不因直接进入本领域而省略预检，无需另建计划或委派。按实际变更验证正常与边界路径，清晰交付证据、改动、未验范围和恢复状态；提交/推送/PR描述沿具体授权，不自动扩大为公共工具、知识写入或新skill。
