@@ -30,14 +30,14 @@
 | `init.github_required` | boolean，默认 true | 完整接入的PR准备要求；false须保留已定范围并报告PR缺口，不隐式修改配置 |
 | `init.remote_required` | boolean，默认 false | 本轮远程验收是否必需；只影响相关能力 |
 | `capabilities.remote_execution` | boolean，默认 false | 是否需要底层远程执行与协调接入 |
-| `capabilities.knowledge_tests` | boolean，默认 false | 是否准备相关 conformance 测试依赖 |
+| `capabilities.knowledge_tests` | boolean，默认 false | 是否准备所选父仍声明的历史conformance测试依赖；非私库索引/引擎开关 |
 | `execution.max_subagents` | 非负整数，默认 3 | 子 agent 同时运行上限；实际工具限额优先 |
 | `execution.provider_refs` | mapping | 已有底层 provider/profile/config/id 的引用 |
 | `execution.artifact_root` | 路径 | 本机缓存及大型原始产物位置 |
 
 `dependencies` 与 lock 的 `sources` 使用相同 id，以 lock 的键为准；可选来源按本次用途启用，不维护另一份固定来源名单。lock 保存 `{path, url, commit, purpose, declared_dependencies}`，其中 `declared_dependencies` 是父仓原声明的相对文件路径引用。配置 path 可绑定已有外部 checkout；与 lock 记录不同则核对来源和实际 SHA，并报告偏离，不能悄悄改 lock 或切版本。没有配置时使用 lock 路径查询资料现状，不替用户决定业务绑定。
 
-enabled 只表示选择来源，仍须逐个核对其适用初始化。本轮消费方式、下层身份、直接工具/协调/服务器各自状态与用户选择保存于 init_report，原状态与 pin 仍由下层管理。remote_execution=false 不代表 workspace 本机身份/profile 可以默认跳过；也不代表用户已决定本轮所有执行组件的范围。
+enabled 只表示选择来源，仍须逐个核对其适用初始化。本轮消费方式、下层身份、直接工具/协调/服务器各自状态与用户选择保存于 init_report，原状态与 pin 仍由下层管理。remote_execution=false不代表已决定所有组件范围；是否需要身份由实际原组件契约决定，不要求新组合先准备旧workspace profile。
 
 已有本机配置未声明某个来源或缺少 `enabled` 时，该来源的实施选择为 `pending_decision`，不能继承其他来源的 true/false 或因目录存在认作已启用。可按 lock 路径只读识别资料和能力；确需初始化或启用时，沿用本轮已有决定，并将剩余必要选择纳入 init 的集中确认，不自动改本机配置。显式 false 表示本轮未启用，按需报告相关能力缺口。
 
@@ -97,6 +97,8 @@ provider_refs 的已知键为 `remote_dev`、`coordinator`，值为底层已有�
 `paths.knowledge_root` 是工程知识正文、主题索引和历史的唯一根目录。使用本机绝对路径，或相对工作台根解析的外部路径；解析真实路径后必须在工作台之外。路径只保存在忽略的本机配置和报告；提交示例保持 null，不写开发者用户名、笔记软件布局或实际仓库 URL。该字段不表示 Git 仓根、托管可见性、写权限或推送授权。
 
 首次初始化集中确认是否接入；选中才收集目录。已有配置复用，明确不接入保留 null 并在报告记 not_enabled；没有决定仍为 pending_decision，不能由默认值替用户选择。普通任务缺少配置时报告知识覆盖缺口并继续不依赖它的工作，不运行完整初始化。`capabilities.knowledge_tests` 仍只控制 conformance 测试依赖，与工程知识目录无关。
+
+知识结构不增加公共index_path或engine配置：工具、模板和索引schema从目标库规范发现，knowledge_root仍为唯一绑定。`knowledge_tests=true`而所选父无对应历史conformance声明时，保留选择并记录legacy_not_applicable；不冒称测试通过或自动安装新引擎，不影响该库文本检索。维护就绪另核对规范、内嵌模板、导航及已声明工具的一致性；缺可选索引不等于缺知识能力。
 
 ## 私有知识库的远端与维护选择
 

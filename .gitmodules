@@ -1,6 +1,6 @@
 [submodule "deps/vllm-ascend-workspace"]
 	path = deps/vllm-ascend-workspace
-	url = https://github.com/vllm-ascend-workspace/vllm-ascend-workspace.git
+	url = https://github.com/mindie-agent/mindie-agent.git
 [submodule "deps/cannbot-skills"]
 	path = deps/cannbot-skills
 	url = https://gitcode.com/cann/cannbot-skills.git
@@ -25,3 +25,18 @@
 [submodule "deps/msagent"]
 	path = deps/msagent
 	url = https://gitcode.com/Ascend/msagent.git
+[submodule "deps/awesome-mindie-skills"]
+	path = deps/awesome-mindie-skills
+	url = https://github.com/mindie-agent/awesome-mindie-skills.git
+[submodule "deps/vllm-ascend-skills"]
+	path = deps/vllm-ascend-skills
+	url = https://github.com/pisceskkk/vllm-ascend-skills.git
+[submodule "deps/vllm-ascend-pd-disaggregation-skills"]
+	path = deps/vllm-ascend-pd-disaggregation-skills
+	url = https://github.com/nwpu-zxr/vllm-ascend-pd-disaggregation-skills.git
+[submodule "deps/ascend-pooling-skills"]
+	path = deps/ascend-pooling-skills
+	url = https://github.com/Yuli-yx/awesome-mindie-skills.git
+[submodule "deps/upstream-downstream-skills"]
+	path = deps/upstream-downstream-skills
+	url = https://github.com/SOMEONEUNSEEN/awesome-mindie-skills.git

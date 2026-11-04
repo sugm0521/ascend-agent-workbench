@@ -29,6 +29,21 @@ knowledge:
     jobs: []       # 每项的 mode/id/时区/时间/范围见 init 配置约定
 
 dependencies:
+  mindie_skill_catalog:
+    path: deps/awesome-mindie-skills
+    enabled: false  # 固定目录，仅发现；不代表原Skill已运行
+  vllm_ascend_skills:
+    path: deps/vllm-ascend-skills
+    enabled: false  # 可移植工程方法；执行仍沿实际工具
+  pd_disaggregation_skills:
+    path: deps/vllm-ascend-pd-disaggregation-skills
+    enabled: false  # PD专项方法；复用当前部署owner
+  ascend_pooling_skills:
+    path: deps/ascend-pooling-skills
+    enabled: false  # 池化方法/只读指标工具；前提按任务核对
+  upstream_downstream_skills:
+    path: deps/upstream-downstream-skills
+    enabled: false  # 上下游调用与激活分析方法
   msagent:
     path: deps/msagent
     enabled: false  # 可选来源；按任务核对原Skill/工具前提，不自动安装
@@ -85,7 +100,7 @@ init:
 
 capabilities:
   remote_execution: false
-  knowledge_tests: false
+  knowledge_tests: false  # 仅所选父声明适用的历史conformance测试；非私库索引或引擎开关
 
 execution:
   max_subagents: 3

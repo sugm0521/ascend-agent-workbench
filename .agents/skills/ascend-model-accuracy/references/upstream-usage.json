@@ -82,14 +82,30 @@
       "resources": [
         ".agents/skills/vllm-ascend-correctness-validation/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-correctness-validation/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "模型正确性比较与判定",
       "purpose": "模型正确性比较与判定",
-      "upstream_basis_revision": null,
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -97,14 +113,30 @@
       "resources": [
         ".agents/skills/vllm-ascend-graph-debug/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-graph-debug/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "eager/graph与replay首个差异",
       "purpose": "eager/graph与replay首个差异",
-      "upstream_basis_revision": null,
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -112,14 +144,30 @@
       "resources": [
         ".agents/skills/vllm-ascend-distributed-debug/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-distributed-debug/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "rank/并行/跨机错误取证",
       "purpose": "rank/并行/跨机错误取证",
-      "upstream_basis_revision": null,
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "awesome按诊断/修复/取证/交付阶段展开；workspace按正确性、图、分布式分支；当前W-opdebug/CN-precision的执行选用归算子域，精度只保留边界交接。MS-eval只用于实际模型评分，不替代性能压测",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -151,6 +199,38 @@
       "when": "本轮目标需要该细分步骤或授权内交接",
       "purpose": "同一任务内按需调用，非全量执行",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "pd_disaggregation_skills",
+      "resources": [
+        "skills/pd-disaggregation-accuracy-debug/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "PD输出异常的P源/传输/D恢复/首consumer分段定位",
+      "purpose": "PD输出异常的P源/传输/D恢复/首consumer分段定位",
+      "upstream_basis_revision": "2852c18ac977783f336f8c8864ca84dfee3f5cc6",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "pd_disaggregation_skills",
+      "resources": [
+        "skills/pd-disaggregation-accuracy-debug/scripts/audit_outputs.py"
+      ],
+      "relationship": "tool_call",
+      "when": "已有归一化JSONL的离线异常分流；不是精度认证",
+      "purpose": "已有归一化JSONL的离线异常分流；不是精度认证",
+      "upstream_basis_revision": "2852c18ac977783f336f8c8864ca84dfee3f5cc6",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

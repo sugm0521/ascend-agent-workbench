@@ -82,14 +82,30 @@
       "resources": [
         ".agents/skills/ascend-operator-debug/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/ascend-operator-debug/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "独立算子reference与复现",
       "purpose": "独立算子reference与复现",
-      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -97,14 +113,78 @@
       "resources": [
         ".agents/skills/ascend-triton-workflow/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/ascend-triton-workflow/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "Triton开发、优化与验证方法",
       "purpose": "Triton开发、优化与验证方法",
-      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "AscendC主选cannbot，Triton主选workspace；其他语言/工具按对应输入选专题；不同时启动多个完整算子流程",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/ascend-triton-operator-development/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "明确Triton实现阶段",
+      "purpose": "明确Triton实现阶段",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/ascend-triton-kernel-validation/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "对应固定实现与非空必要用例的正确性验证",
+      "purpose": "对应固定实现与非空必要用例的正确性验证",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/ascend-triton-kernel-optimization/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "正确性基线具备后的Triton优化阶段",
+      "purpose": "正确性基线具备后的Triton优化阶段",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     }
   ]

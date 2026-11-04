@@ -21,6 +21,38 @@
       "when": "候选组合需要准备或发现入口变化时，复用增量及客户端接入方法",
       "purpose": "复用当前项目方法与约定，按具体范围交接",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "upstream_downstream_skills",
+      "resources": [
+        "skills/analyze-upstream-downstream/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "上游增强在下游的继承/覆盖/遗漏判断",
+      "purpose": "上游增强在下游的继承/覆盖/遗漏判断",
+      "upstream_basis_revision": "614d7c22c05f147d96e09044aa1b8e62cc9ec89e",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "mindie_skill_catalog",
+      "resources": [
+        "catalog/sources.yaml"
+      ],
+      "relationship": "method_reference",
+      "when": "已有能力不足时定位固定来源身份、版本及目录条目",
+      "purpose": "已有能力不足时定位固定来源身份、版本及目录条目",
+      "upstream_basis_revision": "46bc588dc0b4f39f5c745b975358b181e6a75fe1",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

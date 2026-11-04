@@ -4,6 +4,10 @@
 
 AISBench由[benchmark](../../ascend-performance-benchmark/SKILL.md)提供原生测量，回归方法引用见[消费声明](upstream-usage.json)。上游变化后按[消费与升级约定](../../../../docs/maintenance/upstream-consumption.md)复查本能力实际适配及验证范围；不把接口可读当运行成功。
 
+## 当前采用的方法
+
+可比代码回归参考[pisces performance-regression](../../../../deps/vllm-ascend-skills/skills/vllm-ascend-performance-regression/SKILL.md)；已定位重叠机会时参考[多流依赖/资源方法](../../../../deps/vllm-ascend-skills/skills/ascend-model-multistream-overlap-skill/SKILL.md)，明确池化目标时参考[MemCache方法](../../../../deps/ascend-pooling-skills/skills/ascend-memcache-pooling/SKILL.md)。这些方法使用当前原执行工具，不接管部署状态、不安装旧wrapper；实际收益需本任务同条件精度与性能证据。
+
 ## 外部方法来源
 
 本 skill 独立编写；以下外部参考只用于方法查阅，运行不依赖下载这两个参考仓，没有复制其代码、配置表或案例正文。

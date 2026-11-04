@@ -67,14 +67,30 @@
       "resources": [
         ".agents/skills/vllm-ascend-performance-regression/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": null,
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-performance-regression/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "可比基线/候选性能回归",
       "purpose": "可比基线/候选性能回归",
-      "upstream_basis_revision": null,
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "AB仅对性能负载分支直接调用；W-regress仅引用结果格式/交接契约，不接管独立回归判定。普通压测不依赖msagent、cannbot或其他评测仓",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -86,6 +102,22 @@
       "when": "直接启动或需要核对领域适用/补位规则",
       "purpose": "复用所属领域规则，不完整回跑领域流程",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-benchmark/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "预热、重复、指标口径方法；执行保留现有AISBench",
+      "purpose": "预热、重复、指标口径方法；执行保留现有AISBench",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

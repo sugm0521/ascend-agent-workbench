@@ -11,6 +11,8 @@
 | HCCL 或融合通信核占关键路径、跨 rank 明显不均 | 关联真实参与组、数据量、拓扑、rank 到达时间和专家负载；验证 TP/EP/DP/PP 或调度候选 | 计算/通信重叠重复计时，等待被算入融合核，慢 rank 导致陪跑 rank 等待 |
 | 分配/释放/映射与同步显著，存在恢复性 OOM/重试 | 核对同窗口内存日志、workspace/KV/中间量生命周期；选择有源码支持的预算或复用候选 | HTTP 成功掩盖重试；CPU API 时长误当设备 kernel 时间 |
 | 少数算子在生产 shape 持续暴露且有融合机会 | 核对当前实际 kernel、dtype/layout/shape 和已有融合，再交给算子优化路径 | 未加载候选、非关键路径算子、微基准收益未传到端到端 |
+| trace显示可重叠的计算/通信或独立分支，但暴露等待仍长 | 按[多流方法](../../../../deps/vllm-ascend-skills/skills/ascend-model-multistream-overlap-skill/SKILL.md)核数据依赖、事件顺序、资源竞争与实际stream映射，再提出最小候选 | 仅看到多条流不等于有效重叠；先验证同步/数值/图重放，再比较同负载收益 |
+| 池化搬运/命中/恢复占关键路径 | 沿[池化方法](../../../../deps/ascend-pooling-skills/skills/ascend-memcache-pooling/SKILL.md)核缓存层级、版本与传输证据，复用当前部署owner进行候选对照 | 指标改善不直接等于端到端收益；不得绕过原精度/KV路径回归 |
 | MTP/投机接受率或 draft 成本异常 | 核对模型/后端支持、accepted tokens、draft/verify 时间与实际输出分布 | 只看名义投机 token 数；更改采样或接受语义后未验证输出质量 |
 
 分析事件时保留 capture、phase、rank、step 与可比窗口。使用多流忙碌区间并集及暴露等待判读关键路径；硬件 counter 只能用于其原生覆盖窗口。必要时下钻更多 rank，找到足以区分假设的证据后停止扩采。

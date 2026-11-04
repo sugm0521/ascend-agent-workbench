@@ -1,6 +1,6 @@
 # 初始化操作、下层步骤与验收
 
-首次完整接入，后续按项目更新或新功能增量补齐；特定缺项和失败恢复复用同一现状与报告。先读取 [配置约定](config-schema.md)，按当前所选 workspace 提交查验工具，不假设本文列出的入口永远不变。
+首次完整接入，后续按项目更新或新功能增量补齐；特定缺项和失败恢复复用同一现状与报告。先读取 [配置约定](config-schema.md)，按当前所选固定来源与原组件提交查验工具，不假设本文列出的入口永远不变。
 
 ## 增量检查与补齐
 
@@ -35,21 +35,21 @@
 
 ## 下层初始化清单
 
-完整范围按本项目实际采用关系确定：先查清资料/方法和真实工具调用，再推导必要准备，不把九仓全部能力交给用户重新选择；只有会改变前提的真实可选消费方式才集中询问。未采用候选不列必装，已采用工具缺环境时记录缺口，不直接延期到未来任务。
+完整范围按本项目实际采用关系确定：先查清资料/方法和真实工具调用，再推导必要准备，不把所有来源全部能力交给用户重新选择；只有会改变前提的真实可选消费方式才集中询问。未采用候选不列必装，已采用工具缺环境时记录缺口，不直接延期到未来任务。
 
 首次完整核对每个本项目实际采用下层的要求，可选或仅候选来源标明用途与未启用状态。先查根 AGENTS/README、适用 init skill/helper 和当前父提交的传递声明，再按本轮消费方式确定操作；没有 init skill 时读实际安装/使用入口，不另建下层 skill。清单包含：来源/实际路径与 SHA、消费方式、下层入口、必要状态、已存在配置、传递依赖及平台前提、缺失选择、实施副作用与验收证据。全部适用层汇总完再集中确认，不在上层刚得到路径答复后开始实施。
 
 | 下层与消费方式 | 必需核对/收集 | 条件步骤与边界 |
 |---|---|---|
-| workspace 工作区工具 | 原持久身份、machine profile、资源用户名、统一 alias；适用 repo-init checkpoint | 缺 profile 按原三选项 Git 用户名/随机/自定义；自定义取得实际字符串才完整。alias 用资源名/自定义/不设置。实际候选随 cwd/认证变化须复核；这些不是 SSH 登录用户 |
-| workspace 直接远程工具 | 是否复用已有 provider、所需 CLI/MCP 接口、原依赖 pin、实际 checkout、客户端接入位置、平台兼容 | 按原 launcher/default path 接入，已有身份与配置保留；直接 host/port 与管理 resolver 是不同模式，后者不能冒充前者已验证 |
-| workspace 任务协调 | 是否本轮使用任务绑定/池执行、coordinator 接口与原状态目录、客户端 hooks 适用性 | 本机任务与远程池分别验收；池执行才要求现有 manager/显式配置。消费方不自动启动或重配 manager；缺口不自动授权安装另一操作系统或迁移整套协议 |
+| workspace通道及独立方法来源 | 所选父通道、固定原仓、实际消费声明与必要资源 | 新组合不要求旧profile/repo-init；已有身份按原组件复用，方法来源不要求安装整套工具 |
+| 独立remote-dev | 是否复用已有 provider、所需 CLI/MCP 接口、原依赖 pin、实际 checkout、客户端接入位置、平台兼容 | 按原 launcher/default path 接入，已有身份与配置保留；直接 host/port 与管理 resolver 是不同模式，后者不能冒充前者已验证 |
+| 原coordinator | 是否本轮使用任务绑定/池执行、coordinator 接口与原状态目录、客户端 hooks 适用性 | 本机任务与远程池分别验收；池执行才要求现有 manager/显式配置。消费方不自动启动或重配 manager；缺口不自动授权安装另一操作系统或迁移整套协议 |
 | cannbot 资料/领域方法，或原生插件 | 固定来源、所需入口与引用可读；选原生插件时补具体插件、客户端、项目/全局位置及安装冲突 | 资料读取无需全量安装器；选中插件才检查原 init/quickstart 与外部依赖，保留维护源和版本，针对性 tests 按需 |
 | Matt 方法参考，或原版工程流程 | 方法来源与上层引用；选原版流程时补实际目标仓、tracker/工具、domain 与适用 triage 配置 | 原版 setup 配置写入实际目标仓，不写 deps 维护源；方法提炼不要求插件/npm 发布依赖或 tracker |
 | model_analysis 可选分析方法 | 固定来源、原 skill/模板、输入来源、项目侧调用说明及实际声明缺口 | 按[调用说明](../../ascend-model-engineering/references/model-analysis.md)消费；本机资料引用无需新身份/provider，内部 gitlink 来源不明时保持未初始化，产物写任务目录 |
 | 其他传递测试/任务环境 | 启用条件、父声明、所需工具/环境与现有状态 | 未选能力明确不启用，不用全量安装使所有行变绿 |
 
-准备方案前核对本机 OS/Python/SSH、既有客户端 provider 与必要模块/接口；可用的只读 summary/status 优先。`workspace_identity.py summary`、`workspace_profile.py summary` 与完整 init 的 probe/plan 有不同副作用，须按当前实现查证。下层版本不可读取或 URL 重定向时查实际来源、目标 commit 与接口布局；替代方案写清原约束、差异与验证，取得用户选择后才 bootstrap，不修改原 pin 隐藏偏离。
+准备方案前核对本机 OS/Python/SSH、既有客户端 provider 与必要模块/接口；可用的只读 summary/status 优先。原组件构造、status、restart及完整初始化的副作用不同，须按固定实现查证；TaskClient/AgentSessions不能当纯只读探测。下层版本不可读取或 URL 重定向时查实际来源、目标 commit 与接口布局；替代方案写清原约束、差异与验证，取得用户选择后才 bootstrap，不修改原 pin 隐藏偏离。
 
 ## 实施前确认
 
@@ -62,7 +62,7 @@
 | 业务位置 | 首次核对两仓各自复用/专用clone/子模块方式及真实路径，增量只处理相关差异；冲突路径的处置不能由默认值替代 |
 | 来源、拓扑与基线 | 实际 clone URL、community/fork、origin/upstream、vLLM-Ascend 基线与 vLLM 配对策略；必要的 fork 创建、既有分支/remotes 变更纳入方案 |
 | 作者与账号 | 缺失或拟调整的 Git name/email、GitHub 账号与认证通道；GitHub 昵称/邮箱只能作为作者候选，不能自动视为已确认作者 |
-| 下层身份与工具 | 所选 workspace 的 profile/alias、原工具或已有 provider 的复用、客户端接入位置与版本/平台替代；本机工具接入不强制要求服务器信息 |
+| 下层身份与工具 | 实际原组件必要身份、原工具或已有provider的复用、客户端接入位置与版本/平台替代；本机工具接入不强制要求服务器信息 |
 | 已启用远程环境 | 真实服务器/容器目标、已有 SSH 接入方式及拟实施变化；按原流程取得选择，已知登录用户沿用，不要求用户在聊天粘贴机密 |
 
 上述必需项必须有明确答复或可核实的既有配置/决定；已定项不重复问。同次提问可提供[项目改进参与选择](#项目改进参与选择)，但该可选项未答复不加入必需等待集合。异步多问题可能逐项返回，必须检查整个必需项集合，而不是以任意一条答复触发执行。仅确认仓库路径而作者未答复时，整轮初始化实施保持等待，允许继续只读核对和必要记录；禁止 clone、依赖初始化、版本切换、配置写入以及其他初始化副作用。
@@ -91,7 +91,7 @@
 | 入口、配置、顶层依赖、总报告、界面接入 | 上层 | 顶层仅按 lock 和指定 submodule 路径准备 |
 | GitHub 登录与认证通道 | 上层安排一次 | 可以委托原工具；另一层只验收，仓库权限分别查 |
 | 业务 clone/submodule、作者、remotes、CI 配对 | 每项操作指定上层或下层之一 | 唯一业务路径；已定选择传入下层 |
-| workspace 持久身份、machine profile、执行依赖 | 原 workspace 工具 | 启用相关能力且确有缺失时；上层记录原位置引用 |
+| 原组件身份、provider及执行环境 | 对应原组件入口 | 按实际能力复用既有状态；旧workspace profile仅属其历史固定组合，不是新组件前置 |
 | conformance kit/特定环境 | 原声明入口 | 相关测试或任务启用后才准备 |
 
 下层完整初始化会准备未选业务仓库时，不能直接调用。下层没有范围参数时选定向 helper；没有可用 helper 则只暂停相关步骤，给出具体适配方案，不复制第二套业务仓、不改下层维护源。
@@ -106,23 +106,26 @@
 
 ## 条件使用 workspace helper
 
-当前选择的 workspace 为工具根；执行前查看其真实文件、参数和副作用，任何相对路径都按该入口要求解析。
+旧workspace的repo-init、profile、CI resolver、bootstrap和inventory不再作为新组合的活动依赖。历史使用范围留在原固定出处，当前操作按下表实施：
 
-- `.agents/skills/repo-init/scripts/resolve_vllm_ci_pin.py --vllm-ascend-dir <实际路径>` 支持外部 vLLM-Ascend。它先读 `.github/vllm-main-verified.commit`，旧版本按 workflow/docs 回退，并报告来源。调用前确认该来源属于计划中的 vLLM-Ascend HEAD。
-- `repo_topology.py configure --repo <实际路径>` 是有副作用的定向入口，适用明确的新配置；已用 fetch/pushurl/额外 remotes 迁移先检查适用性，不能为便利强行改写。
-- `repo_topology.py ensure-main` 会 fetch/准备 tracking 并可能切 branch；它不能作为普通分支查询或 CI 配对后的无条件步骤。`compare-main` 在当前实现会 `ls-remote`，纯本地快照使用原生只读 Git 查询。
-- `repo_init_probe.py` 会确保存储持久身份，也可能查询 GitHub；`repo_init_profile.py plan/apply/apply-alias` 也可能确保身份。仅相关能力需要时纳入已授权操作，不为分支总览触发。
-- 远程能力按父仓原声明与 `remote_dev.py` / `vaws.py` 的 status/bootstrap 入口核对；provider 接入先用原预览入口，保留用户维护的同名 provider/env/未知字段。不得因缺一个 provider 跑业务完整 repo-init，也不能把 bootstrap 成功当 NPU 运行完成。
+| 原职责 | 当前操作与完成条件 |
+|---|---|
+| vLLM配对resolver | 从实际vLLM-Ascend HEAD读取`.github/vllm-main-verified.commit`，核对vLLM完整对象；文件缺失只查同一历史提交已有CI/workflow/docs，无法确认则暂停该配对 |
+| repo topology/分支 | 对明确真实Git根用原生Git查询；只在已确认差异内配置origin/upstream，不重写pushurl/额外remote，不将ensure-main当查询 |
+| 持久身份/profile | 复用实际组件已有身份和真实业务上下文；只补其必要缺项，不先生成旧workspace profile或借用其他聊天 |
+| bootstrap与provider | 按所选通道/原组件准备隔离环境，执行[组件安全切换](#组件运行环境与安全切换)，保留原provider未知字段 |
+| inventory | 托管目标用实际provider/coordinator只读catalog；手工已有容器用container-ssh/快照规范；无可用接口明确覆盖缺口，不attach或创建task试探 |
+| 旧workspace业务子模块 | 仅原历史布局和明确采用的真实子模块适用；当前独立业务仓绑定不重建，新主仓不当业务源 |
 
-下层 skill 的通用 checkpoint 若包含本次已确认选择，传入这些选择并只补真缺口；其未相关的完整流程不加载、不执行。下层必要规则与上层范围无法协调时报告冲突。
+原生Git分支/版本查询不创建身份。方法迁移、原组件就绪与业务/远程验收分别记录，不用新名称掩盖接口缺失。
 
 ## 保存目标与 NPU 接入
 
 用户要求利用本机已有 SSH 时，先只读检查 SSH config/Include、已保存的应用会话和 known_hosts，按真实 host/port/user 去重。保存会话名只是线索，known_hosts 只证明历史主机密钥记录；不解密/打印密码或读取私钥内容，不扫描未保存的地址。已有登录用户、端口、密钥/跳板配置沿用；只有未能查到的必要接入信息才问用户。
 
-服务器总表同时纳入上述全部已保存具体目标和原管理工具已登记目标，按[快照规范](../../../../docs/guides/task-records.md#服务器可达性总表)保留来源、检查时间及失败/未知状态。workspace 旧登记清单使用其真实来源下 `.agents/skills/machine-management/scripts/inventory.py summary`，单项用 `get`；这是旧 VAWS 范围，不代表新 MindIE 全部目标。优先查实际启用来源的只读 catalog/inventory，不能拿旧入口管理新状态；无可用枚举时记录覆盖缺口，不创建 task/session/run 试探。不得调用 put/upsert/remove 或 attach/部署来生成只读清单。
+服务器总表同时纳入上述全部已保存具体目标和原管理工具已登记目标，按[快照规范](../../../../docs/guides/task-records.md#服务器可达性总表)保留来源、检查时间及失败/未知状态。旧VAWS登记清单只作原固定范围的历史线索，不用已迁出的machine-management管理新状态。优先查实际启用来源的只读 catalog/inventory，不能拿旧入口管理新状态；无可用枚举时记录覆盖缺口，不创建 task/session/run 试探。不得调用 put/upsert/remove 或 attach/部署来生成只读清单。
 
-先做有界连接检查，再用原 remote companion 执行只读硬件查询。采用新鲜 `npu-smi` NPU ID 和两种 board 查询，结合 Chip Type/Chip Name/NPU Name 按原 machine-management 规则判定型号；没有 NPU 0 时用实际查到的 ID，不凭 alias、旧 inventory 或镜像名确认 A2/A3。必要驱动库与命令路径按原规则核对。
+先做有界连接检查，再用原 remote companion 执行只读硬件查询。采用新鲜 `npu-smi` NPU ID 和两种 board 查询，结合 Chip Type/Chip Name/NPU Name 按当前原工具与硬件输出判定型号；没有 NPU 0 时用实际查到的 ID，不凭 alias、旧 inventory 或镜像名确认 A2/A3。必要驱动库与命令路径按原规则核对。
 
 连接失败、认证/host-key 未验证、硬件未知与已确认无 NPU 分别记录。不可连接不等于无 NPU；没有正面硬件证据的目标不加入就绪环境，不为凑数量推断型号。工具暂停/连续失败时遵循原恢复入口，不盲目重试或绕过；不影响其他本机准备。
 
@@ -205,8 +208,99 @@ CI-pinned 配对证明源码组合，不能证明构建、NPU、精度或性能�
 4. **新建私有远端**：只在完整选择确认后，通过实际可用的托管工具创建指定私有仓库，独立回读实际 URL/可见性，再按已定方案准备本地 Git/remote；同名或路径冲突先核对，不覆盖。建仓/绑定成功不等于首次同步成功；首次提交/推送也须在已明确授权和子树白名单内，回读远端 SHA 后才记同步成功。身份或工具缺失时保留具体缺口，不为建仓启用另一套平台/身份。
 5. **规范与绑定**：在实际目录就绪后，读取 AGENTS.md、README.md、相关分类规则及实际布局。新库按已确认布局调整[初始规范](../../../../knowledge/templates/AGENTS.example.md)，生成知识根 AGENTS.md 和最小 README.md；首页说明本库用途、链接规范，并列明知识正文及历史的存放位置。正文、历史、收录记录目录在首次获授权使用时按需创建，不预建空分类或知识条目。自定义布局需同步调整规范全文的路径说明和示例，不仅替换一个目录名。
 
-   已有规范先读后复用，不覆盖、不强制迁移分类；缺规范或首页入口时，仅按已授权补齐范围处理。规范冲突按[接入协议](../../../../knowledge/README.md#规则分工与初始模板)处理，不重复规定。核对规范中的路径与实际布局一致、首页规范链接有效；尚未创建的按需目录需明确为计划位置，不冒充已存在。符合约定后将唯一绑定保存到忽略的本机 paths.knowledge_root，保留未知配置。绑定可读与维护规则就绪分别报告；缺规范仍可绑定用于只读检索，但维护未就绪时不进入知识写入或宣称全部初始化完成。只读 ready 不代表写权限、Git或运行验收。
+   已有规范先读后复用，不覆盖、不强制迁移分类；同时核对内嵌条目模板、导航、已声明工具及索引接口是否一致。未选择派生索引的新库保持最小AGENTS/README，已有无索引库可继续按原布局检索；缺可选索引不触发完整初始化。需要调整规范/模板时列具体hunk和影响，不能整份套用公共模板。缺规范或首页入口时，仅按已授权补齐范围处理。规范冲突按[接入协议](../../../../knowledge/README.md#规则分工与初始模板)处理，不重复规定。核对规范中的路径与实际布局一致、首页规范链接有效；尚未创建的按需目录需明确为计划位置，不冒充已存在。符合约定后将唯一绑定保存到忽略的本机 paths.knowledge_root，保留未知配置。绑定可读与维护规则就绪分别报告；缺规范仍可绑定用于只读检索，但维护未就绪时不进入知识写入或宣称全部初始化完成。只读 ready 不代表写权限、Git或运行验收。
 6. **定时维护**：按当前客户端实际支持的调度入口，先读取匹配项目、用途和真实 ID 的已有任务；复用时只更新已确认字段，保留模型、启用状态等其他设置，不重复创建。新建时使用已选频率、时间、时区及范围；提示读取当前项目规则和本机知识绑定，不嵌入个人路径、私有 URL 或复制一份知识正文。归档/知识维护与周报按各自 skill 执行；未确认知识候选保持待确认，禁止借定时任务向公开仓发布知识。任务目的、实际状态/时间及 ID 回读后才标为已配置；调度工具不可用则记 deferred，不用另建脚本或系统服务替代，不妨碍已就绪的本地知识能力。
 7. **自动同步边界**：仅 `automatic` 且已有对应具体授权时，维护任务才可在私有目标中执行授权同步；默认/缺字段、手动模式或无授权时只产出本机结果与待同步项。依照[每日维护约定](../../../../docs/guides/daily-sync.md#检查遗漏并推送)保留其他 dirty/staged，核查所有 outgoing、白名单、DCO、大小和远端回读；笔记仓项目子树不等于整库授权。不使用远端时不创建推送任务或要求同步策略。
 
 把实际选择、操作状态及非机密证据写忽略的本机配置/初始化报告。目录绑定、维护规范（实际文件、布局与首页入口）、远端接入、调度配置和首次同步分别验收；未执行的定时运行不称为已验收运行。成功创建的远端/任务改记为 `reuse` 并保存实际 URL/ID，重复初始化先核对实际状态，只补缺失；结果不明时先查询，不再次创建。实际 Git 配置及原调度系统仍是状态事实源，不新建平行服务或同步状态。缺配置的普通业务任务只报告知识覆盖缺口，不运行完整初始化。
+
+
+## 组件运行环境与安全切换
+
+本节为已核对固定组合的可复现配方；其它目标版本先重读其原通道和包声明，不直接替换版本号。执行组与分析组独立环境，真实路径和本机结果只写忽略的初始化报告；不把具体开发者目录写入公开说明。
+
+来源：mindie-agent/mindie-agent固定提交`2d7f50943f88241cb00873b6cbc66fe2193fad69`的`channels/0.1.json`。本配方固定组件组合而非每次追最新；六个直接需求与override同时表达，避免上游传递Git约束选择另一提交。只安装原六包及其真实传递依赖，不安装完整knowledge引擎。
+
+路径由使用者选择两个独立项目根，基础Python应满足requires-python；UV使用当前可用版本。`UV_PROJECT_ENVIRONMENT`只对子进程设置到相应项目`.venv`，已有值不得静默借用；不修改用户/系统环境。每组下保存对应pyproject.toml。
+
+Windows Git若遇深目录Filename too long，仅在构建子进程为Git追加`core.longpaths=true`（可通过GIT_CONFIG_COUNT/KEY_n/VALUE_n，须保留已有项）；不全局改Git配置、不改固定SHA。当前已有代理配置由调用方环境继承，不硬编码开发者代理。首次失败保留日志并使用新attempt。
+
+### exec / pyproject.toml
+
+```toml
+[project]
+name = "mindie-workbench-exec"
+version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = [
+  "remote-dev @ git+https://github.com/mindie-agent/remote-dev@7c67876d716feb3949e4dbf33eb5e06980ff0d36",
+  "mindie-coordinator @ git+https://github.com/mindie-agent/coordinator@79a8b28eef72d57f965a01c6660849f024fbb1c0",
+  "mindie-diagnostics @ git+https://github.com/mindie-agent/diagnostics@f2f2f946c172afc99342a84c0c1ed244f6d44e01"
+]
+
+[tool.uv]
+package = false
+override-dependencies = [
+  "remote-dev @ git+https://github.com/mindie-agent/remote-dev@7c67876d716feb3949e4dbf33eb5e06980ff0d36",
+  "mindie-coordinator @ git+https://github.com/mindie-agent/coordinator@79a8b28eef72d57f965a01c6660849f024fbb1c0",
+  "mindie-diagnostics @ git+https://github.com/mindie-agent/diagnostics@f2f2f946c172afc99342a84c0c1ed244f6d44e01"
+]
+```
+
+### analysis / pyproject.toml
+
+```toml
+[project]
+name = "mindie-workbench-analysis"
+version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = [
+  "mindie-profiler @ git+https://github.com/mindie-agent/profiler@79d97e75bff7351b0472b93c03b072c1cf47f5e7",
+  "mindie-sim @ git+https://github.com/mindie-agent/sim@ced2dba5741af2d98f3a75b2a9cad77b9b94c40d",
+  "mindie-debugger @ git+https://github.com/mindie-agent/debugger@e9406b2b178335190d5cb59dff4d6985894497ba"
+]
+
+[tool.uv]
+package = false
+override-dependencies = [
+  "mindie-profiler @ git+https://github.com/mindie-agent/profiler@79d97e75bff7351b0472b93c03b072c1cf47f5e7",
+  "mindie-sim @ git+https://github.com/mindie-agent/sim@ced2dba5741af2d98f3a75b2a9cad77b9b94c40d",
+  "mindie-debugger @ git+https://github.com/mindie-agent/debugger@e9406b2b178335190d5cb59dff4d6985894497ba"
+]
+```
+
+### 每组运行与验收
+
+以下命令中的`<group-root>`及`<base-python>`由使用者解析，不能作为字面参数执行：
+
+```text
+uv sync --project <group-root> --python <base-python> --no-managed-python --no-python-downloads
+uv sync --project <group-root> --python <base-python> --no-managed-python --no-python-downloads --locked
+uv pip check --python <group-root>/.venv/Scripts/python.exe
+```
+
+每条退出0才继续，Linux使用`.venv/bin/python`。首次生成uv.lock后保留作为本机可复现产物，续跑要求`--locked`；不能用`--no-deps`绕过依赖。版本、`direct_url.json`的commit_id和原Git URL、模块实际路径逐项匹配六包目标。`pip check`只证明元数据依赖一致。
+
+本机exec可用命令为`python -m mindie_coordinator --help`、`python -m mindie_coordinator task-server --describe`、`python -m remote_dev --help`；analysis为`python -m mindie_profiler --help`、`python -m mindie_sim --help`、`python -m mindie_debugger --help`。所有help/协议探针以子进程env隔离session/coordinator/remote状态到本轮临时目录。MCP探针只发initialize/initialized/tools-list，无tools/call；正式入口、daemon和业务状态另行切换。
+
+### 正式切换接口的副作用
+
+旧版本`CoordinatorClient(state).call('restart_if_idle')`检查活跃请求、非终态execution和未释放run；busy停止、stopping退出且不会自行重启。CLI`python -m mindie_coordinator daemon --action restart-if-idle --state-dir <state>`收到idle结果后会自动ensure新daemon，不适合作为一致备份之前的停写操作。只读status入口是`python -m mindie_coordinator daemon --action status --state-dir <state>`，它发ping且不启动daemon。
+
+新版本原入口为`from mindie_coordinator.service import ensure_daemon`；它可能建目录/启动后台进程或请求idle升级，正式启动必须在停写和备份之后，绝不能用于只读检查。不能实例化TaskClient或AgentSessions来盘点状态，它们会写库。
+
+### 原生调用身份
+
+新coordinator的task_server逐次读取tools/call的`params._meta['x-codex-turn-metadata']['thread_id']`，再由AgentSessions.native_context('codex', thread_id)定位context；显式context_file若冲突则拒绝。环境中启动时的CODEX_THREAD_ID不能代替每次调用身份。独立tools-list成功只证明服务可发现，当前宿主是否注入该meta必须实际验证。
+
+remote-dev的remote_read/write/edit/multi_edit schema及实现支持逐调用`client_context_id`，本地读授权ledger按该值SHA-256分scope；无显式值时才回退REMOTE_DEV_SESSION_ID等环境。共享进程环境不能证明跨聊天隔离，不应固化某聊天ID。当前宿主是否暴露该参数需真实客户端工具schema核对。
+
+### 停写、迁移与客户端验收
+
+1. 先核对原状态根、实际进程/IPC、正式绑定和使用者，保存两处客户端command/args/env、旧环境、contexts与JSON。只读SQLite采用URI mode=ro和backup，副本quick_check；副本可能带真实目标，不在副本起daemon。
+2. 正式切换先停止本轮负责的项目在途调用，确认相关写入者已停；未知共享MCP进程不能按命令名全量终止。原daemon存在时使用原idle停止接口，busy即暂停；无响应核进程/端口/IPC，不以异常推断未运行。残留IPC另保存证据，不能为通过检查直接删除。
+3. 在一致窗口备份正式会话、协调状态与旧standalone remote账本；复制standalone到新的工作台外依赖目录的本机状态位置，保留原账本，不将coordinator自己的remote状态合并。目标非本轮所有则停止；前后路径/内容指纹应匹配。
+4. 新env沿原工具启动正式daemon并独立status；核旧绑定/owner及记录集合。随后只改本轮管理的MCP command/args和必要env，remote用`python -m remote_dev.mcp.server`，coordinator用`python -m mindie_coordinator task-server`；保留远端runtime_env文件、resolver、SSH配置及未知设置，移除仅旧wrapper使用的VAWS_REMOTE_DEV_ROOT。共享配置不固化聊天ID。
+5. 两处配置一致后，实际客户端重载/重新打开项目并验证真实调用schema、逐次身份与必要只读接口。先核对已安装宿主的原CLI、公开协议及实际连接方式是否提供后台重载，优先使用已验证的原控制通道（Codex可核对其[App Server协议](https://learn.chatgpt.com/docs/app-server)的config/mcpServer/reload）；不能仅因agent工具列表没有重载工具就判定必须用户操作。确无可调用入口时保存候选差异，记client_reload_required，从此阶段恢复；独立tools-list不代表当前客户端已生效。仍有其他owner写入时保留旧正式组合和父pin。
+6. 只有新入口实际生效、原状态完整、旧checkout不再有活动依赖才切父gitlink/lock。无明确获准目标时远程部分记waiting_for_runtime；初始化smoke显式sources={}且不申请NPU，完整请求及累计传输限制另按当前机器规则。
+7. 失败仅回退本批配置/入口差异；正式state已有新事件时不整库覆盖。保留旧环境与账本，不reset/clean或全量stash，不把客户端切换当业务/NPU验收。

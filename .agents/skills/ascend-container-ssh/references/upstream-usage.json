@@ -7,12 +7,12 @@
       "resources": [
         ".agents/skills/machine-management/SKILL.md"
       ],
-      "relationship": "method_reference",
-      "when": "托管机器接入/SSH契约的条件交接",
-      "purpose": "托管机器接入/SSH契约的条件交接",
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
       "upstream_basis_revision": null,
       "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "W-machine只在托管机器完整接入/ready目标且后端契约适用时交接；手工Docker SSH不依赖该仓",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
       "recheck_on": [
         "使用资源/接口或当前任务前提变化"
       ]

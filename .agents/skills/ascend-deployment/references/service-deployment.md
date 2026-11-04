@@ -5,7 +5,7 @@
 ## 目标、容器与执行方式
 
 - 同会话继续同一任务，核对后沿用本会话已确认任务容器；重试/重启不重复创建。跨会话或其他任务容器只有用户明确指定复用才使用。新部署无已确认容器且未指定复用，按明确方案准备独立容器；不默认优先旧容器。
-- 旧VAWS session、新MindIE binding/execution及用户指定手工Docker分别使用自身支持的原工具。旧[serving](../../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-serving/SKILL.md)/[PD](../../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-pd-serving/SKILL.md)有session前置条件，不传入新绑定，不伪造lease或重复资源分配。
+- 当前MindIE binding/execution、其他既有provider及用户指定手工Docker分别使用自身支持的原工具；[serving方法](../../../../deps/vllm-ascend-skills/skills/vllm-ascend-serving/SKILL.md)和[PD专项方法](../../../../deps/vllm-ascend-pd-disaggregation-skills/skills/pd-disaggregation-serving/SKILL.md)不接管运行状态。沿真实任务绑定执行，不伪造旧session/lease或重复资源分配。
 - 核对实际工具、绑定、前置条件和代码路径，未知中断状态先查证；没有可用运行入口就记录缺口，不退回未经核对的裸SSH流程。
 
 ## 启动前检查
@@ -177,9 +177,11 @@ vllm serve "$MODEL_DIR" --host "$BIND_IP" --port "$PORT" \
 
 在同轮 `启动命令与差异.md` 中，为每个节点给出完整命令，先 export 该节点的 BIND_IP、PORT、NODE_RANK 和 HEADLESS_FLAG，再执行已确认远端位置的对应角色文件。rank 0 的 HEADLESS_FLAG 为空，使用 headless 的 worker 为 `--headless`；该变量仅承载这个可选开关。节点判断在准备逐节点命令时完成，角色文件中不增加分支。
 
-PD按当前连接器明确P/D角色、engine标识、KV端口、TP/PP/DP及必要状态元数据；参数化形状是追加`--kv-transfer-config "$KV_TRANSFER_JSON"`，不提供与模型无关的万能JSON。使用原实现核对代理启动参数和连接器要求的顺序；[PD流程](../../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-pd-serving/SKILL.md)的proxy生命周期在其边界之外，不把启动代理误称其wrapper已管理。准备角色命令后同环境解析，确认master/rendezvous与实际监听一致。
+PD按当前连接器明确P/D角色、engine标识、KV端口、TP/PP/DP及必要状态元数据；参数化形状是追加`--kv-transfer-config "$KV_TRANSFER_JSON"`，不提供与模型无关的万能JSON。使用原实现核对代理启动参数和连接器要求的顺序；[PD专项流程](../../../../deps/vllm-ascend-pd-disaggregation-skills/skills/pd-disaggregation-serving/SKILL.md)用于核对角色/代理/状态传输条件；代理生命周期由当前部署owner与实际执行工具管理，方法文档存在不证明wrapper已管理。准备角色命令后同环境解析，确认master/rendezvous与实际监听一致。
 
 仅当本次计划启用EPLB时，可按[私有知识入口](../../../../knowledge/README.md)在已配置目录检索“EPLB启用、MRV2/STAIR”版本化参考；未接入或未命中时直接核对目标源码与本次方案，先核对模型/量化、runner与并行约束；该样例不作为所有服务的默认配置，P/D角色分别确认，不因套用样例自动叠加历史PR或修改环境。
+
+明确MemCache池化目标时，按[域内池化分支](scenario-selection.md)核对版本/连接器/缓存层级/观测指标，准备前后同条件证据；不把一般PD自动改成池化部署，也不由分析流程重启正在维护的服务。
 
 ## 启动、验收和交接
 
@@ -189,4 +191,4 @@ PD按当前连接器明确P/D角色、engine标识、KV端口、TP/PP/DP及必�
 4. 分别报告启动、接口、传输、输出；HTTP200、token数或传输完成不能掩盖异常文本。异常时必要同输入单D/手动PD对照，不自动扩大源码修复。
 5. 按用户最新要求保留服务并交付URL可达范围、请求样例、日志、版本清单和占用；只回收本次已确认失败组件，按部署回滚合同保留已要求保留的组件。用户要求停服务时核对实际退出，不处理其他业务或删除产物。
 
-参考方法来自本项目锁定workspace serving/PD入口和本项目近期任务；本文新增通用编排及A5条件示例，不复制外部维护源。历史OpenSSL、QuaRot、jemalloc、MLAPO、KDA等症状仅按当前证据触发排查，不固化为每次安装/修复步骤。
+参考方法来自锁定pisces serving、PD专项及本项目既有部署实践；本文新增通用编排及A5条件示例，不复制外部维护源。历史OpenSSL、QuaRot、jemalloc、MLAPO、KDA等症状仅按当前证据触发排查，不固化为每次安装/修复步骤。

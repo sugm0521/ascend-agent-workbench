@@ -177,7 +177,7 @@ tasks/2026-10-27/启动报错定位/
 
 首次工程目标定向查知识；新错、重复失败、转向或条件变化再补查。已覆盖结果复用，不每层全库搜索。知识/报告域不是查询必经入口；未配置知识库不伪造命中，独立工作可继续，新经验收录沿具体授权。
 
-[细分目录与能力发现](upstream/skill-mapping.md)保留45场景及原资源定位；选用决策归各领域，来源事实归消费声明。多个仓同方向不等于都要依赖：AISBench性能工具、workspace方法、cannbot算子、awesome精度、compound知识及msagent等按本轮目标/输入选用，原工具前提另验。
+[细分目录与能力发现](upstream/skill-mapping.md)保留45场景及原资源定位；选用决策归各领域，来源事实归消费声明。多个仓同方向不等于都要依赖：AISBench性能工具、独立vLLM-Ascend/PD/池化方法、cannbot算子、awesome精度、compound知识及msagent等按本轮目标/输入选用，原工具前提另验。
 
 定位/分析交付证据和建议，修复/优化在已定范围推进；提交/推送/发布沿具体授权。数值语义、支持范围和必需验收的改变由用户决定。原工具与[运行探针](docs/tools/runtime-tools.md)按需使用，不因层级新增执行或资源系统。
 
@@ -204,7 +204,12 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 
 | 来源路径 | 启用条件与边界 |
 |---|---|
-| `deps/vllm-ascend-workspace` | 使用其领域流程或执行工具；按用途准备身份、工具与服务器，不重复克隆已绑定业务代码 |
+| `deps/vllm-ascend-workspace` | MindIE组件组合与通道/历史出处；组件环境独立准备，业务绑定继续复用 |
+| `deps/awesome-mindie-skills` | 固定目录，仅发现；不代表原Skill已运行 |
+| `deps/vllm-ascend-skills` | 可移植工程方法；执行仍沿实际工具 |
+| `deps/vllm-ascend-pd-disaggregation-skills` | PD专项方法；复用当前部署owner |
+| `deps/ascend-pooling-skills` | 池化方法/只读指标工具；前提按任务核对 |
+| `deps/upstream-downstream-skills` | 上下游调用与激活分析方法 |
 | `deps/cannbot-skills` | 使用 AscendC 等领域方法；资料引用不要求安装整套插件 |
 | `deps/matt-pocock-skills` | 使用澄清、拆分、实现与交接的方法来源 |
 | `deps/model-analysis` | 模型架构报告、版本比较或参数/KVCache 估算，按[调用说明](.agents/skills/ascend-model-engineering/references/model-analysis.md)使用；原仓许可尚未明确、内部 gitlink 声明缺口保留，仅作资料引用，再分发前需核实许可 |
@@ -213,6 +218,8 @@ git -c submodule.recurse=false submodule update --init -- <来源路径>
 | `deps/msagent` | msAgent 原Skill、脚本与工具来源，按[统一发现入口](upstream/skill-mapping.md#依赖能力发现入口)定位；满足输入、环境与授权后使用，CLI/MCP等前提按任务核对 |
 | `deps/ascend-agent-skills` | 昇腾领域原Skill与专题工具，按[统一发现入口](upstream/skill-mapping.md#依赖能力发现入口)定位并核对适用条件；不自动全量安装 |
 | `deps/compound-engineering` | 知识归纳与复查的只读方法，不安装整套插件；项目适配由 knowledge-curation 维护 |
+
+组件安装、旧状态保护和先运行后父仓切版的步骤见[初始化组件操作](.agents/skills/ascend-workbench-init/references/operations.md#组件运行环境与安全切换)。知识结构维护同时核对[初始模板与目标库规则](knowledge/README.md#规则分工与初始模板)，不安装完整知识引擎。
 
 不要对整个依赖树无条件递归初始化，以免连带克隆 workspace 内的业务代码。取得来源不代表工具可调用、客户端已接入或远程运行就绪。
 

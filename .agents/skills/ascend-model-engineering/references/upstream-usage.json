@@ -71,6 +71,22 @@
       "when": "本轮目标需要该细分步骤或授权内交接",
       "purpose": "同一任务内按需调用，非全量执行",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "pd_disaggregation_skills",
+      "resources": [
+        "skills/pd-disaggregation-design/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "PD缓存布局、传输与消费条件的兼容性设计",
+      "purpose": "PD缓存布局、传输与消费条件的兼容性设计",
+      "upstream_basis_revision": "2852c18ac977783f336f8c8864ca84dfee3f5cc6",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

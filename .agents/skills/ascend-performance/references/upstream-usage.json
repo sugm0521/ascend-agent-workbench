@@ -7,14 +7,30 @@
       "resources": [
         ".agents/skills/ascend-profiling-collection/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-profiling-collection/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "已有服务的profiling采集方法",
       "purpose": "已有服务的profiling采集方法",
-      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -22,14 +38,30 @@
       "resources": [
         ".agents/skills/ascend-profiling-analysis/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/ascend-profiling-analysis/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "trace/step/layer/跨rank整体分析",
       "purpose": "trace/step/layer/跨rank整体分析",
-      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -37,14 +69,30 @@
       "resources": [
         ".agents/skills/ascend-memory-profiling/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-memory-profiling/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "vLLM服务HBM组件拆分",
       "purpose": "vLLM服务HBM组件拆分",
-      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "整体trace/组件HBM选workspace；SQL/通信/计算/调度的匹配DB及msMemScope选msagent专题；原工具需另验。AISBench经本仓benchmark间接使用",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -161,6 +209,38 @@
       "when": "本轮目标需要该细分步骤或授权内交接",
       "purpose": "同一任务内按需调用，非全量执行",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "ascend_pooling_skills",
+      "resources": [
+        "skills/ascend-memcache-pooling/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "池化累计/区间指标与命中、SSD回读证据解释",
+      "purpose": "池化累计/区间指标与命中、SSD回读证据解释",
+      "upstream_basis_revision": "2844c25cd3f63cd0cd817cce866de827653babf2",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "ascend_pooling_skills",
+      "resources": [
+        "skills/ascend-memcache-pooling/scripts/cache_metrics.py"
+      ],
+      "relationship": "tool_call",
+      "when": "明确读取已有pool/vLLM指标端点；不发推理或重启",
+      "purpose": "明确读取已有pool/vLLM指标端点；不发推理或重启",
+      "upstream_basis_revision": "2844c25cd3f63cd0cd817cce866de827653babf2",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

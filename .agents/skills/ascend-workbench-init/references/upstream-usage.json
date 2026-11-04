@@ -7,12 +7,12 @@
       "resources": [
         ".agents/skills/repo-init/SKILL.md"
       ],
-      "relationship": "method_reference",
-      "when": "所选布局适用时的定向初始化方法",
-      "purpose": "所选布局适用时的定向初始化方法",
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
       "upstream_basis_revision": null,
       "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "所选workspace布局适用时才用W-init；其他来源是按用户选择准备的对象，只读取选中能力声明，不全装九仓工具",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
       "recheck_on": [
         "使用资源/接口或当前任务前提变化"
       ]
@@ -26,6 +26,22 @@
       "when": "直接启动或需要核对领域适用/补位规则",
       "purpose": "复用所属领域规则，不完整回跑领域流程",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "workspace",
+      "resources": [
+        "channels/0.1.json"
+      ],
+      "relationship": "method_reference",
+      "when": "选定组件固定通道与下层原包声明；不执行旧bootstrap",
+      "purpose": "选定组件固定通道与下层原包声明；不执行旧bootstrap",
+      "upstream_basis_revision": "2d7f50943f88241cb00873b6cbc66fe2193fad69",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

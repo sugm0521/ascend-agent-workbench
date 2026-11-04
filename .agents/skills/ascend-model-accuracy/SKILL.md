@@ -29,9 +29,10 @@ metadata:
 
 | 当前判断 | 入口与职责 |
 |---|---|
-| baseline/candidate、eager/graph、离线/在线或任务分数比较 | [correctness-validation](../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-correctness-validation/SKILL.md)：可比性、运行证据、阈值和结果分类 |
-| eager 正常，graph 异常或 replay 首个分叉 | [graph-debug](../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-graph-debug/SKILL.md)：阶段、metadata 与图内安全取证 |
-| 故障依赖 rank、DP/EP、跨机或通信 | [distributed-debug](../../../deps/vllm-ascend-workspace/.agents/skills/vllm-ascend-distributed-debug/SKILL.md)：拓扑与各 rank 证据 |
+| baseline/candidate、eager/graph、离线/在线或任务分数比较 | [correctness-validation](../../../deps/vllm-ascend-skills/skills/vllm-ascend-correctness-validation/SKILL.md)：可比性、运行证据、阈值和结果分类 |
+| eager 正常，graph 异常或 replay 首个分叉 | [graph-debug](../../../deps/vllm-ascend-skills/skills/vllm-ascend-graph-debug/SKILL.md)：阶段、metadata 与图内安全取证 |
+| 故障依赖 rank、DP/EP、跨机或通信 | [distributed-debug](../../../deps/vllm-ascend-skills/skills/vllm-ascend-distributed-debug/SKILL.md)：拓扑与各 rank 证据 |
+| P/D输出异常且怀疑KV传输或恢复 | [PD精度专项](../../../deps/vllm-ascend-pd-disaggregation-skills/skills/pd-disaggregation-accuracy-debug/SKILL.md)：按P源、完整载荷、D恢复和首consumer分段；原JSONL审计只作离线异常分流，仍按当前reference验收 |
 | 已缩到具体算子边界 | 交[算子领域](../ascend-operator/SKILL.md)核对独立reference和语言/芯片专题，保留同一模型任务的上下文与回归要求 |
 | 已有 AISBench 结果需要逐组指标、答案与输出审计 | [证据报告](../../../docs/tools/aisbench-evidence.md)：离线整理；任务分数和通过判定仍由原 correctness 流程负责 |
 | 修复影响吞吐/时延或用户要求性能回归 | [performance-benchmark](../ascend-performance-benchmark/SKILL.md)：目标负载测量；可比回归按原 performance-regression 入口组织 |

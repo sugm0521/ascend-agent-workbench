@@ -8,5 +8,7 @@
 | I01 代码/CI/PR审查 | 项目review和实际diff/workflow/check证据组织验收；AscendC专项审查交[算子领域](../../ascend-operator/SKILL.md)选择语言方法；一般工程的条件候选：[matt/code-review](../../../../deps/matt-pocock-skills/skills/engineering/code-review/SKILL.md)、[compound_engineering/ce-code-review](../../../../deps/compound-engineering/skills/ce-code-review/SKILL.md) | 按真实语言/对象核对适用性，不把AscendC方法用于一般代码；只参考本轮所需方法，不自动启用commit/push/PR文案写回 |
 | I02 文档可用性审查 | msagent document-ux-review仅在明确文档体验任务时评估；定位：[msagent/document-ux-review](../../../../deps/msagent/skills/minos/document-ux-review/SKILL.md)（方法候选） | 与代码缺陷review区分；跟文档运行命令仍按本轮执行范围；不默认部署 |
 | Z01 CV/训练框架迁移、RL/投机训练、K8s、驱动安装等 | 来源库存保留可发现能力，尚无本项目固定采用关系 | 用户实际目标落入该范围时，核对对应候选正文、平台、接口和副作用后选择；不因依赖已下载就自动纳入vLLM业务流程，也不无依据删除这些能力 |
+| I04 固定上游变化在下游是否实际生效 | [analyze-upstream-downstream](../../../../deps/upstream-downstream-skills/skills/analyze-upstream-downstream/SKILL.md)：核固定双版本、真实调用链、注册/开关与激活条件 | 同名函数或标题不足以证明已集成；实现存在、已调用和目标运行分别说明，不自动改业务仓 |
+| I05 按diff制定验证范围 | [vllm-ascend-change-validation](../../../../deps/vllm-ascend-skills/skills/vllm-ascend-change-validation/SKILL.md)补实际变更到适用检查的映射 | 与本项目review/业务预检共用同一矩阵；不因方法列举而全跑无关测试，不降低原必需验收，不自动推送 |
 
 方法不足时按[依赖能力发现](../../../../upstream/skill-mapping.md#依赖能力发现入口)查询已登记来源，足够即停。候选选择或上游更新影响本域时核对新增/增强/修复及旧适配，采用后同步消费声明与受影响引用。

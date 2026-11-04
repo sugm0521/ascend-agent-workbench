@@ -7,14 +7,30 @@
       "resources": [
         ".agents/skills/vllm-ascend-serving/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-serving/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "支持相应后端契约的服务部署方法",
       "purpose": "支持相应后端契约的服务部署方法",
-      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "从旧workflow reference迁入；只有原后端/session契约适用才调用原流程，当前MindIE/手工Docker沿用各自真实工具；不默认采用其他仓部署器",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -22,14 +38,30 @@
       "resources": [
         ".agents/skills/vllm-ascend-pd-serving/SKILL.md"
       ],
+      "relationship": "provenance",
+      "when": "追溯旧workspace方法出处时",
+      "purpose": "仅历史来源，不作为当前执行入口",
+      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
+      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
+      "local_adaptation": "保留原历史依据，未知仍null；不要求旧资源在新父版本存在",
+      "recheck_on": [
+        "使用资源/接口或当前任务前提变化"
+      ]
+    },
+    {
+      "source_id": "pd_disaggregation_skills",
+      "resources": [
+        "skills/pd-disaggregation-serving/SKILL.md"
+      ],
       "relationship": "method_reference",
       "when": "P/D角色与服务部署方法",
       "purpose": "P/D角色与服务部署方法",
-      "upstream_basis_revision": "596ca40f2b89757edaaf96c1583a0940f036a1d9",
-      "reviewed_scope": "方法/输入输出契约与阶段选择；未据此宣称原工具或NPU已验",
-      "local_adaptation": "从旧workflow reference迁入；只有原后端/session契约适用才调用原流程，当前MindIE/手工Docker沿用各自真实工具；不默认采用其他仓部署器",
+      "upstream_basis_revision": "2852c18ac977783f336f8c8864ca84dfee3f5cc6",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
       "recheck_on": [
-        "使用资源/接口或当前任务前提变化"
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
       ]
     },
     {
@@ -51,6 +83,38 @@
       "when": "本轮目标需要该细分步骤或授权内交接",
       "purpose": "同一任务内按需调用，非全量执行",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-pd-serving/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "PD通用背景参考；专项主流程仍为pd-disaggregation-serving",
+      "purpose": "PD通用背景参考；专项主流程仍为pd-disaggregation-serving",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "ascend_pooling_skills",
+      "resources": [
+        "skills/ascend-memcache-pooling/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "明确MemCache池化部署/配置目标",
+      "purpose": "明确MemCache池化部署/配置目标",
+      "upstream_basis_revision": "2844c25cd3f63cd0cd817cce866de827653babf2",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

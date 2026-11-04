@@ -1,5 +1,9 @@
 # PD 指标、环境复刻与验收
 
+## PD与池化实验归属
+
+PD与MemCache候选沿[部署领域](../../ascend-deployment/references/scenario-selection.md)的当前服务owner和实际执行工具推进；优化分析不另起部署controller。先明确P源、传输、D恢复及首consumer正确性，再在同负载/版本/缓存策略下测收益；真实请求、KV状态传输、输出质量与性能分别留证。已有服务只做分析时不重启或重新部署。
+
 ## 每 D 卡输出吞吐
 
 用户指定 AISBench `Output Token Throughput` 时，使用本次完整正式 run 的原生字段及其实际单位；记录 AISBench 版本、字段来源和统计窗口。不用 Total Token Throughput、请求吞吐、D 端局部计数或带 profiling 的值替代。

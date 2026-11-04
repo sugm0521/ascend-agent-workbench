@@ -21,6 +21,38 @@
       "when": "本轮目标需要该细分步骤或授权内交接",
       "purpose": "同一任务内按需调用，非全量执行",
       "upstream_basis_revision": null
+    },
+    {
+      "source_id": "vllm_ascend_skills",
+      "resources": [
+        "skills/vllm-ascend-change-validation/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "按实际diff制定适用验证矩阵",
+      "purpose": "按实际diff制定适用验证矩阵",
+      "upstream_basis_revision": "4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
+    },
+    {
+      "source_id": "upstream_downstream_skills",
+      "resources": [
+        "skills/analyze-upstream-downstream/SKILL.md"
+      ],
+      "relationship": "method_reference",
+      "when": "固定上下游版本的调用、实现与激活关系分析",
+      "purpose": "固定上下游版本的调用、实现与激活关系分析",
+      "upstream_basis_revision": "614d7c22c05f147d96e09044aa1b8e62cc9ec89e",
+      "reviewed_scope": "固定原文/接口静态核对；实施阶段验路由与对应原工具；未声明运行或NPU通过",
+      "local_adaptation": "复用本项目任务、授权和现有运行owner；原资源只读，产物写任务；不自动启用上游安装/发布/服务操作",
+      "recheck_on": [
+        "实际消费原文或必要资源变化",
+        "目标平台/输入/工具接口或适用条件变化"
+      ]
     }
   ]
 }

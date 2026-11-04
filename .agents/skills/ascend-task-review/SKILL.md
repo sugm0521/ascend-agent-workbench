@@ -35,6 +35,8 @@ metadata:
 
 `results/验证矩阵.md` 首页应包含目标、代码/环境、支持范围、reference/阈值、版本、审阅状态和缺口。覆盖摘要按任务适用的生产场景、分支/边界、集成组织，列代表输入、选择理由、通过标准、状态和详细 case/run 引用。
 
+实际diff需要补检查覆盖时，可参考[change-validation方法](../../../deps/vllm-ascend-skills/skills/vllm-ascend-change-validation/SKILL.md)映射受影响能力、适用检查与缺口；与本任务矩阵共用，不另造验收标准，不将静态方法选择写成运行通过。
+
 检查摘要能找到详细用例与证据，裁剪有风险/等价覆盖依据；不凑固定 case 数，不铺笛卡尔积。尽量一页仅是浏览目标，不能删必需项。推导输入不能冒充真实生产输入，失败和未验证须可见。
 
 按[CI记录模板](../../../docs/templates/CI记录.md)核查适用记录与实际候选、原生CI证据是否一致，不在本skill重复列字段。queued/running/skipped 不计 success，旧 SHA 绿灯不证明当前 SHA；合入与远程/NPU 验收分别报告。提交/推送默认审核，具体已有授权继续有效；需要新一轮授权时提供可审核结果。

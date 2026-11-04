@@ -23,19 +23,17 @@
 
 ## workspace 的当前声明入口
 
-以下为已核对过的入口提示，执行前仍读所选父提交；不把当前字段或 pin 固化为永恒要求：
+先从所选父的真实树核对布局。当前MindIE父仓通过`channels/0.1.json`声明原组件组合；读取其中包URL/commit，再读原包pyproject、CLI/MCP及平台约束。通道是组合约束，不另造永久的第二套pin。
 
-| 声明/入口 | 范围 | 应核验的内容 |
-|---|---|---|
-| `.agents/deps/remote-dev.json`、`docs/remote-dev-consumption.md` | 启用远程能力时 | URL/commit、定位环境变量、bootstrap/status、resolver/result 接口、所需运行文件 |
-| `.agents/deps/coordinator.json`、`docs/coordinator-consumption.md` | 使用协调/session 接口时 | URL/commit/tree、入口文件、provider/env、声明的 mirror/blob 检查与兼容约束 |
-| `.agents/deps/vaws-knowledge.json`、相关 tests/CI | 仅知识 conformance 测试 | 父版本测试声明和所需 kit commit；不是 runtime 依赖 |
-| `.gitmodules` 与实际 gitlink | 仅绑定 workspace 业务子模块时 | 所选 commit、真实业务 HEAD、任务基线；branch=main 不授权更新 |
-| 实际业务 vLLM-Ascend 的 CI 声明 | 业务组合核对 | 从实际/明确候选父 SHA 读取 vLLM pin，解析并核对完整双 SHA |
+| 声明/入口 | 适用范围与核对 |
+|---|---|
+| `channels/0.1.json`及实际组件pyproject/CLI | 新组合的完整SHA、依赖覆盖、Python/平台、实际模块与协议；安装配方见[组件操作](../../ascend-workbench-init/references/operations.md#组件运行环境与安全切换) |
+| 历史`.agents/deps/remote-dev.json`、`coordinator.json`及旧status/bootstrap | 仅仍采用旧父/原工具的历史组合；不作为新父的活动前置，不用旧wrapper操作新状态 |
+| 历史`.agents/deps/vaws-knowledge.json`及测试/CI | 仅声明存在且已选conformance时；声明已迁出记legacy_not_applicable，不安装新引擎补绿 |
+| `.gitmodules`和实际gitlink | 仅实际业务子模块布局适用；新主仓不因旧目录名被当业务根 |
+| 实际业务vLLM-Ascend CI pin | 从明确业务SHA读取`.github/vllm-main-verified.commit`，核完整双SHA；缺失只查该历史分支已有CI/docs，不能猜配对 |
 
-原 `remote_dev.py status` / `vaws.py status` 可报告定位、真实 checkout 与 pin 偏离，但仍要按任务核对所需接口。bootstrap 使用其父仓当前声明；`--track-ref` 会跟随分支，不作为满足固定 pin 的默认方式。保持父声明的 scope，不把 coordinator 变化误当 remote-dev pin 变化。
-
-provider 安装是配置变更，需要原预览与本轮授权；保留用户维护的同名 command/args/type/env 与未知字段。原协调工具记录 task/session/run/execution，上层仅引用，不能另起 manager 或写第二套 registry。
+provider安装是配置变更，保留同名command/args/type/env和未知字段；只修改本轮已确认字段。原协调工具仍拥有task/session/run/execution和资源，上层不写第二份registry。
 
 ## 候选父提交的读取与切换
 
@@ -59,6 +57,8 @@ provider 安装是配置变更，需要原预览与本轮授权；保留用户�
 | 本地适配及原理由 | 是项目授权/记录要求、环境差异，还是上游旧缺陷的临时规避；区分仍需保留与可能退役的部分 |
 | 原事实和重新核验条件 | 固定版本仍以lock为准；相关源码/接口/依赖变化时重跑能检出原问题的代表输入或行为走查 |
 | 采用与清理结果 | 明确继续旧版、直接采用新版或保留薄适配的理由；验证覆盖的旧patch/例外删除或改引用，未解决的具体差异保留 |
+
+版本影响继续跟踪到模板、配置、校验工具及日常消费者：正文入口与reference同时核对，不能只迁JSON或锁。需要变更的项同步实施；不需变更的任务模板、报告器或调度写明已有通用委托及代表输入验证。知识结构变化同时检查当前库模板和写后索引维护，新旧无索引库保持可用。
 
 实际能力使用不要求先封装为自有skill。复用上游流程和工具时只适配明确不兼容处，并按已有任务授权执行；本地源码副本不承载任务输出和临时修改。采用变更时同步受影响映射和直接reference，覆盖正常输入、不适用输入、缺工具及原缺陷的复验；被替代的说明合并，不维护第二套优先级。
 

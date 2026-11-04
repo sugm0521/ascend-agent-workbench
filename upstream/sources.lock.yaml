@@ -3,14 +3,11 @@ baseline: docs/maintenance/项目框架.md
 sources:
   workspace:
     path: deps/vllm-ascend-workspace
-    url: https://github.com/vllm-ascend-workspace/vllm-ascend-workspace.git
-    commit: 596ca40f2b89757edaaf96c1583a0940f036a1d9
-    purpose: 领域流程与执行基础
+    url: https://github.com/mindie-agent/mindie-agent.git
+    commit: 2d7f50943f88241cb00873b6cbc66fe2193fad69
+    purpose: 生态架构、固定发布通道与历史方法出处；不再承载旧VAWS初始化或运行入口
     declared_dependencies:
-      - .gitmodules
-      - .agents/deps/remote-dev.json
-      - .agents/deps/coordinator.json
-      - .agents/deps/vaws-knowledge.json
+    - channels/0.1.json
   cannbot:
     path: deps/cannbot-skills
     url: https://gitcode.com/cann/cannbot-skills.git
@@ -99,3 +96,35 @@ sources:
 
 # 仅固定顶层来源。下层版本要求从父提交的原声明读取，
 # 不在这里复制另一套 pin；业务版本与本机能力另行初始化。
+
+  mindie_skill_catalog:
+    path: deps/awesome-mindie-skills
+    url: https://github.com/mindie-agent/awesome-mindie-skills.git
+    commit: 46bc588dc0b4f39f5c745b975358b181e6a75fe1
+    purpose: 固定Skill目录与来源发现
+    declared_dependencies:
+      - catalog/sources.yaml
+  vllm_ascend_skills:
+    path: deps/vllm-ascend-skills
+    url: https://github.com/pisceskkk/vllm-ascend-skills.git
+    commit: 4e7417c3d88847a17ba6d61d6a9b748ad8e0bbc3
+    purpose: 可移植vLLM-Ascend工程方法
+    declared_dependencies: []
+  pd_disaggregation_skills:
+    path: deps/vllm-ascend-pd-disaggregation-skills
+    url: https://github.com/nwpu-zxr/vllm-ascend-pd-disaggregation-skills.git
+    commit: 2852c18ac977783f336f8c8864ca84dfee3f5cc6
+    purpose: PD部署、布局设计与精度方法
+    declared_dependencies: []
+  ascend_pooling_skills:
+    path: deps/ascend-pooling-skills
+    url: https://github.com/Yuli-yx/awesome-mindie-skills.git
+    commit: 2844c25cd3f63cd0cd817cce866de827653babf2
+    purpose: MemCache池化方法与指标读取工具
+    declared_dependencies: []
+  upstream_downstream_skills:
+    path: deps/upstream-downstream-skills
+    url: https://github.com/SOMEONEUNSEEN/awesome-mindie-skills.git
+    commit: 614d7c22c05f147d96e09044aa1b8e62cc9ec89e
+    purpose: 上下游真实调用与能力继承分析
+    declared_dependencies: []
