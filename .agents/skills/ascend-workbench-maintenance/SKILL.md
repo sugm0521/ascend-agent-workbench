@@ -1,6 +1,6 @@
 ---
 name: ascend-workbench-maintenance
-description: 统筹工作台初始化、仓库安全同步、依赖检查与吸收升级、自有skill建设、使用反馈和发布准备。用于维护工作台及来源消费关系；业务模型、算子、部署或性能工作交对应领域。
+description: 统筹工作台初始化、仓库安全同步、依赖检查与吸收升级、自有skill建设、会话整理、使用反馈和发布准备。用于维护工作台及来源消费关系；业务模型、算子、部署或性能工作交对应领域。
 metadata:
   workbench_role: domain_entry
   workbench_domain: maintenance
@@ -14,6 +14,7 @@ metadata:
 
 | 用户目标 | 本仓执行能力 |
 |---|---|
+| 统一当前项目会话名称、调整当前标题、准备或执行指定归档 | [chat-organization](../ascend-chat-organization/SKILL.md)：按实际目标命名并回读，批量范围与归档授权分别核对；当前任务自动命名可直接调用 |
 | 首次完整接入、更新后增量检查、新功能开启、补齐/恢复 | [init](../ascend-workbench-init/SKILL.md)：复用现状与已定选择，检查先给差异，补齐按具体授权实施 |
 | 同步工作台/业务仓 | [repository-update](../ascend-repository-update/SKILL.md)：保护dirty/staged与分支；固定来源变化交dependencies，工作台更新影响接入时交init只读检查 |
 | 版本核对、上游变化、候选兼容/吸收/采用/回退 | [dependencies](../ascend-workbench-dependencies/SKILL.md)，按[消费与升级约定](../../../docs/maintenance/upstream-consumption.md)组织事实与验证 |

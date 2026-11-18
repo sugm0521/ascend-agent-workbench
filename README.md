@@ -151,7 +151,7 @@ tasks/2026-10-27/启动报错定位/
 | 模型分析与适配 | [ascend-model-engineering](.agents/skills/ascend-model-engineering/README.md) | 架构/参数/KV估算、性能仿真、量化与模型实现适配 |
 | 通用工程开发与审查 | [ascend-engineering](.agents/skills/ascend-engineering/README.md) | 业务代码调查/修复、源码学习、CI/PR/文档审查、Agent/SWE评测 |
 | 知识与报告 | [ascend-knowledge-and-report](.agents/skills/ascend-knowledge-and-report/README.md) | 知识检索/收录/复查、周报与周期报告 |
-| 工作台维护 | [ascend-workbench-maintenance](.agents/skills/ascend-workbench-maintenance/README.md) | 初始化、安全同步、依赖检查/吸收/升级、skill建设、使用反馈与发布准备 |
+| 工作台维护 | [ascend-workbench-maintenance](.agents/skills/ascend-workbench-maintenance/README.md) | 初始化、安全同步、依赖检查/吸收/升级、skill建设、会话整理、使用反馈与发布准备 |
 
 ### 领域内能力与共用模块
 
@@ -167,6 +167,7 @@ tasks/2026-10-27/启动报错定位/
 | 知识与报告 | [ascend-knowledge-curation](.agents/skills/ascend-knowledge-curation/README.md)：知识检索/维护，含 PR 与提交材料归纳 |
 | 知识与报告 | [ascend-weekly-report](.agents/skills/ascend-weekly-report/README.md) |
 | 工作台维护 | [ascend-workbench-init](.agents/skills/ascend-workbench-init/README.md) |
+| 工作台维护（共用能力） | [ascend-chat-organization](.agents/skills/ascend-chat-organization/README.md)：当前任务自动命名、指定项目批量整理与授权归档 |
 | 工作台维护 | [ascend-repository-update](.agents/skills/ascend-repository-update/README.md) |
 | 工作台维护 | [ascend-workbench-dependencies](.agents/skills/ascend-workbench-dependencies/README.md) |
 | 工作台维护 | [ascend-skill-candidate-review](.agents/skills/ascend-skill-candidate-review/README.md) |

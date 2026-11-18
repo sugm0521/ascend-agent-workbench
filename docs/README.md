@@ -10,6 +10,7 @@
 | 调用工具、保存输入与结果 | 下方[工具说明](#工具使用说明) → [任务材料规范](guides/task-records.md)；工具前提仍由实际执行入口核对 |
 | 查找上游能力、检查更新并吸收改进 | [来源发现](../upstream/skill-mapping.md#依赖能力发现入口) → [消费与升级约定](maintenance/upstream-consumption.md) → [只读检查工具](maintenance/upstream-consumption.md#只读检查辅助工具)；维护流程见[工作台维护领域](../.agents/skills/ascend-workbench-maintenance/README.md) |
 | 改进或新建自有 skill | [贡献流程](../CONTRIBUTING.md#如何提交修改) → [候选评估](../.agents/skills/ascend-skill-candidate-review/README.md)或[已授权开发](../.agents/skills/ascend-skill-development/README.md) → [适用验证](maintenance/validation.md) |
+| 统一项目会话名称、新任务自动命名 | [会话命名与整理](../.agents/skills/ascend-chat-organization/README.md)；项目级 hook 的配置与信任见其接入说明 |
 | 整理skill使用反馈、准备Issue或PR | [agent协助反馈](../CONTRIBUTING.md#由agent协助反馈) → [维护域专项流程](../.agents/skills/ascend-workbench-maintenance/references/skill-feedback.md)；主动邀请需明确参加，每次发布前审核当次最终资料 |
 
 配置字段见[配置示例](../config/workbench.example.yaml)及[配置约定](../.agents/skills/ascend-workbench-init/references/config-schema.md)；知识库接入和运行时检索见[知识协议](../knowledge/README.md)与[知识触发规则](guides/skill-routing.md#知识在业务运行中的触发)。来源版本和许可分别见[来源锁](../upstream/sources.lock.yaml)与[来源许可](../upstream/来源与许可.md)。

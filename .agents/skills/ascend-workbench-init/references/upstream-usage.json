@@ -42,6 +42,20 @@
         "实际消费原文或必要资源变化",
         "目标平台/输入/工具接口或适用条件变化"
       ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-chat-organization/references/codex-integration.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "用户要求会话整理或增量启用自动命名时",
+      "purpose": "共用唯一命名能力及项目级接入流程",
+      "upstream_basis_revision": null,
+      "local_adaptation": "仅按用户范围操作，不改全局或运行身份",
+      "recheck_on": [
+        "会话工具或hook接入变化"
+      ]
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "description": "Project-scoped chat naming reminder; replace placeholders before enabling.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"__PYTHON_EXECUTABLE__\" \"__PROMPT_HOOK_SCRIPT__\"",
+            "commandWindows": "powershell.exe -NoProfile -NonInteractive -Command \"& '__PYTHON_EXECUTABLE__' '__PROMPT_HOOK_SCRIPT__'\"",
+            "timeout": 3,
+            "additionalContextLimit": 500
+          }
+        ]
+      }
+    ]
+  }
+}

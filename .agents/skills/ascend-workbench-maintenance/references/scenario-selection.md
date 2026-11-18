@@ -4,6 +4,7 @@
 
 | 场景与输入 | 本域方法/原资源定位 | 条件与边界 |
 |---|---|---|
+| 会话命名、项目批量整理与指定归档 | [会话命名](../../ascend-chat-organization/SKILL.md)；安装提醒 hook 时读其 [Codex 接入说明](../../ascend-chat-organization/references/codex-integration.md) | 当前任务明确后可自动命名；批量按指定范围、改名后回读；不管理 MindIE 身份，不自动移动或归档 |
 | A03 Skill使用反馈、评估与开发 | 使用反馈按[本域反馈流程](skill-feedback.md)准备本仓草稿；candidate-review决定是否值得改，development实施已授权范围；定位：[ascend-skill-candidate-review](../../ascend-skill-candidate-review/SKILL.md)（评估入口）、[ascend-skill-development](../../ascend-skill-development/SKILL.md)（实施入口） | 参与偏好仅控制主动邀请；Issue不以完成候选评估为门槛，每次公开发布须审核当次最终资料；外部审查器按实际检查缺口评估，不把反馈/评估变成修复授权 |
 | A04 首次与增量接入、安全同步、固定依赖变化 | init负责首次完整准备、更新差异与新功能增量接入，repository-update负责安全同步，dependencies负责固定来源兼容；定位：[ascend-workbench-init](../../ascend-workbench-init/SKILL.md)（首次接入）、[ascend-repository-update](../../ascend-repository-update/SKILL.md)（安全同步）、[ascend-workbench-dependencies](../../ascend-workbench-dependencies/SKILL.md)（依赖维护）、[组件与私库增量操作](../../ascend-workbench-init/references/operations.md) | 原helper迁出后使用原组件接口与原生Git；旧出处仅留历史依据，不继续作为活动入口；同步影响发现/接入时交init只读检查，必要准备只补确认项；三者不互跑完整流程 |
 

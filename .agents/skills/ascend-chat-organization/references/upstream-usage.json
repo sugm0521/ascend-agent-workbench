@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "consumer": "ascend-chat-organization",
+  "uses": [
+    {
+      "source_id": "mindie_skill_catalog",
+      "resources": [
+        "catalog/skills/vllm-dev-chat-organization.yaml",
+        "evidence/vllm-dev-chat-organization-definition-review-2026-10-21.md"
+      ],
+      "relationship": "method_reference",
+      "when": "命名或整理 Codex 开发会话时",
+      "purpose": "复用按实际工作命名、范围限定和改名回读方法；历史定义由目录中的固定链接定位",
+      "upstream_basis_revision": "46bc588dc0b4f39f5c745b975358b181e6a75fe1",
+      "reviewed_scope": "目录、审核记录及其固定定义的方法范围；不作为历史原仓运行依赖",
+      "local_adaptation": "中文命名约定、当前任务自动命名和项目级短提醒；不改变 MindIE 身份",
+      "recheck_on": [
+        "目录来源或命名契约变化",
+        "客户端会话工具或 hook 接口变化"
+      ]
+    },
+    {
+      "source_id": "workbench",
+      "resources": [
+        ".agents/skills/ascend-workbench-init/references/operations.md"
+      ],
+      "relationship": "rule_reference",
+      "when": "首次或增量接入会话命名提醒hook时",
+      "purpose": "统一启用、不启用、未答及复用已有选择的分支；不调用完整初始化",
+      "upstream_basis_revision": null,
+      "local_adaptation": "实际接入仍按本skill说明执行，不新增平行配置开关",
+      "recheck_on": [
+        "初始化可选项或授权边界变化"
+      ]
+    }
+  ]
+}
