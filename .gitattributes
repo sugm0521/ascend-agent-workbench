@@ -1,1 +1,6 @@
 # Preserve archived evidence bytes, including original line endings.
+# Hash-locked integration inputs must survive checkout on every platform.
+integrations/** text=auto eol=lf
+integrations/**/*.zip binary
+integrations/**/*.patch whitespace=-blank-at-eol
+upstream/npu-top.lock.json text eol=lf

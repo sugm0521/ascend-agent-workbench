@@ -15,6 +15,8 @@ metadata:
 
 作为初始化的统一入口，采用“首次完整接入，后续增量补齐”的同一流程。由agent读取现状、汇总必要选择、调用原工具并分项验收，不增加初始化服务或第二套执行状态。
 
+可选外部组件按 [integrations 接入说明](../../../integrations/README.md)仅处理已选项；例如 [npu-top](../../../integrations/npu-top/README.md) 使用组件安装入口与 upstream 权威锁，不复用另一组件虚拟环境、不复制维护源或底层身份。安装、启停和服务器采集分别核对授权与结果；普通初始化不自动开启看板，不把已有本机任务脚本作为换机依赖。
+
 ## 先确定范围
 
 先读工作台根AGENTS.md、README.md和存在的config/workbench.local.yaml，按[路径约定](references/config-schema.md#路径与缺省值)定位实际来源锁与初始化报告；操作及验收见[实施约定](references/operations.md)。从已有配置、报告、实际产物和本轮请求判断首次或增量，不因报告缺失或较旧就重新初始化。

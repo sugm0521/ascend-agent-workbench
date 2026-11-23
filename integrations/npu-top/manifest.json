@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "component": "npu-top",
+  "customization": "workbench-ui-v7",
+  "upstream_lock": "../../upstream/npu-top.lock.json",
+  "patch": {
+    "path": "patches/dashboard.patch",
+    "sha256": "96e2543850f6c1ea9f615e39d14d056706c0483dd7b499664e58af18f34b648d"
+  },
+  "frontend": {
+    "path": "assets/frontend.zip",
+    "sha256": "fc025cf3c44ddde2fa9a7753c80f7ffe8667401a06fa6bcf6713230059344063"
+  },
+  "service": {
+    "path": "service.py",
+    "sha256": "ef8fbc831825d9694182c011ac1d5c5fb46db36ec2d0e4f3e3e1e3da4c48039c"
+  }
+}

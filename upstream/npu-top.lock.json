@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "component": "npu-top",
+  "python_min": [3, 11],
+  "upstream_revision": "72654fe6047df6ccc67746c242b3ce18bcabc945",
+  "source": {
+    "url": "https://github.com/mindie-agent/npu-top/releases/download/v0.3.5/npu_top-0.3.5.tar.gz",
+    "sha256": "469bfe8d3f9de5e468ff1f9a92a396d9fe98e601cd5b734f93165051b1c3afce"
+  },
+  "wheels": [
+    {
+      "name": "npu-top",
+      "version": "0.3.5",
+      "filename": "npu_top-0.3.5-py3-none-any.whl",
+      "url": "https://github.com/mindie-agent/npu-top/releases/download/v0.3.5/npu_top-0.3.5-py3-none-any.whl",
+      "sha256": "8df6b643905f1facf1a6a0fbdf8fd5a185197d0a2d54c044b605119d3dfd0e71"
+    },
+    {
+      "name": "remote-dev",
+      "version": "0.11.13",
+      "revision": "64c5a8d0ca9fe344e7af05f89fc0de6249f2368a",
+      "filename": "remote_dev-0.11.13-py3-none-any.whl",
+      "url": "https://github.com/mindie-agent/remote-dev/releases/download/v0.11.13/remote_dev-0.11.13-py3-none-any.whl",
+      "sha256": "a7ec2a1cadcd8d9de52f6431082885f0d4944224b3ae3b72947c9da82fc3b024"
+    },
+    {
+      "name": "mindie-diagnostics",
+      "version": "0.5.16",
+      "revision": "54ac7c03c78f9e02f379051d1613a4427559e10d",
+      "filename": "mindie_diagnostics-0.5.16-py3-none-any.whl",
+      "url": "https://github.com/mindie-agent/diagnostics/releases/download/v0.5.16/mindie_diagnostics-0.5.16-py3-none-any.whl",
+      "sha256": "81558c14b418f108660e144213ebc7e902ef02487174be45ca6730276b9957a2"
+    }
+  ]
+}

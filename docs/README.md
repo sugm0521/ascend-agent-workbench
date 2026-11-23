@@ -8,6 +8,7 @@
 |---|---|
 | 开始任务、选择领域或直接使用能力 | [上手与初始化](../README.md#快速开始) → [skill 使用说明索引](../README.md#按任务选择入口)；启动与交接规则见[分层协作](guides/skill-routing.md) |
 | 调用工具、保存输入与结果 | 下方[工具说明](#工具使用说明) → [任务材料规范](guides/task-records.md)；工具前提仍由实际执行入口核对 |
+| 接入或定制外部工具、换机器部署 | [组件集成](../integrations/README.md) → [npu-top 安装与局部定制](../integrations/npu-top/README.md)；固定制品由 upstream 锁定，本机运行数据独立保存 |
 | 查找上游能力、检查更新并吸收改进 | [来源发现](../upstream/skill-mapping.md#依赖能力发现入口) → [消费与升级约定](maintenance/upstream-consumption.md) → [只读检查工具](maintenance/upstream-consumption.md#只读检查辅助工具)；维护流程见[工作台维护领域](../.agents/skills/ascend-workbench-maintenance/README.md) |
 | 改进或新建自有 skill | [贡献流程](../CONTRIBUTING.md#如何提交修改) → [候选评估](../.agents/skills/ascend-skill-candidate-review/README.md)或[已授权开发](../.agents/skills/ascend-skill-development/README.md) → [适用验证](maintenance/validation.md) |
 | 统一项目会话名称、新任务自动命名 | [会话命名与整理](../.agents/skills/ascend-chat-organization/README.md)；项目级 hook 的配置与信任见其接入说明 |

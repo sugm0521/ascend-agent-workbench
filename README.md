@@ -49,6 +49,8 @@ cd ascend-agent-workbench
 
 已接入的使用者更新工作台后，可说：“使用 $ascend-workbench-init，检查已启用能力的新接入要求，先给差异，不修改。”以后开启新功能也可使用同一init，只确认和准备它的必要前提。确认后只补差异，不重复首次初始化；详见[增量检查与补齐](.agents/skills/ascend-workbench-init/references/operations.md#增量检查与补齐)。
 
+外部工具的可选接入和定制统一维护在 [integrations](integrations/README.md)。目前提供 [npu-top 原界面优化与可迁移安装](integrations/npu-top/README.md)，包含中文错误摘要、固定版本、在线/离线安装与启停入口；普通安装无需 Node，不自动启用服务器或接管已有看板。
+
 如果客户端没有自动发现 skill，显式让它读取 [.agents/skills/ascend-workbench-init/SKILL.md](.agents/skills/ascend-workbench-init/SKILL.md) 再执行；维护源仍是本项目 `.agents/skills/`。
 
 ### 3. 查看接入结果

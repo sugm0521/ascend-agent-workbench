@@ -1,5 +1,7 @@
 # 工作台首次接入与补齐
 
+已选外部工具可按 [integrations](../../../integrations/README.md) 增量安装；[npu-top](../../../integrations/npu-top/README.md) 的固定依赖、中文错误定制和在线/离线部署由组件入口维护，不自动启动看板或接入服务器。
+
 ## 启动与领域归属
 
 本能力由[工作台维护领域](../ascend-workbench-maintenance/SKILL.md)维护；可直接指定，也可由主/领域调用，按[共用约定](../../../docs/guides/skill-routing.md)复用任务和知识查询。具体输入输出、脚本与原验收边界见[SKILL](SKILL.md)。
