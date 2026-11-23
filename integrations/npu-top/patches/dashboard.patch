@@ -127,10 +127,10 @@
    function openServer(server: Server) { setSelectedServerId(server.id); setView('server'); }
 -
 -  const titles: Record<View, [string, string]> = { overview: ['集群实时总览', '跨服务器资源、空闲设备与基础设施状态'], server: [selectedServer?.name || '服务器详情', selectedServer ? `${selectedServer.username}@${selectedServer.host}:${selectedServer.port}` : '选择服务器查看详情'], history: ['资源历史', selectedServer ? `${selectedServer.name} · 趋势与 2 小时热力图` : '选择服务器查看历史'], servers: ['服务器管理', '本地清单、连接状态与采集控制'] };
-+  function openGroup(key: string) {
++  function openGroup(key: string, toggleExpanded = false) {
 +    if (bulkRef.current) return;
 +    setBulkServerIds([]); setBulkRemoveTags([]); setBulkResults([]); setBulkError('');
-+    setGroupPreferences((current) => ({ ...current, selectedGroupKey: key, expandedGroups: { ...current.expandedGroups, [key]: true } }));
++    setGroupPreferences((current) => ({ ...current, selectedGroupKey: key, expandedGroups: { ...current.expandedGroups, [key]: toggleExpanded ? !current.expandedGroups[key] : true } }));
 +    if (view !== 'servers') setView('overview');
 +  }
 +
@@ -205,7 +205,7 @@
 +        return <section className="server-group" key={group.key} aria-label={`服务器分组：${group.label}`}>
 +          <div className={`server-group__heading ${activeGroup.key === group.key ? 'is-active' : ''}`}>
 +            <button className="server-group__toggle" aria-label={`${expanded ? '收起' : '展开'}分组：${group.label}`} aria-expanded={expanded} aria-controls={`server-group-members-${groupIndex}`} onClick={() => setGroupPreferences((current) => ({ ...current, expandedGroups: { ...current.expandedGroups, [group.key]: !current.expandedGroups[group.key] } }))}>{expanded ? '▾' : '▸'}</button>
-+            <button className="server-group__select" disabled={bulkBusy} aria-label={`${group.key.startsWith('tag:') ? '筛选标签' : '筛选分组'}：${group.label}`} aria-pressed={activeGroup.key === group.key} onClick={() => openGroup(group.key)}><strong title={group.label}>{group.label}</strong>{group.key.startsWith('tag:') && <small>标签</small>}<b>{members.length}</b></button>
++            <button className="server-group__select" disabled={bulkBusy} aria-label={`${group.key.startsWith('tag:') ? '筛选标签' : '筛选分组'}：${group.label}`} aria-pressed={activeGroup.key === group.key} aria-expanded={expanded} aria-controls={`server-group-members-${groupIndex}`} onClick={() => openGroup(group.key, true)}><strong title={group.label}>{group.label}</strong>{group.key.startsWith('tag:') && <small>标签</small>}<b>{members.length}</b></button>
 +          </div>
 +          {expanded && <div id={`server-group-members-${groupIndex}`} className="server-group__members">{members.map((server) => {
 +            const summary = server.snapshot?.summary;
