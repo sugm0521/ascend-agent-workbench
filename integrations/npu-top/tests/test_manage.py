@@ -2,8 +2,12 @@
 import argparse
 import importlib.util
 import io
+import os
 from pathlib import Path
+import re
+import shutil
 import stat
+import subprocess
 import sys
 import tempfile
 import threading
@@ -20,6 +24,68 @@ service_spec.loader.exec_module(service)
 
 
 class IntegrationTests(unittest.TestCase):
+    def run_probe_fixture(self, inherited='', returncode=0):
+        git = shutil.which('git')
+        candidate = Path(git).resolve().parents[1] / 'bin/bash.exe' if git and os.name == 'nt' else None
+        bash = str(candidate) if candidate and candidate.is_file() else shutil.which('bash')
+        if not bash:
+            self.skipTest('Bash is needed for the synthetic collector shell checks')
+        script = '\n'.join([
+            'set +e', service.UPSTREAM_LIBRARY_LINE,
+            "printf '__NFM_SECTION__npu_info\\n'; timeout 8 npu-smi info 2>&1; nfm_rc=$?",
+            service.UPSTREAM_RESULT_LINE,
+            "printf '__NFM_SECTION__npu_usages\\n'; timeout 8 npu-smi info -t usages 2>&1",
+        ])
+        functions = '''timeout() { shift; "$@"; }
+npu-smi() {
+    if [ "$2" = "-t" ]; then return 215; fi
+    printf 'libraries=%s\\n' "$LD_LIBRARY_PATH"
+    if [ "$NPU_TEST_RC" -ne 0 ]; then printf 'synthetic probe failure\\n' >&2; fi
+    return "$NPU_TEST_RC"
+}
+'''
+        environment = dict(os.environ, LD_LIBRARY_PATH=inherited, NPU_TEST_RC=str(returncode))
+        environment.pop('BASH_ENV', None)
+        environment.pop('ENV', None)
+        result = subprocess.run([bash, '--noprofile', '--norc', '-s'],
+            input=functions + service.customize_fast_script(script) + '\nexit 0\n',
+            env=environment, capture_output=True, text=True, encoding='utf-8', timeout=8)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        parts = re.split(r'__NFM_SECTION__([^\n]+)\n', result.stdout)
+        return {parts[i]: parts[i + 1].strip() for i in range(1, len(parts) - 1, 2)}
+
+    def test_collector_keeps_host_libraries_before_system_and_driver_fallbacks(self):
+        for inherited in ('', '/example/host-libraries:/example/second'):
+            with self.subTest(inherited=inherited):
+                sections = self.run_probe_fixture(inherited)
+                paths = sections['npu_info'].removeprefix('libraries=').split(':')
+                if inherited:
+                    self.assertEqual(paths[:2], inherited.split(':'))
+                self.assertLess(paths.index('/usr/lib64'), paths.index('/usr/local/Ascend/driver/lib64/driver'))
+                self.assertEqual(sections['npu_info_rc'], '0')
+                self.assertNotIn('失败', sections['npu_info'])
+                self.assertNotIn('超时', sections['npu_info'])
+                # Optional usages exits 215; it must not change the successful info result.
+                self.assertEqual(sections['npu_usages'], '')
+
+    def test_collector_preserves_failure_output_and_reports_timeout_or_exit_code(self):
+        for returncode in (124, 137, 127):
+            with self.subTest(returncode=returncode):
+                sections = self.run_probe_fixture(returncode=returncode)
+                self.assertEqual(sections['npu_info_rc'], str(returncode))
+                self.assertIn('synthetic probe failure', sections['npu_info'])
+                self.assertIn('退出码 ' + str(returncode), sections['npu_info'])
+                self.assertEqual('超时' in sections['npu_info'], returncode == 124)
+
+    def test_collector_customization_is_idempotent_and_rejects_upstream_drift(self):
+        source = service.UPSTREAM_LIBRARY_LINE + '\n' + service.UPSTREAM_RESULT_LINE
+        customized = service.customize_fast_script(source)
+        self.assertEqual(service.customize_fast_script(customized), customized)
+        with self.assertRaisesRegex(RuntimeError, 'probe layout changed'):
+            service.customize_fast_script(source.replace('npu_info_rc', 'changed_section'))
+        with self.assertRaisesRegex(RuntimeError, 'probe layout changed'):
+            service.customize_fast_script(source + '\n' + service.UPSTREAM_LIBRARY_LINE)
+
     def test_json_writers_retry_transient_windows_reader_locks(self):
         for writer in (manage.write_json, service.write_json):
             with self.subTest(writer=writer.__module__), tempfile.TemporaryDirectory() as directory:

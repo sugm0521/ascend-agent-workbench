@@ -10,6 +10,36 @@ import time
 import uuid
 
 
+UPSTREAM_LIBRARY_LINE = 'export LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64:${LD_LIBRARY_PATH:-}'
+WORKBENCH_LIBRARY_LINE = 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}/usr/lib64:/lib64:/usr/lib:/lib:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64"'
+UPSTREAM_RESULT_LINE = '''printf '__NFM_SECTION__npu_info_rc\\n%s\\n' "$nfm_rc"'''
+WORKBENCH_RESULT_LINE = '''if [ "$nfm_rc" -eq 124 ]; then
+    printf 'npu-smi info 超时（退出码 124）\\n'
+elif [ "$nfm_rc" -ne 0 ]; then
+    printf 'npu-smi info 失败（退出码 %s）\\n' "$nfm_rc"
+fi
+''' + UPSTREAM_RESULT_LINE
+
+
+def customize_fast_script(script):
+    """Adapt the locked probe without changing the upstream installation.
+
+    Preserve an explicit host environment, then system library precedence,
+    with Ascend directories as fallback. Refuse an unexpected upstream layout.
+    """
+    if script.count(WORKBENCH_LIBRARY_LINE) == 1 and script.count(WORKBENCH_RESULT_LINE) == 1:
+        return script
+    if script.count(UPSTREAM_LIBRARY_LINE) != 1 or script.count(UPSTREAM_RESULT_LINE) != 1:
+        raise RuntimeError('The locked npu-top probe layout changed; review the collector customization')
+    return script.replace(UPSTREAM_LIBRARY_LINE, WORKBENCH_LIBRARY_LINE).replace(
+        UPSTREAM_RESULT_LINE, WORKBENCH_RESULT_LINE)
+
+
+def configure_collector():
+    from npu_top import probe
+    probe.FAST_SCRIPT = customize_fast_script(probe.FAST_SCRIPT)
+
+
 def write_json(path, value):
     temporary = path.with_name(path.name + '.' + uuid.uuid4().hex + '.tmp')
     temporary.write_text(json.dumps(value, indent=2), encoding='utf-8')
@@ -68,6 +98,7 @@ def main():
     os.environ.update(environment)
     # Inventory discovery must not inherit another client's coordinator binding.
     os.environ.pop('MINDIE_COORDINATOR_STATE_DIR', None)
+    configure_collector()
     instance_path = args.runtime / 'instance.json'
     stop_path = args.runtime / 'stop.json'
     finished = threading.Event()

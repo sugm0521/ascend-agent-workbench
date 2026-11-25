@@ -13,6 +13,6 @@
   },
   "service": {
     "path": "service.py",
-    "sha256": "ef8fbc831825d9694182c011ac1d5c5fb46db36ec2d0e4f3e3e1e3da4c48039c"
+    "sha256": "5584bbc82697eda0267ad73113c2b2d820f16aceef73debe8d1fed8ae42bd1c8"
   }
 }
