@@ -1,16 +1,17 @@
 --- a/app/dashboard.tsx
 +++ b/app/dashboard.tsx
-@@ -2,6 +2,9 @@
+@@ -2,6 +2,10 @@
  
  import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
  import { onboardingOutcomes, type OnboardingOutcome, type OnboardingReceipt } from './onboarding';
 +import { summarizeServerError } from './server-errors';
++import { applyEnabledChanges } from './bulk-enabled';
 +import { bulkTagChoices, mergeBulkTags, parseBulkTags, type BulkTagMode } from './bulk-tags';
 +import { readGroupPreferences, reconcileGroupPreferences, saveGroupPreferences } from './group-preferences';
  
  type Chip = {
    chip_id?: number;
-@@ -60,6 +63,7 @@
+@@ -60,6 +64,7 @@
  type HeatmapPoint = HistoryPoint & { sample_count: number; devices: HeatmapDevice[] };
  type View = 'overview' | 'server' | 'history' | 'servers';
  type MetricKey = 'npu_util_percent' | 'hbm_percent' | 'cpu_percent' | 'memory_percent' | 'disk_max_percent';
@@ -18,7 +19,7 @@
  
  const API = '';
  async function requestJson<T>(path: string, options?: RequestInit): Promise<T> {
-@@ -67,6 +71,12 @@
+@@ -67,6 +72,12 @@
    const data = await response.json();
    if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : `API ${response.status}`);
    return data as T;
@@ -31,7 +32,7 @@
  }
  const LOW_PRIORITY_TAG = '低优先级';
  const emptyRuntime: Runtime = { mode: 'idle', effective_interval: 120, idle_interval: 120, history_interval: 30, active_viewers: 0, collecting: false, allowed_intervals: [1, 5, 10, 30] };
-@@ -207,7 +217,8 @@
+@@ -207,7 +218,8 @@
    const devices = server.snapshot?.devices || [];
    const dies = physicalDies(devices);
    const hbm = percent(summary?.hbm_used_mb, summary?.hbm_total_mb);
@@ -41,7 +42,7 @@
  }
  
  export default function Dashboard() {
-@@ -215,6 +226,10 @@
+@@ -215,6 +227,10 @@
    const [view, setView] = useState<View>('overview');
    const [selectedServerId, setSelectedServerId] = useState<string>('');
    const [serverSearch, setServerSearch] = useState('');
@@ -52,7 +53,7 @@
    const [interval, setIntervalValue] = useState(10);
    const [error, setError] = useState('');
    const [actionError, setActionError] = useState('');
-@@ -222,6 +237,15 @@
+@@ -222,6 +238,16 @@
    const [viewerError, setViewerError] = useState('');
    const [modal, setModal] = useState(false);
    const [tagServer, setTagServer] = useState<Server | null>(null);
@@ -62,13 +63,14 @@
 +  const [bulkRemoveTags, setBulkRemoveTags] = useState<string[]>([]);
 +  const [bulkBusy, setBulkBusy] = useState(false);
 +  const [bulkTotal, setBulkTotal] = useState(0);
++  const [bulkOperation, setBulkOperation] = useState<'tags' | 'enable' | 'disable'>('tags');
 +  const [bulkResults, setBulkResults] = useState<BulkTagResult[]>([]);
 +  const [bulkError, setBulkError] = useState('');
 +  const bulkRef = useRef(false);
    const [history, setHistory] = useState<HistoryPoint[]>([]);
    const [heatmap, setHeatmap] = useState<HeatmapPoint[]>([]);
    const [range, setRange] = useState('7d');
-@@ -232,22 +256,46 @@
+@@ -232,22 +258,46 @@
    const addingRef = useRef(false);
    const clientId = useMemo(() => `viewer_${crypto.randomUUID().replaceAll('-', '')}`, []);
  
@@ -121,7 +123,7 @@
  
    async function addServers(event: FormEvent<HTMLFormElement>) {
      event.preventDefault();
-@@ -297,8 +345,67 @@
+@@ -297,8 +347,90 @@
    }
    async function saveTags(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (!tagServer) return; const form = new FormData(event.currentTarget); const tags = String(form.get('tags') || '').split(/[|,，]/).map((tag) => tag.trim()).filter(Boolean); if (tagServer.tags.includes(LOW_PRIORITY_TAG) && !tags.includes(LOW_PRIORITY_TAG)) tags.push(LOW_PRIORITY_TAG); if (await action(`/api/servers/${tagServer.id}`, 'PUT', { tags })) setTagServer(null); }
    function openServer(server: Server) { setSelectedServerId(server.id); setView('server'); }
@@ -153,6 +155,7 @@
 +        mergeBulkTags([], tags, 'remove'); // Validate protected tags without splitting existing label text.
 +      } else tags = parseBulkTags(bulkText, bulkMode);
 +    } catch (reason) { setBulkError(reason instanceof Error ? reason.message : '标签输入无效'); return; }
++    setBulkOperation('tags');
 +    bulkRef.current = true; setBulkBusy(true); setBulkError(''); setBulkResults([]); setBulkTotal(targets.length);
 +    const unconfirmed: string[] = [];
 +    try {
@@ -187,11 +190,33 @@
 +    } finally { bulkRef.current = false; setBulkBusy(false); }
 +  }
 +
++  async function applyBulkEnabled(enabled: boolean) {
++    if (bulkRef.current || !bulkTargets.length) return;
++    const targets = bulkTargets.map(({ id, name }) => ({ id, name }));
++    bulkRef.current = true; setBulkBusy(true); setBulkOperation(enabled ? 'enable' : 'disable');
++    setBulkError(''); setBulkResults([]); setBulkTotal(targets.length);
++    try {
++      const fresh = await bulkRequest<Overview>('/api/overview', { cache: 'no-store' });
++      if (!Array.isArray(fresh.servers)) throw new Error('服务器清单响应不完整');
++      const results = await applyEnabledChanges(targets, enabled, fresh.servers,
++        (id, value) => bulkRequest(`/api/servers/${encodeURIComponent(id)}`, {
++          method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled: value }),
++        }), (item) => setBulkResults((previous) => [...previous, item]));
++      const confirmed = new Set(results.filter((item) => item.state !== 'unconfirmed').map((item) => item.id));
++      setOverview((previous) => ({ ...previous, servers: previous.servers.map((server) => confirmed.has(server.id) ? { ...server, enabled } : server) }));
++      setBulkServerIds(results.filter((item) => item.state === 'unconfirmed').map((item) => item.id));
++      setBulkRemoveTags([]);
++      await load();
++    } catch (reason) {
++      setBulkError(`无法读取最新状态，本次未执行启停：${reason instanceof Error ? reason.message : '请检查连接后重试'}`);
++    } finally { bulkRef.current = false; setBulkBusy(false); }
++  }
++
 +  const titles: Record<View, [string, string]> = { overview: [activeGroup.key === 'all' ? '集群实时总览' : `${activeGroup.label} · 实时总览`, '跨服务器资源、空闲设备与基础设施状态'], server: [selectedServer?.name || '服务器详情', selectedServer ? `${selectedServer.username}@${selectedServer.host}:${selectedServer.port}` : '选择服务器查看详情'], history: ['资源历史', selectedServer ? `${selectedServer.name} · 趋势与 2 小时热力图` : '选择服务器查看历史'], servers: ['服务器管理', '本地清单、连接状态与采集控制'] };
    const runtimeError = [
      overview.runtime.storage_failures || overview.runtime.maintenance_error ? '历史记录未完成；当前观测仍保留，不能视作历史已保存' : '',
      overview.runtime.inventory?.state === 'failed' ? `${overview.runtime.inventory.error} (${overview.runtime.inventory.error_type})` : '',
-@@ -313,25 +420,53 @@
+@@ -313,25 +445,54 @@
          <button className={view === 'history' ? 'is-active' : ''} onClick={() => setView('history')}><i>▦</i><span>资源历史</span></button>
          <button className={view === 'servers' ? 'is-active' : ''} onClick={() => setView('servers')}><i>⚙</i><span>服务器管理</span></button>
        </nav>
@@ -238,20 +263,21 @@
 -        {view === 'servers' && <section className="panel server-table"><header className="panel-heading"><div><p className="section-kicker">Inventory</p><h2>已纳管服务器</h2><span>标签可用于搜索和分组；主工作区禁用设备自动标记为低优先级</span></div><button className="secondary-button" onClick={() => action('/api/collect')}>全部采集</button></header>{overview.servers.length ? <div className="table-wrap"><table><thead><tr><th>服务器</th><th>连接地址</th><th>设备</th><th>标签</th><th>最近采样</th><th>状态</th><th>操作</th></tr></thead><tbody>{orderedServers.map((server) => <tr key={server.id}><td><button className="table-server" onClick={() => openServer(server)}><StatusDot status={server.status} /><strong>{server.name}</strong></button></td><td><code>{server.username}@{server.host}:{server.port}</code></td><td>{server.snapshot?.devices?.length || 0} NPU</td><td><div className="table-tags"><ServerTags tags={server.tags} /><button onClick={() => setTagServer(server)}>编辑标签</button></div></td><td>{timeAgo(server.last_seen_at)}</td><td><span className={`status-label status-label--${server.status}`}>{server.enabled ? (server.status === 'online' ? '在线' : '待检查') : '已暂停'}</span></td><td className="row-actions"><button onClick={() => action(`/api/servers/${server.id}`, 'PUT', { enabled: !server.enabled })}>{server.enabled ? '暂停' : '启用'}</button><button className="is-danger" onClick={() => confirm(`移除 ${server.name}？历史数据也会删除。`) && action(`/api/servers/${server.id}`, 'DELETE')}>移除</button></td></tr>)}</tbody></table></div> : <div className="empty-state"><strong>服务器列表为空</strong><button className="primary-button" onClick={() => setModal(true)}>批量添加</button></div>}</section>}
 +        {view === 'history' && selectedServer && <div className="page-stack history-page"><section className="history-toolbar panel"><div><label>服务器<select value={effectiveServerId} onChange={(event) => setSelectedServerId(event.target.value)}>{orderedServers.map((server) => <option value={server.id} key={server.id}>{server.name}</option>)}</select></label><label>趋势指标<select value={metric} onChange={(event) => setMetric(event.target.value as MetricKey)}>{Object.entries(metricLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label></div><div className="range-tabs" role="group" aria-label="历史范围">{['7d', '30d', '90d'].map((value) => <button key={value} className={range === value ? 'is-active' : ''} onClick={() => setRange(value)}>{value}</button>)}</div></section><section className="history-summary metric-grid metric-grid--history"><MetricCard label={`${metricLabels[metric]}平均`} value={precise(average(history, metric), '%')} detail={`${history.length} 个趋势桶`} tone="blue" icon="Ø" /><MetricCard label="设备繁忙均值" value={precise(average(history, 'npu_util_percent'), '%')} detail={`${deviceIds.length} 张 NPU 有历史`} tone="purple" icon="N" /><MetricCard label="HBM 平均" value={precise(average(history, 'hbm_percent'), '%')} detail={`最长保留 ${range}`} tone="green" icon="H" /><MetricCard label="磁盘最高水位" value={number(history.length ? Math.max(...history.map((point) => point.disk_max_percent || 0)) : null, '%')} detail="窗口内峰值" tone="orange" icon="D" /></section><article className="panel trend-panel"><header className="panel-heading"><div><p className="section-kicker">Timeline</p><h2>{metricLabels[metric]}趋势</h2><span>{selectedServer?.name || '未选择服务器'} · SQLite 历史数据自动分桶</span></div></header><TrendCanvas points={history} metric={metric} /><footer className="trend-axis"><span>{history.length ? new Date(history[0].bucket * 1000).toLocaleString('zh-CN', { hour12: false }) : '暂无数据'}</span><span>{history.length ? new Date(history.at(-1)!.bucket * 1000).toLocaleString('zh-CN', { hour12: false }) : ''}</span></footer></article><section className="heatmap-section"><header className="panel-heading"><div><p className="section-kicker">Activity heatmap</p><h2>资源活动热力图</h2><span>每列代表一天、每格代表 2 小时；CPU、内存与 NPU 状态在同页对照</span></div></header><div className="heatmap-list"><HistoryHeatmap title="CPU" subtitle="整机处理器利用率" points={heatmap} days={heatmapDays} tone="blue" valueFor={(point) => point.cpu_percent ?? null} /><HistoryHeatmap title="系统内存" subtitle="整机内存占用" points={heatmap} days={heatmapDays} tone="orange" valueFor={(point) => point.memory_percent ?? null} /><HistoryHeatmap title="NPU 汇总" subtitle="设备平均 AICore 利用率" points={heatmap} days={heatmapDays} tone="purple" valueFor={(point) => point.npu_util_percent ?? null} /><HistoryHeatmap title="HBM 汇总" subtitle="设备显存占用" points={heatmap} days={heatmapDays} tone="green" valueFor={(point) => point.hbm_percent ?? null} />{deviceIds.map((deviceId) => <HistoryHeatmap key={deviceId} title={`NPU ${deviceId}`} subtitle="AICore 利用率" points={heatmap} days={heatmapDays} tone="purple" valueFor={(point) => point.devices.find((device) => device.npu_id === deviceId)?.utilization_percent ?? null} />)}</div></section></div>}
 +
-+        {view === 'servers' && <section className="panel server-table"><header className="panel-heading"><div><p className="section-kicker">Inventory</p><h2>已纳管服务器</h2><span>勾选当前列表中的机器，批量添加或移除标签</span></div><button className="secondary-button" disabled={bulkBusy} onClick={() => action('/api/collect')}>全部采集</button></header>
++        {view === 'servers' && <section className="panel server-table"><header className="panel-heading"><div><p className="section-kicker">Inventory</p><h2>已纳管服务器</h2><span>勾选当前列表中的机器，批量启用、停用或修改标签</span></div><button className="secondary-button" disabled={bulkBusy} onClick={() => action('/api/collect')}>全部采集</button></header>
 +          <form className="bulk-tags" onSubmit={applyBulkTags} aria-label="批量标签操作">
 +            <div className="bulk-tags__selection"><strong>已选择 {bulkTargets.length} 台服务器</strong><button type="button" disabled={bulkBusy || !bulkServerIds.length} onClick={() => selectBulkServers([])}>清空选择</button><span>仅对当前列表勾选项生效，保留其他标签</span></div>
++            <div className="bulk-tags__controls bulk-enabled" role="group" aria-label="批量启停操作"><button type="button" className="primary-button" disabled={bulkBusy || !bulkTargets.length} onClick={() => void applyBulkEnabled(true)}>批量启用</button><button type="button" className="secondary-button" disabled={bulkBusy || !bulkTargets.length} onClick={() => void applyBulkEnabled(false)}>批量停用</button><span>只调整监控采集。停用机器默认隐藏，可打开“显示已停用服务器”重新启用。</span></div>
 +            <div className="bulk-tags__controls"><label>操作<select aria-label="批量标签操作类型" disabled={bulkBusy} value={bulkMode} onChange={(event) => { setBulkMode(event.target.value as BulkTagMode); setBulkRemoveTags([]); setBulkError(''); }}>{['add', 'remove'].map((mode) => <option value={mode} key={mode}>{mode === 'add' ? '添加标签' : '移除标签'}</option>)}</select></label><label className="bulk-tags__input">标签<input aria-label="批量标签内容" value={bulkMode === 'remove' ? bulkRemoveTags.join(' | ') : bulkText} readOnly={bulkMode === 'remove'} onChange={(event) => { setBulkText(event.target.value); setBulkError(''); }} disabled={bulkBusy} placeholder={bulkMode === 'remove' ? '从下方已有标签中勾选' : '训练 | A3 | 北京机房'} aria-describedby="bulk-tags-help" /></label><button className="primary-button" type="submit" disabled={bulkBusy || !bulkTargets.length || (bulkMode === 'remove' ? !bulkRemoveTags.length : !bulkText.trim())}>{bulkBusy ? '正在处理…' : bulkMode === 'add' ? '批量添加标签' : '批量移除标签'}</button></div>
 +            {bulkMode === 'remove' && <fieldset className="bulk-tags__existing" aria-label="已有标签"><legend>{bulkTargets.length ? '已勾选机器的已有标签' : '当前列表的已有标签'}</legend><div>{bulkTagOptions.map((choice) => <label key={choice.tag.toLowerCase()} className={choice.protected ? 'is-protected' : ''}><input type="checkbox" aria-label={`移除标签：${choice.tag}`} disabled={bulkBusy || choice.protected} checked={bulkRemoveTags.some((tag) => tag.toLowerCase() === choice.tag.toLowerCase())} onChange={(event) => { setBulkError(''); setBulkRemoveTags((current) => event.target.checked ? [...current, choice.tag] : current.filter((tag) => tag.toLowerCase() !== choice.tag.toLowerCase())); }} /><span>{choice.tag}</span><small>{choice.protected ? '系统标签' : `${choice.count} 台${choice.count ? '' : ' · 待核对'}`}</small></label>)}</div>{!bulkTagOptions.length && <p>当前范围没有已有标签。</p>}</fieldset>}
 +            <p id="bulk-tags-help">{bulkMode === 'remove' ? '勾选需要移除的已有标签；未勾选机器时展示当前列表，勾选后仅展示所选机器的标签。' : '多个标签用竖线或逗号分隔；'}每台最多 20 个标签，系统“低优先级”标签保留。</p>
 +            {bulkError && <p className="bulk-tags__error" role="alert">{bulkError}</p>}
-+            {(bulkBusy || bulkResults.length > 0) && <div className="bulk-tags__results"><p role="status" aria-live="polite">{bulkBusy ? `正在处理 ${bulkResults.length} / ${bulkTotal} 台` : `已完成 ${bulkResults.filter((item) => item.state !== 'unconfirmed').length} 台（无需变更 ${bulkResults.filter((item) => item.state === 'unchanged').length} 台），未确认 ${bulkResults.filter((item) => item.state === 'unconfirmed').length} 台`}</p>{!bulkBusy && bulkResults.some((item) => item.state === 'unconfirmed') && <p>已完成项保留；未确认项仍可勾选，核对后再次应用即可重试。</p>}<ul>{bulkResults.map((item) => <li className={item.state === 'unconfirmed' ? 'is-unconfirmed' : ''} key={item.id}><span><strong>{item.name}</strong> · {item.state === 'done' ? '已保存' : item.state === 'unchanged' ? '无需变更' : '未确认'}</span>{item.error && <details><summary>查看错误</summary><pre>{item.error}</pre></details>}</li>)}</ul></div>}
++            {(bulkBusy || bulkResults.length > 0) && <div className="bulk-tags__results"><p role="status" aria-live="polite">{bulkBusy ? `正在处理 ${bulkResults.length} / ${bulkTotal} 台` : `已完成 ${bulkResults.filter((item) => item.state !== 'unconfirmed').length} 台（无需变更 ${bulkResults.filter((item) => item.state === 'unchanged').length} 台），未确认 ${bulkResults.filter((item) => item.state === 'unconfirmed').length} 台`}</p>{!bulkBusy && bulkResults.some((item) => item.state === 'unconfirmed') && <p>已完成项保留；未确认项仍可勾选，核对后再次应用即可重试。</p>}<ul>{bulkResults.map((item) => <li className={item.state === 'unconfirmed' ? 'is-unconfirmed' : ''} key={item.id}><span><strong>{item.name}</strong> · {item.state === 'done' ? (bulkOperation === 'enable' ? '已启用' : bulkOperation === 'disable' ? '已停用' : '已保存') : item.state === 'unchanged' ? '无需变更' : '未确认'}</span>{item.error && <details><summary>查看错误</summary><pre>{item.error}</pre></details>}</li>)}</ul></div>}
 +          </form>
 +          {orderedServers.length ? <div className="table-wrap"><table><thead><tr><th className="server-select"><input type="checkbox" aria-label="全选当前列表服务器" disabled={bulkBusy} checked={bulkTargets.length === orderedServers.length} ref={(element) => { if (element) element.indeterminate = bulkTargets.length > 0 && bulkTargets.length < orderedServers.length; }} onChange={(event) => selectBulkServers(event.target.checked ? orderedServers.map((server) => server.id) : [])} /></th><th>服务器</th><th>连接地址</th><th>设备</th><th>标签</th><th>最近采样</th><th>状态</th><th>操作</th></tr></thead><tbody>{orderedServers.map((server) => <tr key={server.id}><td className="server-select"><input type="checkbox" aria-label={`选择服务器：${server.name}`} disabled={bulkBusy} checked={bulkServerIds.includes(server.id)} onChange={(event) => selectBulkServers(event.target.checked ? Array.from(new Set([...bulkServerIds, server.id])) : bulkServerIds.filter((id) => id !== server.id))} /></td><td><button className="table-server" disabled={bulkBusy} onClick={() => openServer(server)}><StatusDot status={server.status} /><strong>{server.name}</strong></button></td><td><code>{server.username}@{server.host}:{server.port}</code></td><td>{server.snapshot?.devices?.length || 0} NPU</td><td><div className="table-tags"><ServerTags tags={server.tags} /><button disabled={bulkBusy} onClick={() => setTagServer(server)}>编辑标签</button></div></td><td>{timeAgo(server.last_seen_at)}</td><td><span className={`status-label status-label--${server.status}`}>{server.enabled ? (server.status === 'online' ? '在线' : '待检查') : '已暂停'}</span></td><td className="row-actions"><button disabled={bulkBusy} onClick={() => action(`/api/servers/${server.id}`, 'PUT', { enabled: !server.enabled })}>{server.enabled ? '暂停' : '启用'}</button><button disabled={bulkBusy} className="is-danger" onClick={() => confirm(`移除 ${server.name}？历史数据也会删除。`) && action(`/api/servers/${server.id}`, 'DELETE')}>移除</button></td></tr>)}</tbody></table></div> : <div className="empty-state"><strong>{overview.servers.length ? '已停用服务器已隐藏' : '服务器列表为空'}</strong>{overview.servers.length ? <p>打开上方“显示已停用服务器”开关即可查看。</p> : <button className="primary-button" onClick={() => setModal(true)}>批量添加</button>}</div>}</section>}
        </div>
      </section>
  
-@@ -394,5 +529,6 @@
+@@ -394,5 +555,6 @@
    const containers = snapshot?.docker?.containers || [];
    const memoryPercent = percent(summary?.memory_used_bytes, summary?.memory_total_bytes);
    const hbmPercent = percent(summary?.hbm_used_mb, summary?.hbm_total_mb);
@@ -275,7 +301,7 @@
  .server-card__metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
  .server-card__metrics > div { display: grid; grid-template-columns: 1fr auto; gap: 7px 5px; }
  .server-card__metrics span:first-child { color: var(--text-3); font-size: 9px; }.server-card__metrics strong { font-size: 11px; }.server-card__metrics .mini-bar { grid-column: 1 / -1; }
-@@ -228,3 +234,60 @@
+@@ -228,3 +234,63 @@
  }
  
  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto!important; animation-duration: .01ms!important; transition-duration: .01ms!important; } }
@@ -336,6 +362,9 @@
 +.bulk-tags__existing small { color: var(--text-3); white-space: nowrap; font-size: 9px; }
 +.bulk-tags__existing label.is-protected { cursor: default; opacity: .6; }
 +.bulk-tags__existing > p { color: var(--text-3); font-size: 11px; }
++
++.bulk-enabled { flex-wrap: wrap; }
++.bulk-enabled > span { flex: 1 1 220px; color: var(--text-3); font-size: 12px; overflow-wrap: anywhere; }
 --- /dev/null
 +++ b/app/server-errors.ts
 @@ -0,0 +1,19 @@
@@ -603,6 +632,93 @@
 +  const active = decodeGroupPreferences('{"version":1,"selectedGroupKey":"untagged","expandedGroups":{"all":false,"untagged":true}}');
 +  assert.equal(reconcileGroupPreferences(active, [{ tags: [] }]), active);
 +});
+--- /dev/null
++++ b/app/bulk-enabled.ts
+@@ -0,0 +1,33 @@
++export type EnabledTarget = { id: string; name: string };
++export type EnabledResult = EnabledTarget & { state: 'done' | 'unchanged' | 'unconfirmed'; error?: string };
++type Receipt = { ok: boolean; server?: { id: string; enabled: boolean } };
++
++export async function applyEnabledChanges(
++  targets: readonly EnabledTarget[], enabled: boolean,
++  servers: readonly { id: string; enabled: boolean }[],
++  update: (id: string, enabled: boolean) => Promise<Receipt>,
++  report: (result: EnabledResult) => void,
++): Promise<EnabledResult[]> {
++  const current = new Map(servers.map((server) => [server.id, server]));
++  const results: EnabledResult[] = [];
++  for (const target of new Map(targets.map((server) => [server.id, server])).values()) {
++    let result: EnabledResult;
++    try {
++      const server = current.get(target.id);
++      if (!server || typeof server.enabled !== 'boolean') throw new Error('服务器已不在最新清单中或状态不完整，请核对');
++      if (server.enabled === enabled) result = { ...target, state: 'unchanged' };
++      else {
++        const receipt = await update(target.id, enabled);
++        if (!receipt.ok || receipt.server?.id !== target.id || receipt.server.enabled !== enabled) {
++          throw new Error('未取得完整的启停回执，请核对当前状态后重试');
++        }
++        result = { ...target, state: 'done' };
++      }
++    } catch (reason) {
++      result = { ...target, state: 'unconfirmed', error: reason instanceof Error ? reason.message : '启停结果未确认' };
++    }
++    results.push(result);
++    report(result);
++  }
++  return results;
++}
+--- /dev/null
++++ b/tests/bulk-enabled.test.mjs
+@@ -0,0 +1,48 @@
++import assert from 'node:assert/strict';
++import { readFileSync } from 'node:fs';
++import test from 'node:test';
++import { URL } from 'node:url';
++import ts from 'typescript';
++
++const { outputText } = ts.transpileModule(readFileSync(new URL('../app/bulk-enabled.ts', import.meta.url), 'utf8'), {
++  compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 },
++});
++const { applyEnabledChanges } = await import('data:text/javascript,' + encodeURIComponent(outputText));
++const target = (id) => ({ id, name: id });
++
++test('selected IDs only, deduplication and mixed states skip unchanged machines', async () => {
++  const writes = [], reports = [];
++  const results = await applyEnabledChanges([target('a'), target('b'), target('a')], false,
++    [{ id: 'a', enabled: true }, { id: 'b', enabled: false }, { id: 'outside', enabled: true }],
++    async (id, enabled) => { writes.push({ id, enabled }); return { ok: true, server: { id, enabled } }; },
++    (r) => reports.push(r));
++  assert.deepEqual(writes, [{ id: 'a', enabled: false }]);
++  assert.deepEqual(results.map((r) => r.state), ['done', 'unchanged']);
++  assert.deepEqual(reports, results);
++});
++
++test('failures do not stop later machines; missing and malformed status never write', async () => {
++  const writes = [];
++  const results = await applyEnabledChanges(['missing', 'bad', 'a', 'b'].map(target), true,
++    [{ id: 'bad' }, { id: 'a', enabled: false }, { id: 'b', enabled: false }],
++    async (id, enabled) => { writes.push(id); if (id === 'a') throw new Error('failed'); return { ok: true, server: { id, enabled } }; }, () => {});
++  assert.deepEqual(writes, ['a', 'b']);
++  assert.deepEqual(results.map((r) => r.state), ['unconfirmed', 'unconfirmed', 'unconfirmed', 'done']);
++});
++
++test('wrong or absent receipt identity and state remain unconfirmed', async () => {
++  for (const receipt of [{ ok: true }, { ok: false }, { ok: true, server: { id: 'other', enabled: true } }, { ok: true, server: { id: 'a', enabled: false } }]) {
++    const results = await applyEnabledChanges([target('a')], true, [{ id: 'a', enabled: false }], async () => receipt, () => {});
++    assert.equal(results[0].state, 'unconfirmed');
++  }
++});
++
++test('lost receipt followed by a fresh matching state retries without another write', async () => {
++  let enabled = false, writes = 0;
++  const update = async () => { enabled = true; writes++; throw new Error('readback lost'); };
++  const first = await applyEnabledChanges([target('a')], true, [{ id: 'a', enabled }], update, () => {});
++  assert.equal(first[0].state, 'unconfirmed');
++  const retry = await applyEnabledChanges([target('a')], true, [{ id: 'a', enabled }], update, () => {});
++  assert.equal(retry[0].state, 'unchanged');
++  assert.equal(writes, 1);
++});
 --- a/package.json
 +++ b/package.json
 @@ -7,7 +7,7 @@
@@ -610,7 +726,7 @@
    "scripts": {
      "dev": "vite",
 -    "test": "node --test tests/onboarding.test.mjs",
-+    "test": "node --test tests/onboarding.test.mjs tests/server-errors.test.mjs tests/bulk-tags.test.mjs tests/group-preferences.test.mjs",
++    "test": "node --test tests/onboarding.test.mjs tests/server-errors.test.mjs tests/bulk-tags.test.mjs tests/group-preferences.test.mjs tests/bulk-enabled.test.mjs",
      "build": "vite build",
      "lint": "eslint . --ignore-pattern npu_top/static --ignore-pattern dist"
    },
